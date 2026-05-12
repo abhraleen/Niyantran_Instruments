@@ -131,9 +131,10 @@ export const WhyChooseUs = () => {
                         <motion.div 
                             style={{ 
                                 x: useTransform(mouseX, [-0.5, 0.5], [-60, 60]),
-                                y: useTransform(mouseY, [-0.5, 0.5], [-60, 60])
+                                y: useTransform(mouseY, [-0.5, 0.5], [-60, 60]),
+                                animationDelay: '2s'
                             }}
-                            className="absolute -bottom-12 -left-12 w-64 h-64 bg-accent/5 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} 
+                            className="absolute -bottom-12 -left-12 w-64 h-64 bg-accent/5 rounded-full blur-[120px] animate-pulse"
                         />
                     </motion.div>
                 </div>

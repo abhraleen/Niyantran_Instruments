@@ -1,20 +1,61 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Niyantran Instruments - Research Control Systems
 
-# Run and deploy your AI Studio app
+Precision engineering and instrumentation solutions for research laboratories.
 
-This contains everything you need to run your app locally.
+## Local Development
 
-View your app in AI Studio: https://ai.studio/apps/9d1abe72-d7d2-47b6-ad3e-fe123cf5b414
+To run this project on your local machine, follow these steps:
 
-## Run Locally
+### Prerequisites
 
-**Prerequisites:**  Node.js
+- [Node.js](https://nodejs.org/) (Version 18 or higher)
+- [npm](https://www.npmjs.com/)
 
+### Installation
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1. Clone or download the source code.
+2. Navigate to the project directory.
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Setup Environment Variables
+
+Create a `.env` file in the root directory and add the following (or copy from `.env.example`):
+
+```env
+DATABASE_URL=your_postgresql_url
+GEMINI_API_KEY=your_gemini_api_key
+PORT=3000
+```
+
+*Note: The app will work with dummy data if `DATABASE_URL` is omitted.*
+
+### Running the Application
+
+To start the development server:
+```bash
+npm run dev
+```
+
+The application will be accessible at [http://localhost:3000](http://localhost:3000).
+
+### Building for Production
+
+To create a production build:
+```bash
+npm run build
+```
+
+To run the production server:
+```bash
+NODE_ENV=production npm run dev
+```
+
+## Tech Stack
+
+- **Frontend**: React, Vite, Tailwind CSS, Framer Motion, Lucide React
+- **Backend**: Node.js, Express, PostgreSQL (Neon)
+- **AI**: Google Gemini API
+- **Deployment**: Google Cloud Run (via AI Studio)
