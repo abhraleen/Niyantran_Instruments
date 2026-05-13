@@ -1,7 +1,8 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, Menu, X, ArrowUpRight, Mail } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import logoSrc from '@/assets/logo.png';
 
 export const Navbar = () => {
     const [isOpen, setIsOpen] = React.useState(false);
@@ -31,8 +32,8 @@ export const Navbar = () => {
 
                     {/* Logo */}
                     <a href="/" className="flex items-center gap-3.5 group cursor-pointer">
-                        <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-light rounded-[12px] flex items-center justify-center shadow-[0_6px_20px_rgba(27,78,216,0.30)] group-hover:shadow-[0_10px_30px_rgba(27,78,216,0.45)] group-hover:scale-105 transition-all duration-500">
-                            <Activity className="h-5 w-5 text-white" strokeWidth={2} />
+                        <div className="w-10 h-10 rounded-[12px] overflow-hidden shadow-[0_6px_20px_rgba(27,78,216,0.30)] group-hover:shadow-[0_10px_30px_rgba(27,78,216,0.45)] group-hover:scale-105 transition-all duration-500 flex-shrink-0">
+                            <img src={logoSrc} alt="Niyantran" className="w-full h-full object-cover" />
                         </div>
                         <div className="flex flex-col leading-none">
                             <span className="text-[17px] font-heading font-black tracking-[-0.04em] text-navy">NIYANTRAN</span>
@@ -122,8 +123,8 @@ export const Footer = () => {
                     {/* Brand */}
                     <div className="md:col-span-5">
                         <div className="flex items-center gap-3.5 mb-8">
-                            <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-light rounded-[12px] flex items-center justify-center">
-                                <Activity className="h-5 w-5 text-white" strokeWidth={2} />
+                            <div className="w-10 h-10 rounded-[12px] overflow-hidden flex-shrink-0">
+                                <img src={logoSrc} alt="Niyantran" className="w-full h-full object-cover" />
                             </div>
                             <span className="text-[17px] font-heading font-black tracking-[-0.04em] text-white">NIYANTRAN</span>
                         </div>

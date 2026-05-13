@@ -1,8 +1,9 @@
 ﻿import React from 'react';
 import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, Users, Activity, Layers, ArrowUpRight } from 'lucide-react';
+import { TrendingUp, Users, Layers, ArrowUpRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import logoSrc from '@/assets/logo.png';
 
 const ChartBar = ({ height, delay, highlight }: { height: string; delay: number; highlight?: boolean }) => (
     <motion.div
@@ -60,8 +61,8 @@ export const DashboardPreview = () => {
                             </div>
                             <div className="w-px h-5 bg-white/[0.07]" />
                             <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary-light rounded-[10px] flex items-center justify-center">
-                                    <Activity className="h-4 w-4 text-white" strokeWidth={2} />
+                                <div className="w-8 h-8 rounded-[10px] overflow-hidden flex-shrink-0">
+                                    <img src={logoSrc} alt="Niyantran" className="w-full h-full object-cover" />
                                 </div>
                                 <div>
                                     <span className="text-white font-heading font-black text-sm tracking-tight">NIYANTRAN OS </span>

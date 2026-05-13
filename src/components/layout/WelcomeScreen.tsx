@@ -1,6 +1,6 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion } from 'framer-motion';
-import { Activity } from 'lucide-react';
+import logoSrc from '@/assets/logo.png';
 
 export const WelcomeScreen = ({ onComplete }: { onComplete: () => void }) => {
     return (
@@ -49,8 +49,8 @@ export const WelcomeScreen = ({ onComplete }: { onComplete: () => void }) => {
                     transition={{ duration: 3.5, repeat: Infinity, ease: 'easeOut', delay: 0.4 }}
                     className="absolute inset-[-30px] rounded-[3rem] bg-primary/15 blur-3xl"
                 />
-                <div className="relative z-10 w-[88px] h-[88px] bg-gradient-to-br from-primary to-primary-light rounded-[1.75rem] flex items-center justify-center shadow-[0_24px_80px_rgba(27,78,216,0.55)]">
-                    <Activity className="h-11 w-11 text-white" strokeWidth={1.75} />
+                <div className="relative z-10 w-[88px] h-[88px] rounded-[1.75rem] overflow-hidden shadow-[0_24px_80px_rgba(27,78,216,0.55)]">
+                    <img src={logoSrc} alt="Niyantran" className="w-full h-full object-cover" />
                 </div>
             </motion.div>
 
