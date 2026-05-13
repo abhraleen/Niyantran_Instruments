@@ -6,26 +6,26 @@ import { Activity, Beaker, Layers, Code, ArrowRight } from 'lucide-react';
 
 const services = [
     {
-        title: "IV Measurement Systems",
-        description: "Precision source-measure units and characterization systems for advanced semiconductors and nanomaterials.",
+        title: "I–V Measurement Systems",
+        description: "Precision current–voltage characterization solutions for semiconductor devices, solar cells, and electronic materials research.",
         icon: Activity,
         color: "blue",
     },
     {
         title: "Quantum Efficiency",
-        description: "Spectral response measurement systems for solar cells, photodetectors, and optoelectronic research.",
+        description: "Advanced EQE/IQE measurement systems designed for accurate photovoltaic characterization and performance analysis.",
         icon: Beaker,
         color: "cyan",
     },
     {
         title: "Evaporation Control",
-        description: "Intelligent process control systems for thermal and e-beam evaporation systems with high-resolution feedback.",
+        description: "Automation and monitoring solutions for thin-film deposition and evaporation systems, enabling improved process stability.",
         icon: Layers,
         color: "blue",
     },
     {
-        title: "Software Consultancy",
-        description: "Custom instrumentation software, automation drivers, and data analysis pipelines for research workflows.",
+        title: "Scientific Software Consultancy",
+        description: "Custom software development, instrument interfacing, automation, data acquisition, and analysis solutions.",
         icon: Code,
         color: "cyan",
     }
@@ -54,37 +54,34 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <Card className="h-full glass hover:shadow-[0_40px_80px_-15px_rgba(37,99,235,0.2)] transition-all duration-700 border-white/50 group overflow-hidden rounded-[3rem] p-4 relative">
+            <Card className="h-full bg-white transition-all duration-700 border-slate-100 group overflow-hidden rounded-[2.5rem] p-4 relative shadow-sm hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] hover:border-primary/20">
                 {/* Interactive Spotlight */}
                 <motion.div 
-                    className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[3rem]"
+                    className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2.5rem]"
                     style={{
                         background: useSpring(
-                            `radial-gradient(600px circle at ${spotlightX.get()}px ${spotlightY.get()}px, rgba(37, 99, 235, 0.08), transparent 80%)`,
-                            { damping: 50, stiffness: 200 }
+                            `radial-gradient(400px circle at ${spotlightX.get()}px ${spotlightY.get()}px, rgba(37, 99, 235, 0.04), transparent 80%)`,
+                            { damping: 40, stiffness: 150 }
                         )
                     }}
                 />
                 
                 <CardHeader className="p-10 relative z-10">
-                    <div className={`w-20 h-20 rounded-[2rem] flex items-center justify-center mb-10 transition-all duration-700 group-hover:scale-110 group-hover:rotate-12 ${
-                        service.color === 'blue' ? 'bg-primary/20 text-primary shadow-xl shadow-blue-500/10' : 'bg-accent/20 text-accent shadow-xl shadow-cyan-500/10'
+                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-10 transition-all duration-700 group-hover:scale-110 group-hover:bg-primary group-hover:text-white ${
+                        service.color === 'blue' ? 'bg-primary/5 text-primary' : 'bg-slate-50 text-slate-400'
                     }`}>
-                        <service.icon className="h-10 w-10" />
+                        <service.icon className="h-8 w-8" />
                     </div>
-                    <CardTitle className="text-3xl font-heading font-black mb-8 group-hover:text-primary transition-colors tracking-tight leading-tight">{service.title}</CardTitle>
-                    <CardDescription className="text-lg text-slate-500 leading-relaxed font-light tracking-tight">
+                    <CardTitle className="text-3xl font-heading font-black mb-6 transition-colors tracking-tight leading-tight">{service.title}</CardTitle>
+                    <CardDescription className="text-lg text-slate-500 leading-relaxed font-medium tracking-tight">
                         {service.description}
                     </CardDescription>
                 </CardHeader>
                 <CardFooter className="px-10 pb-10 pt-0 relative z-10">
-                    <Button variant="ghost" className="p-0 text-primary text-lg font-black group/btn items-center hover:bg-transparent">
-                        View Specs <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover/btn:translate-x-3" />
+                    <Button variant="ghost" className="p-0 text-primary text-base font-black group/btn items-center hover:bg-transparent tracking-tight">
+                        View Technical Specs <ArrowRight className="ml-3 h-5 w-5 transition-transform group-hover/btn:translate-x-2" />
                     </Button>
                 </CardFooter>
-                
-                {/* Animated underline element */}
-                <div className="absolute bottom-0 left-0 h-2 w-0 bg-primary group-hover:w-full transition-all duration-1000 ease-[0.16,1,0.3,1] z-20" />
             </Card>
         </motion.div>
     );
@@ -92,28 +89,45 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
 
 export const Services = () => {
     return (
-        <section id="services" className="py-40 bg-slate-50 relative overflow-hidden">
+        <section id="services" className="py-48 bg-white relative overflow-hidden">
+            {/* Minimalist Grid and Accent */}
             <div className="absolute inset-0 scientific-grid opacity-30" />
-            <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-white to-transparent" />
+            <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary/[0.03] rounded-full blur-[120px]" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
             
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="text-center mb-32">
+                <div className="mb-32">
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0, x: -50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
+                        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                        className="flex flex-col md:flex-row md:items-end justify-between gap-12"
                     >
-                        <h2 className="text-sm font-mono tracking-[0.5em] text-primary uppercase mb-8">Specialized Services</h2>
-                        <h3 className="text-5xl md:text-8xl font-heading font-black text-heading mb-10 tracking-tighter leading-none italic uppercase">
-                            CORE <span className="text-primary not-italic underline underline-offset-[16px] decoration-4 decoration-primary/20">CAPABILITIES</span>
-                        </h3>
-                        <p className="text-2xl text-secondary-text max-w-4xl mx-auto font-light leading-relaxed tracking-tight">
-                            We build bespoke measurement solutions that integrate perfectly into modern research workflows, ensuring extreme data integrity.
-                        </p>
+                        <div className="max-w-3xl">
+                            <h2 className="text-sm font-mono tracking-[0.4em] text-primary uppercase mb-10 flex items-center gap-4">
+                                <span className="h-px w-12 bg-primary/30" />
+                                Specialist Expertise
+                            </h2>
+                            <h3 className="text-5xl md:text-8xl font-heading font-black text-heading mb-10 tracking-tighter leading-[0.9]">
+                                CORE<br />
+                                <span className="text-slate-300">CAPABILITIES.</span>
+                            </h3>
+                            <p className="text-xl md:text-2xl text-slate-500 font-medium tracking-tight leading-relaxed">
+                                We build bespoke measurement solutions that integrate into modern research workflows, ensuring extreme data integrity.
+                            </p>
+                        </div>
+                        <div className="hidden md:block">
+                            <div className="flex gap-2">
+                                {[1, 2, 3].map(i => (
+                                    <div key={i} className="w-12 h-1.5 rounded-full bg-slate-100" />
+                                ))}
+                            </div>
+                        </div>
                     </motion.div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {services.map((service, index) => (
                         <ServiceCard key={index} service={service} index={index} />
                     ))}

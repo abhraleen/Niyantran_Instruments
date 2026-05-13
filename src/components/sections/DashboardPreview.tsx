@@ -39,80 +39,79 @@ export const DashboardPreview = () => {
                 </div>
 
                 <motion.div 
-                    initial={{ opacity: 0, scale: 0.95, y: 100 }}
+                    initial={{ opacity: 0, scale: 0.98, y: 50 }}
                     whileInView={{ opacity: 1, scale: 1, y: 0 }}
                     transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                    className="p-3 glass rounded-[3rem] border border-white/50 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.12)] mask-fade-bottom"
+                    className="p-1 rounded-[4rem] bg-slate-50 border border-slate-100 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.06)]"
                 >
-                    <div className="bg-[#F8FAFC] rounded-[2.5rem] overflow-hidden border border-border/50">
+                    <div className="bg-white rounded-[3.8rem] overflow-hidden border border-slate-50">
                         {/* Header */}
-                        <div className="px-10 py-8 border-b border-border/50 bg-white flex items-center justify-between">
+                        <div className="px-12 py-10 border-b border-slate-50 flex items-center justify-between">
                             <div className="flex items-center gap-6">
-                                <div className="bg-primary p-3 rounded-2xl text-white shadow-lg shadow-blue-500/20">
-                                    <Activity className="h-7 w-7" />
+                                <div className="bg-black p-3.5 rounded-2xl text-white shadow-xl">
+                                    <Activity className="h-6 w-6" />
                                 </div>
                                 <div>
-                                    <h4 className="text-xl font-heading font-black text-heading tracking-tight">NIYANTRAN OS v4.2</h4>
+                                    <h4 className="text-xl font-heading font-black text-black tracking-tight uppercase">NIYANTRAN OS <span className="text-primary italic">v4.2</span></h4>
                                     <div className="flex items-center gap-3 mt-1">
-                                        <Badge variant="outline" className="rounded-full bg-green-50 text-green-700 border-green-200 uppercase text-[10px] font-bold">Systems Optimal</Badge>
-                                        <span className="text-[10px] font-mono text-slate-400">SESSION ID: 0x82A4F2</span>
+                                        <div className="flex h-1.5 w-1.5 bg-green-500 rounded-full animate-pulse" />
+                                        <span className="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-[0.2em]">SYSTEMS OPTIMAL // 0x82A4F2</span>
                                     </div>
                                 </div>
                             </div>
-                            <Button variant="outline" className="rounded-2xl h-12 px-6 border-border hover:bg-slate-50">
-                                Global Dashboard <ArrowUpRight className="ml-2 h-4 w-4" />
+                            <Button className="rounded-2xl h-14 px-8 border-slate-100 hover:bg-slate-50 transition-all duration-500 bg-black text-white font-bold text-xs uppercase tracking-widest">
+                                Global Dashboard <ArrowUpRight className="ml-2 h-5 w-5" />
                             </Button>
                         </div>
 
                         {/* Content */}
-                        <div className="p-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
-                            <div className="lg:col-span-8 space-y-8">
-                                <div className="grid grid-cols-3 gap-6">
+                        <div className="p-12 grid grid-cols-1 lg:grid-cols-12 gap-10">
+                            <div className="lg:col-span-8 space-y-10">
+                                <div className="grid grid-cols-3 gap-8">
                                     {[
                                         { label: "Active Nodes", val: "32", icon: Layers, trend: "+4%" },
                                         { label: "Live Experiments", val: "12", icon: Activity, trend: "Stable" },
                                         { label: "Research Staff", val: "154", icon: Users, trend: "+12%" }
                                     ].map((card, i) => (
-                                        <div key={i} className="p-8 bg-white rounded-[2rem] border border-border/50 shadow-sm transition-transform hover:-translate-y-1">
-                                            <div className="flex justify-between items-center mb-6">
-                                                <card.icon className="h-6 w-6 text-primary" />
-                                                <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2.5 py-1 rounded-full uppercase tracking-wider">{card.trend}</span>
+                                        <div key={i} className="p-10 bg-slate-50 rounded-[2.5rem] border border-slate-100 transition-all duration-700 hover:bg-white hover:shadow-xl hover:-translate-y-2 group">
+                                            <div className="flex justify-between items-center mb-10">
+                                                <card.icon className="h-7 w-7 text-black group-hover:text-primary transition-colors duration-700" />
+                                                <span className="text-[10px] font-bold text-primary tracking-widest">{card.trend}</span>
                                             </div>
-                                            <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{card.label}</div>
-                                            <div className="text-4xl font-heading font-black text-heading tracking-tight">{card.val}</div>
+                                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em] mb-2">{card.label}</div>
+                                            <div className="text-4xl font-heading font-black text-black tracking-tighter">{card.val}</div>
                                         </div>
                                     ))}
                                 </div>
 
-                                <div className="p-10 bg-white rounded-[2.5rem] border border-border/50 shadow-sm h-[320px]">
-                                    <div className="flex items-center justify-between mb-10">
-                                        <h5 className="text-xl font-heading font-black tracking-tight flex items-center gap-3">
-                                            <TrendingUp className="h-5 w-5 text-primary" />
+                                <div className="p-12 bg-white rounded-[3rem] border border-slate-100 shadow-sm h-[340px] group">
+                                    <div className="flex items-center justify-between mb-12">
+                                        <h5 className="text-lg font-heading font-black tracking-tight flex items-center gap-4">
+                                            <div className="h-2 w-2 bg-primary rounded-full" />
                                             Signal Stability Analysis
                                         </h5>
-                                        <div className="flex gap-2">
-                                            <div className="h-3 w-3 bg-primary rounded-full" />
-                                            <div className="h-3 w-3 bg-accent rounded-full" />
-                                            <div className="h-3 w-3 bg-slate-100 rounded-full" />
+                                        <div className="flex gap-1.5">
+                                            {[1, 2, 3].map(i => (
+                                                <div key={i} className="h-1.5 w-1.5 bg-slate-100 rounded-full group-hover:bg-primary transition-colors duration-700" />
+                                            ))}
                                         </div>
                                     </div>
-                                    <div className="h-32 flex items-end gap-3 px-4">
-                                        {[40, 60, 35, 75, 45, 90, 65, 80, 55, 70, 85, 50, 95, 60, 45, 80, 70, 90, 100, 85, 60].map((h, i) => (
-                                            <ChartBar key={i} height={`${h}%`} delay={i * 0.05} />
+                                    <div className="h-32 flex items-end gap-2.5 px-4">
+                                        {[40, 60, 35, 75, 45, 90, 65, 80, 55, 70, 85, 50, 95, 60, 45, 80, 70, 90, 100, 85, 60, 40, 55, 75].map((h, i) => (
+                                            <ChartBar key={i} height={`${h}%`} delay={i * 0.04} />
                                         ))}
                                     </div>
-                                    <div className="mt-8 pt-8 border-t border-slate-50 flex justify-between text-[10px] font-mono text-slate-400 tracking-[0.2em] uppercase">
-                                        <span>MAR 12, 2026</span>
-                                        <span>REAL-TIME TELEMETRY STREAMING</span>
-                                        <span>ISO-CERTIFIED DATA</span>
+                                    <div className="mt-12 pt-8 border-t border-slate-50 flex justify-between text-[10px] font-mono text-slate-400 tracking-[0.4em] uppercase font-bold">
+                                        <span>MAR 2026 // LOGGED</span>
+                                        <span className="text-primary italic opacity-50">TELEMETRY STREAM ACTIVE</span>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="lg:col-span-4 space-y-8">
-                                <div className="p-10 bg-heading rounded-[2.5rem] text-white h-full relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000" />
-                                    <h5 className="text-2xl font-heading font-black mb-10 leading-tight">Instant Decision Support AI</h5>
+                                <div className="p-12 bg-black rounded-[3rem] text-white h-full relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 w-48 h-48 bg-primary/20 rounded-full blur-[80px] group-hover:scale-150 transition-transform duration-1000" />
+                                    <h5 className="text-2xl font-heading font-black mb-10 leading-tight">System Reliability Protocols</h5>
                                     <div className="space-y-6">
                                         {[
                                             "Analyze spectral deviations in Node-04",
@@ -123,16 +122,16 @@ export const DashboardPreview = () => {
                                                 key={i}
                                                 initial={{ x: -20, opacity: 0 }}
                                                 whileInView={{ x: 0, opacity: 1 }}
-                                                transition={{ delay: 0.8 + (i * 0.2) }}
-                                                className="p-5 bg-white/5 border border-white/10 rounded-2xl text-sm font-light tracking-tight hover:bg-white/10 transition-colors cursor-pointer"
+                                                transition={{ delay: 0.8 + (i * 0.15) }}
+                                                className="p-6 bg-white/5 border border-white/5 rounded-2xl text-sm font-medium tracking-tight hover:bg-white/10 transition-all duration-500 cursor-pointer hover:translate-x-2"
                                             >
                                                 {msg}
                                             </motion.div>
                                         ))}
                                     </div>
-                                    <div className="mt-12 pt-8 border-t border-white/10">
-                                        <Button className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-bold transition-all hover:scale-[1.02]">
-                                            Deploy Intelligent Logic
+                                    <div className="mt-16 pt-8 border-t border-white/5">
+                                        <Button className="w-full h-16 rounded-[2rem] bg-primary hover:bg-white hover:text-black text-white font-black transition-all duration-700 uppercase text-xs tracking-[0.2em]">
+                                            View Performance Logs
                                         </Button>
                                     </div>
                                 </div>
