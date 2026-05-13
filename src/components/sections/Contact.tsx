@@ -1,11 +1,10 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Activity, Mail, Phone, MapPin, Send, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Activity, Mail, ArrowRight, CheckCircle2, ExternalLink } from 'lucide-react';
 
 export const Contact = () => {
     const [formData, setFormData] = React.useState({
@@ -14,26 +13,26 @@ export const Contact = () => {
         email: '',
         phone: '',
         service: '',
-        message: ''
+        message: '',
     });
-    
+
     const [isLoading, setIsLoading] = React.useState(false);
     const [isSubmitted, setIsSubmitted] = React.useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        
+
         try {
             const response = await fetch('/api/inquiries', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
             });
-            
+
             if (response.ok) {
-                const subject = `Research Inquiry: ${formData.service} - ${formData.organization}`;
-                const body = `Hello Niyantran Instruments,\n\nInquiry Details:\n- Name: ${formData.name}\n- Org: ${formData.organization}\n- Service: ${formData.service}\n\nMessage:\n${formData.message}`;
+                const subject = `Booking Enquiry: ${formData.service} — ${formData.organization}`;
+                const body = `Dear Niyantran Instruments Team,\n\nI would like to enquire about: ${formData.service}\n\nMy Details:\nName: ${formData.name}\nOrganization: ${formData.organization}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nRequirements:\n${formData.message}\n\nPlease get back to me at your earliest convenience.\n\nRegards,\n${formData.name}`;
                 const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=sb@niyantran.org&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
                 window.open(gmailUrl, '_blank');
 
@@ -50,137 +49,139 @@ export const Contact = () => {
         }
     };
 
+    const inputClass = "rounded-[14px] border border-blue-50 bg-blue-50/30 h-14 px-5 font-medium text-navy placeholder:text-slate-300 focus:bg-white focus:border-primary/30 focus:ring-4 focus:ring-primary/6 transition-all duration-400 text-sm";
+
     return (
-        <section id="contact" className="py-48 bg-white relative overflow-hidden">
-            {/* Ultra-minimalist Background elements */}
-            <div className="absolute top-0 right-0 w-1/2 h-full bg-slate-50/50 -skew-x-12 translate-x-1/2 pointer-events-none" />
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-full bg-gradient-to-b from-slate-200 via-transparent to-transparent opacity-20" />
-            
+        <section id="contact" className="py-40 bg-white relative overflow-hidden">
+            {/* Background */}
+            <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-50/35 to-transparent pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-1/3 h-1/2 bg-gradient-to-tr from-blue-50/20 to-transparent pointer-events-none" />
+
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="flex flex-col lg:flex-row gap-32 items-start">
-                    <motion.div 
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
+                <div className="flex flex-col lg:flex-row gap-20 lg:gap-28 items-start">
+
+                    {/* Left */}
+                    <motion.div
+                        initial={{ opacity: 0, x: -40 }}
+                        whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
                         className="lg:w-1/2"
                     >
-                        <h2 className="text-sm font-mono tracking-[0.4em] text-primary uppercase mb-10 flex items-center gap-4">
-                            <span className="h-px w-12 bg-primary/30" />
+                        <p className="section-label mb-8">
+                            <span className="h-px w-10 bg-primary/30" />
                             Global Outreach
-                        </h2>
-                        <h3 className="text-5xl md:text-8xl font-heading font-black text-heading mb-16 tracking-tighter leading-[0.9]">
+                        </p>
+                        <h3 className="text-5xl md:text-[5.5rem] font-heading font-black text-navy mb-10 tracking-[-0.03em] leading-[0.9]">
                             LET'S<br />
-                            <span className="text-slate-300">CONNECT.</span>
+                            <span className="text-gradient">CONNECT.</span>
                         </h3>
-                        <p className="text-xl md:text-2xl text-slate-500 font-medium tracking-tight leading-relaxed max-w-xl mb-24">
+                        <p className="text-lg text-slate-400 font-medium tracking-tight leading-relaxed max-w-md mb-16">
                             Ready to transform your laboratory with research-grade automation? Our instrumentation specialists are available for deep-tech consultation.
                         </p>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-                            <div className="space-y-4 group cursor-pointer" onClick={() => window.location.href = 'mailto:sb@niyantran.org'}>
-                                <p className="text-[10px] font-mono text-slate-400 uppercase tracking-[0.4em] font-bold">Scientific Hub</p>
-                                <div className="flex items-center gap-3">
-                                    <Mail className="h-6 w-6 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-                                    <p className="text-2xl font-heading font-black text-heading group-hover:text-primary transition-colors">sb@niyantran.org</p>
+                        <div className="space-y-5 mb-16">
+                            <a href="mailto:sb@niyantran.org" className="flex items-center gap-5 group cursor-pointer">
+                                <div className="w-14 h-14 rounded-[16px] bg-gradient-to-br from-primary to-primary-light flex items-center justify-center shadow-[0_6px_20px_rgba(27,78,216,0.25)] group-hover:shadow-[0_10px_30px_rgba(27,78,216,0.40)] group-hover:scale-105 transition-all duration-500 flex-shrink-0">
+                                    <Mail className="h-6 w-6 text-white" strokeWidth={1.75} />
                                 </div>
-                            </div>
-                            <div className="space-y-4 group cursor-pointer" onClick={() => window.location.href = 'https://niyantran.org'}>
-                                <p className="text-[10px] font-mono text-slate-400 uppercase tracking-[0.4em] font-bold">Research Portal</p>
-                                <div className="flex items-center gap-3">
-                                    <ArrowRight className="h-6 w-6 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-                                    <p className="text-2xl font-heading font-black text-heading group-hover:text-primary transition-colors">niyantran.org</p>
+                                <div>
+                                    <div className="text-[10px] text-slate-300 font-mono tracking-[0.35em] uppercase font-bold mb-0.5">Scientific Hub</div>
+                                    <div className="text-xl font-heading font-black text-navy group-hover:text-primary transition-colors duration-300 tracking-tight">sb@niyantran.org</div>
                                 </div>
-                            </div>
+                            </a>
+                            <a href="https://niyantran.org" target="_blank" rel="noopener noreferrer" className="flex items-center gap-5 group cursor-pointer">
+                                <div className="w-14 h-14 rounded-[16px] bg-blue-50 border border-blue-100 flex items-center justify-center group-hover:bg-primary group-hover:border-primary group-hover:shadow-[0_10px_30px_rgba(27,78,216,0.30)] group-hover:scale-105 transition-all duration-500 flex-shrink-0">
+                                    <ExternalLink className="h-6 w-6 text-primary group-hover:text-white transition-colors" strokeWidth={1.75} />
+                                </div>
+                                <div>
+                                    <div className="text-[10px] text-slate-300 font-mono tracking-[0.35em] uppercase font-bold mb-0.5">Research Portal</div>
+                                    <div className="text-xl font-heading font-black text-navy group-hover:text-primary transition-colors duration-300 tracking-tight">niyantran.org</div>
+                                </div>
+                            </a>
                         </div>
 
-                        <div className="mt-32 flex items-center gap-8 p-10 rounded-[3rem] bg-white border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-700">
-                            <div className="h-16 w-16 rounded-2xl bg-primary/5 flex items-center justify-center">
-                                <Activity className="h-8 w-8 text-primary" />
+                        <div className="inline-flex items-center gap-4 px-7 py-5 rounded-[1.5rem] bg-white border border-blue-50 shadow-[0_4px_24px_rgba(27,78,216,0.06)] hover:shadow-[0_12px_40px_rgba(27,78,216,0.09)] transition-shadow duration-500">
+                            <div className="w-12 h-12 rounded-[14px] bg-gradient-to-br from-primary to-primary-light flex items-center justify-center shadow-[0_4px_14px_rgba(27,78,216,0.25)]">
+                                <Activity className="h-6 w-6 text-white" strokeWidth={1.75} />
                             </div>
                             <div>
-                                <h4 className="text-xl font-heading font-black">ISO-9001 Facility</h4>
-                                <p className="text-slate-500 font-medium text-sm tracking-tight">System validation & research calibration laboratory</p>
+                                <div className="text-navy font-heading font-black text-lg tracking-tight">ISO-9001 Facility</div>
+                                <div className="text-slate-400 font-medium text-sm tracking-tight">System validation & research calibration</div>
                             </div>
                         </div>
                     </motion.div>
 
-                    <motion.div 
-                        initial={{ opacity: 0, y: 100 }}
+                    {/* Right — form */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 60 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                         className="lg:w-1/2 w-full"
                     >
-                        <div className="p-16 rounded-[4rem] bg-white border border-slate-100 shadow-[0_60px_120px_-30px_rgba(0,0,0,0.06)] relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/[0.02] rounded-full blur-[100px] pointer-events-none group-hover:scale-150 transition-transform duration-[3s]" />
-                            
-                            <form onSubmit={handleSubmit} className="space-y-12 relative z-10">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                                    <div className="space-y-3">
+                        <div className="p-10 md:p-14 rounded-[3rem] bg-white border border-blue-50 shadow-[0_24px_80px_rgba(27,78,216,0.07),0_4px_16px_rgba(0,0,0,0.03)] relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-60 h-60 bg-primary/[0.03] rounded-full blur-[100px] pointer-events-none group-hover:scale-150 transition-transform duration-[3s]" />
+                            <div className="absolute -top-1 inset-x-0 h-1 bg-gradient-to-r from-primary via-primary-light to-accent" />
+
+                            <form onSubmit={handleSubmit} className="space-y-7 relative z-10">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div className="space-y-2">
                                         <label className="text-[10px] font-black font-mono text-slate-400 uppercase tracking-[0.3em]">Full Name</label>
-                                        <Input 
-                                            required 
-                                            value={formData.name}
-                                            onChange={e => setFormData({...formData, name: e.target.value})}
-                                            className="rounded-2xl border-slate-100 bg-slate-50/30 h-16 px-8 font-bold text-lg focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all duration-500" 
-                                            placeholder="DR. ALICE CHEN"
-                                        />
+                                        <Input required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className={inputClass} placeholder="Dr. Alice Chen" />
                                     </div>
-                                    <div className="space-y-3">
+                                    <div className="space-y-2">
                                         <label className="text-[10px] font-black font-mono text-slate-400 uppercase tracking-[0.3em]">Organization</label>
-                                        <Input 
-                                            required 
-                                            value={formData.organization}
-                                            onChange={e => setFormData({...formData, organization: e.target.value})}
-                                            className="rounded-2xl border-slate-100 bg-slate-50/30 h-16 px-8 font-bold text-lg focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all duration-500" 
-                                            placeholder="MIT / BELL LABS"
-                                        />
+                                        <Input required value={formData.organization} onChange={e => setFormData({ ...formData, organization: e.target.value })} className={inputClass} placeholder="MIT / Bell Labs" />
                                     </div>
                                 </div>
-
-                                <div className="space-y-3">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black font-mono text-slate-400 uppercase tracking-[0.3em]">Email Address</label>
+                                        <Input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className={inputClass} placeholder="researcher@lab.org" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black font-mono text-slate-400 uppercase tracking-[0.3em]">Phone</label>
+                                        <Input type="tel" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} className={inputClass} placeholder="+91 98765 00000" />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
                                     <label className="text-[10px] font-black font-mono text-slate-400 uppercase tracking-[0.3em]">Research Category</label>
-                                    <Select required onValueChange={(val: string) => setFormData({...formData, service: val})}>
-                                        <SelectTrigger className="rounded-2xl border-slate-100 bg-slate-50/30 h-16 px-8 font-bold text-lg focus:bg-white transition-all duration-500">
-                                            <SelectValue placeholder="SELECT INSTRUMENTATION" />
+                                    <Select required onValueChange={(val: string) => setFormData({ ...formData, service: val })}>
+                                        <SelectTrigger className={`${inputClass} w-full`}>
+                                            <SelectValue placeholder="Select instrumentation" />
                                         </SelectTrigger>
-                                        <SelectContent className="rounded-3xl border-slate-100 shadow-3xl p-4">
-                                            {["I–V Measurement Systems", "Quantum Efficiency Measurement", "Evaporation Process Control", "Software Consultancy"].map(cat => (
-                                                <SelectItem key={cat} value={cat} className="rounded-xl py-4 px-6 font-bold text-base tracking-tight hover:bg-primary/5 transition-colors">{cat}</SelectItem>
+                                        <SelectContent className="rounded-[1.5rem] border-blue-50 shadow-[0_20px_60px_rgba(27,78,216,0.12)] p-3">
+                                            {['I–V Measurement Systems', 'Quantum Efficiency Measurement', 'Evaporation Process Control', 'Software Consultancy'].map(cat => (
+                                                <SelectItem key={cat} value={cat} className="rounded-xl py-3 px-4 font-medium text-sm hover:bg-blue-50 transition-colors cursor-pointer">{cat}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
                                 </div>
-
-                                <div className="space-y-3">
+                                <div className="space-y-2">
                                     <label className="text-[10px] font-black font-mono text-slate-400 uppercase tracking-[0.3em]">Scientific Objectives</label>
-                                    <Textarea 
-                                        required 
-                                        value={formData.message}
-                                        onChange={e => setFormData({...formData, message: e.target.value})}
-                                        className="rounded-[2.5rem] border-slate-100 bg-slate-50/30 min-h-[220px] p-10 font-medium text-lg tracking-tight leading-relaxed focus:bg-white transition-all duration-500" 
-                                        placeholder="Describe your experimental objectives..."
-                                    />
+                                    <Textarea required value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} className="rounded-[1.5rem] border border-blue-50 bg-blue-50/30 min-h-[160px] p-5 font-medium text-navy placeholder:text-slate-300 focus:bg-white focus:border-primary/30 focus:ring-4 focus:ring-primary/6 transition-all duration-400 text-sm leading-relaxed" placeholder="Describe your experimental objectives and requirements..." />
                                 </div>
-
-                                <Button 
-                                    disabled={isLoading || isSubmitted}
-                                    className="w-full h-24 rounded-[2.5rem] bg-heading hover:bg-black text-white text-xl font-black shadow-2xl transition-all hover:-translate-y-2 active:scale-95 duration-500 group/btn"
-                                >
-                                    {isLoading ? (
-                                        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1 }}>
-                                            <Activity className="h-8 w-8" />
-                                        </motion.div>
-                                    ) : isSubmitted ? (
-                                        <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-4">
-                                            DATA RECEIVED <CheckCircle2 className="h-8 w-8 text-green-400" />
-                                        </motion.span>
-                                    ) : (
-                                        <span className="flex items-center gap-4">
-                                            INITIATE CONSULTATION <ArrowRight className="h-8 w-8 transition-transform group-hover/btn:translate-x-4" />
-                                        </span>
-                                    )}
+                                <Button disabled={isLoading || isSubmitted} className="w-full h-16 rounded-[1.5rem] bg-navy hover:bg-primary text-white text-sm font-bold tracking-[0.15em] uppercase shadow-[0_8px_30px_rgba(4,14,33,0.25)] hover:shadow-[0_14px_44px_rgba(27,78,216,0.40)] transition-all duration-500 hover:-translate-y-0.5 active:scale-[0.98] group/btn">
+                                    <AnimatePresence mode="wait">
+                                        {isLoading ? (
+                                            <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-3">
+                                                <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}>
+                                                    <Activity className="h-5 w-5" />
+                                                </motion.div>
+                                                Sending...
+                                            </motion.div>
+                                        ) : isSubmitted ? (
+                                            <motion.span key="done" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-3">
+                                                Inquiry Received <CheckCircle2 className="h-5 w-5 text-emerald-300" />
+                                            </motion.span>
+                                        ) : (
+                                            <span key="default" className="flex items-center gap-3">
+                                                Initiate Consultation
+                                                <ArrowRight className="h-5 w-5 transition-transform group-hover/btn:translate-x-1.5" />
+                                            </span>
+                                        )}
+                                    </AnimatePresence>
                                 </Button>
                             </form>
                         </div>

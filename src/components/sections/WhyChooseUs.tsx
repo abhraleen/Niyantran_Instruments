@@ -1,12 +1,36 @@
-import React, { useRef } from 'react';
+﻿import React, { useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { ShieldCheck, Cpu, FlaskConical, Gauge, Settings, Zap, Activity } from 'lucide-react';
+import { ShieldCheck, Cpu, FlaskConical, Gauge, Activity, CheckCircle2 } from 'lucide-react';
 
 const features = [
-    { title: "Precision Engineering", icon: ShieldCheck, desc: "Sub-nanometer accuracy in every instrumentation build." },
-    { title: "Research Expertise", icon: FlaskConical, desc: "Led by industry veterans with 15+ years of lab experience." },
-    { title: "Automation Systems", icon: Cpu, desc: "End-to-end semiconductor characterization pipelines." },
-    { title: "Reliable Measurement", icon: Gauge, desc: "ISO-certified calibration ensures scientific validity." }
+    {
+        title: 'Precision Engineering',
+        icon: ShieldCheck,
+        desc: 'Sub-nanometer accuracy in every instrumentation build with rigorous QA processes.',
+    },
+    {
+        title: 'Research Expertise',
+        icon: FlaskConical,
+        desc: 'Led by industry veterans with 15+ years of hands-on laboratory experience.',
+    },
+    {
+        title: 'Automation Systems',
+        icon: Cpu,
+        desc: 'End-to-end semiconductor characterization pipelines built for real workflows.',
+    },
+    {
+        title: 'Reliable Measurement',
+        icon: Gauge,
+        desc: 'ISO-certified calibration ensures scientific validity across every data point.',
+    },
+];
+
+const differentiators = [
+    'Custom-built measurement architectures for your exact experimental conditions',
+    'Seamless integration with existing laboratory infrastructure',
+    'Continuous firmware and software support post-deployment',
+    'Expert on-site calibration and training programs',
+    'Research publications backed by our instrumentation',
 ];
 
 export const WhyChooseUs = () => {
@@ -14,67 +38,61 @@ export const WhyChooseUs = () => {
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
 
-    const springConfig = { damping: 25, stiffness: 150 };
-    const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [10, -10]), springConfig);
-    const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-10, 10]), springConfig);
+    const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [8, -8]), { damping: 25, stiffness: 120 });
+    const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-8, 8]), { damping: 25, stiffness: 120 });
 
     const handleMouseMove = (e: React.MouseEvent) => {
         if (!containerRef.current) return;
         const rect = containerRef.current.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
-        mouseX.set(x);
-        mouseY.set(y);
-    };
-
-    const handleMouseLeave = () => {
-        mouseX.set(0);
-        mouseY.set(0);
+        mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
+        mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
     };
 
     return (
-        <section className="py-48 bg-white relative overflow-hidden">
-            {/* Background Decor */}
-            <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-50/50 -skew-x-12 translate-x-1/2" />
-            
+        <section className="py-40 bg-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-50/40 to-transparent pointer-events-none" />
+
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col lg:flex-row items-center gap-24">
-                    <div className="flex-1 space-y-16">
+                <div className="flex flex-col lg:flex-row items-center gap-20 lg:gap-28">
+
+                    {/* Left â€” text content */}
+                    <div className="flex-1 space-y-14">
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                         >
-                            <h2 className="text-sm font-mono tracking-[0.4em] text-primary uppercase mb-10 flex items-center gap-4">
-                                <span className="h-px w-12 bg-primary/30" />
+                            <p className="section-label mb-8">
+                                <span className="h-px w-10 bg-primary/30" />
                                 Why Niyantran
-                            </h2>
-                            <h3 className="text-5xl md:text-[5.5rem] font-heading font-black text-heading mb-10 tracking-tighter leading-[0.9]">
+                            </p>
+                            <h3 className="text-5xl md:text-[5.5rem] font-heading font-black text-navy mb-8 tracking-[-0.03em] leading-[0.9]">
                                 MEASURING<br />
-                                <span className="text-slate-300 tracking-tight">LIMITLESS.</span>
+                                <span className="text-navy/15 font-light tracking-tight">LIMITLESS.</span>
                             </h3>
-                            <p className="text-xl md:text-2xl text-slate-500 font-medium tracking-tight leading-relaxed max-w-xl">
+                            <p className="text-lg text-slate-400 font-medium tracking-tight leading-relaxed max-w-lg">
                                 We bridge the gap between complex physical phenomena and absolute data reliability through custom-built architectures.
                             </p>
                         </motion.div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        {/* Feature grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {features.map((feature, index) => (
-                                <motion.div 
-                                    key={index} 
+                                <motion.div
+                                    key={index}
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
-                                    whileHover={{ y: -5 }}
+                                    whileHover={{ y: -4 }}
                                     viewport={{ once: true }}
-                                    transition={{ delay: index * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                                    className="p-8 rounded-[2rem] border border-slate-100 bg-white shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 group cursor-default"
+                                    transition={{ delay: index * 0.1, duration: 0.8 }}
+                                    className="p-7 rounded-[1.5rem] border border-blue-50 bg-white hover:border-primary/18 hover:shadow-[0_16px_40px_rgba(27,78,216,0.07)] transition-all duration-500 group cursor-default"
                                 >
-                                    <div className="bg-slate-50 p-4 rounded-2xl w-fit mb-6 group-hover:bg-primary group-hover:text-white transition-all duration-500">
-                                        <feature.icon className="h-6 w-6" />
+                                    <div className="w-11 h-11 bg-gradient-to-br from-primary to-primary-light rounded-[12px] flex items-center justify-center mb-5 shadow-[0_4px_14px_rgba(27,78,216,0.25)] group-hover:shadow-[0_8px_24px_rgba(27,78,216,0.35)] group-hover:scale-105 transition-all duration-500">
+                                        <feature.icon className="h-5 w-5 text-white" strokeWidth={2} />
                                     </div>
-                                    <h4 className="text-xl font-heading font-bold mb-3 tracking-tight group-hover:text-primary transition-colors">{feature.title}</h4>
-                                    <p className="text-slate-500 font-medium leading-relaxed tracking-tight text-sm">
+                                    <h4 className="text-lg font-heading font-bold mb-2 tracking-tight text-navy group-hover:text-primary transition-colors duration-400">{feature.title}</h4>
+                                    <p className="text-slate-400 font-medium leading-relaxed text-sm tracking-tight">
                                         {feature.desc}
                                     </p>
                                 </motion.div>
@@ -82,80 +100,71 @@ export const WhyChooseUs = () => {
                         </div>
                     </div>
 
-                    <motion.div 
+                    {/* Right â€” 3D card */}
+                    <motion.div
                         ref={containerRef}
                         onMouseMove={handleMouseMove}
-                        onMouseLeave={handleMouseLeave}
-                        initial={{ opacity: 0, scale: 0.8 }}
+                        onMouseLeave={() => { mouseX.set(0); mouseY.set(0); }}
+                        initial={{ opacity: 0, scale: 0.85 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                        style={{ rotateX: rotateX, rotateY: rotateY, perspective: 1500 }}
-                        className="flex-1 relative"
+                        transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+                        style={{ rotateX, rotateY, perspective: 1200 }}
+                        className="flex-1 max-w-lg w-full"
                     >
-                        <div className="aspect-square rounded-[4rem] overflow-hidden bg-white border border-slate-100 relative group shadow-[0_50px_100px_-20px_rgba(0,0,0,0.05)]">
-                             {/* Scientific Graphic Mockup */}
-                             <div className="absolute inset-0 flex items-center justify-center p-16">
-                                <motion.div 
-                                    animate={{ rotate: 360 }}
-                                    transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-                                    style={{ 
-                                        x: useTransform(mouseX, [-0.5, 0.5], [30, -30]),
-                                        y: useTransform(mouseY, [-0.5, 0.5], [30, -30])
-                                    }}
-                                    className="w-full h-full border-2 border-dashed border-slate-200 rounded-full relative"
-                                >
-                                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-white p-5 rounded-2xl shadow-xl border border-slate-100 group-hover:scale-110 transition-transform duration-700">
-                                        <Cpu className="h-10 w-10 text-primary" />
-                                    </div>
-                                    <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white p-5 rounded-2xl shadow-xl border border-slate-100 group-hover:scale-110 transition-transform duration-700">
-                                        <Gauge className="h-10 w-10 text-accent" />
-                                    </div>
-                                </motion.div>
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <motion.div 
-                                        style={{ 
-                                            x: useTransform(mouseX, [-0.5, 0.5], [-20, 20]),
-                                            y: useTransform(mouseY, [-0.5, 0.5], [-20, 20])
-                                        }}
-                                        className="w-3/4 h-3/4 bg-gradient-to-br from-primary/[0.03] to-accent/[0.03] rounded-full blur-[80px]" 
-                                    />
-                                    <motion.div 
-                                        animate={{ 
-                                            scale: [1, 1.05, 1],
-                                            rotate: [0, 2, 0]
-                                        }}
-                                        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                                        style={{ 
-                                            x: useTransform(mouseX, [-0.5, 0.5], [40, -40]),
-                                            y: useTransform(mouseY, [-0.5, 0.5], [40, -40])
-                                        }}
-                                        className="relative group/core"
-                                    >
-                                        <div className="absolute inset-x-[-60px] inset-y-[-60px] bg-primary/20 rounded-full blur-3xl opacity-0 group-hover/core:opacity-50 transition-opacity duration-1000" />
-                                        <div className="bg-white p-16 rounded-[3rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] relative border border-slate-100">
-                                             <Activity className="h-24 w-24 text-primary" />
-                                        </div>
-                                    </motion.div>
-                                </div>
-                             </div>
-                        </div>
+                        {/* Navy premium card */}
+                        <div className="bg-navy rounded-[3rem] overflow-hidden border border-white/[0.07] shadow-[0_40px_100px_rgba(4,14,33,0.35),0_8px_32px_rgba(4,14,33,0.15)] relative group">
+                            {/* Top accent line */}
+                            <div className="h-1 w-full bg-gradient-to-r from-primary via-primary-light to-accent" />
 
-                        {/* Floating Micro-Decors */}
-                        <motion.div 
-                            style={{ 
-                                x: useTransform(mouseX, [-0.5, 0.5], [60, -60]),
-                                y: useTransform(mouseY, [-0.5, 0.5], [60, -60])
-                            }}
-                            className="absolute -top-16 -right-16 w-64 h-64 bg-primary/[0.02] rounded-full blur-[100px]" 
-                        />
-                        <motion.div 
-                            style={{ 
-                                x: useTransform(mouseX, [-0.5, 0.5], [-80, 80]),
-                                y: useTransform(mouseY, [-0.5, 0.5], [-80, 80])
-                            }}
-                            className="absolute -bottom-16 -left-16 w-80 h-80 bg-accent/[0.02] rounded-full blur-[120px]" 
-                        />
+                            {/* Inner glow */}
+                            <div className="absolute top-0 right-0 w-80 h-80 bg-primary/12 rounded-full blur-[100px] pointer-events-none" />
+                            <div className="absolute bottom-0 left-0 w-60 h-60 bg-accent/8 rounded-full blur-[80px] pointer-events-none" />
+
+                            <div className="p-10 relative z-10">
+                                {/* Header */}
+                                <div className="flex items-center gap-4 mb-10">
+                                    <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-light rounded-[14px] flex items-center justify-center shadow-[0_6px_20px_rgba(27,78,216,0.5)]">
+                                        <Activity className="h-6 w-6 text-white" strokeWidth={1.75} />
+                                    </div>
+                                    <div>
+                                        <div className="text-white font-heading font-black text-lg tracking-tight">Research Grade</div>
+                                        <div className="text-white/35 text-[10px] font-mono tracking-[0.25em] uppercase">Quality Assurance</div>
+                                    </div>
+                                </div>
+
+                                {/* Differentiator list */}
+                                <ul className="space-y-4 mb-10">
+                                    {differentiators.map((item, i) => (
+                                        <motion.li
+                                            key={i}
+                                            initial={{ opacity: 0, x: -16 }}
+                                            whileInView={{ opacity: 1, x: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ delay: 0.6 + i * 0.1, duration: 0.7 }}
+                                            className="flex items-start gap-3.5 group/item"
+                                        >
+                                            <CheckCircle2 className="h-4 w-4 text-primary-light mt-0.5 flex-shrink-0 opacity-80 group-hover/item:opacity-100 transition-opacity" />
+                                            <span className="text-white/50 text-sm font-medium leading-relaxed tracking-tight group-hover/item:text-white/80 transition-colors duration-300">
+                                                {item}
+                                            </span>
+                                        </motion.li>
+                                    ))}
+                                </ul>
+
+                                {/* Bottom stat */}
+                                <div className="pt-8 border-t border-white/[0.06]">
+                                    <div className="flex items-baseline gap-3">
+                                        <span className="text-5xl font-heading font-black text-gradient tracking-tight leading-none">99.98%</span>
+                                        <div>
+                                            <div className="text-white/60 text-sm font-bold leading-tight">Measurement</div>
+                                            <div className="text-white/60 text-sm font-bold">Accuracy</div>
+                                        </div>
+                                    </div>
+                                    <div className="mt-3 text-[10px] text-white/20 font-mono tracking-[0.3em] uppercase font-bold">ISO-9001 Research Certified</div>
+                                </div>
+                            </div>
+                        </div>
                     </motion.div>
                 </div>
             </div>

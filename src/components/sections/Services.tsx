@@ -1,48 +1,45 @@
-import React, { useRef, useState } from 'react';
+﻿import React, { useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Activity, Beaker, Layers, Code, ArrowRight } from 'lucide-react';
 
 const services = [
     {
-        title: "I–V Measurement Systems",
-        description: "Precision current–voltage characterization solutions for semiconductor devices, solar cells, and electronic materials research.",
+        title: 'Iâ€“V Measurement Systems',
+        description: 'Precision currentâ€“voltage characterization solutions for semiconductor devices, solar cells, and electronic materials research.',
         icon: Activity,
-        color: "blue",
+        accent: 'from-primary to-primary-light',
+        bg: 'from-blue-50 to-white',
     },
     {
-        title: "Quantum Efficiency",
-        description: "Advanced EQE/IQE measurement systems designed for accurate photovoltaic characterization and performance analysis.",
+        title: 'Quantum Efficiency',
+        description: 'Advanced EQE/IQE measurement systems designed for accurate photovoltaic characterization and performance analysis.',
         icon: Beaker,
-        color: "cyan",
+        accent: 'from-accent to-primary-light',
+        bg: 'from-cyan-50/60 to-white',
     },
     {
-        title: "Evaporation Control",
-        description: "Automation and monitoring solutions for thin-film deposition and evaporation systems, enabling improved process stability.",
+        title: 'Evaporation Control',
+        description: 'Automation and monitoring solutions for thin-film deposition and evaporation systems, enabling improved process stability.',
         icon: Layers,
-        color: "blue",
+        accent: 'from-primary to-accent',
+        bg: 'from-blue-50 to-white',
     },
     {
-        title: "Scientific Software Consultancy",
-        description: "Custom software development, instrument interfacing, automation, data acquisition, and analysis solutions.",
+        title: 'Scientific Software',
+        description: 'Custom software development, instrument interfacing, automation, data acquisition, and analysis solutions for modern labs.',
         icon: Code,
-        color: "cyan",
-    }
+        accent: 'from-primary-light to-primary',
+        bg: 'from-indigo-50/50 to-white',
+    },
 ];
 
-const ServiceCard = ({ service, index }: { service: typeof services[0], index: number }) => {
+const ServiceCard = ({ service, index }: { service: typeof services[0]; index: number }) => {
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
-    const spotlightX = useSpring(mouseX, { damping: 20, stiffness: 150 });
-    const spotlightY = useSpring(mouseY, { damping: 20, stiffness: 150 });
-    const [isHovered, setIsHovered] = useState(false);
-
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        const { left, top } = e.currentTarget.getBoundingClientRect();
-        mouseX.set(e.clientX - left);
-        mouseY.set(e.clientY - top);
-    };
+    const spotX = useSpring(mouseX, { damping: 25, stiffness: 150 });
+    const spotY = useSpring(mouseY, { damping: 25, stiffness: 150 });
+    const [hovered, setHovered] = useState(false);
 
     return (
         <motion.div
@@ -50,84 +47,94 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.1, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            onMouseMove={handleMouseMove}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseMove={(e) => {
+                const { left, top } = e.currentTarget.getBoundingClientRect();
+                mouseX.set(e.clientX - left);
+                mouseY.set(e.clientY - top);
+            }}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            className="group relative"
         >
-            <Card className="h-full bg-white transition-all duration-700 border-slate-100 group overflow-hidden rounded-[2.5rem] p-4 relative shadow-sm hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] hover:border-primary/20">
-                {/* Interactive Spotlight */}
-                <motion.div 
-                    className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2.5rem]"
-                    style={{
-                        background: useSpring(
-                            `radial-gradient(400px circle at ${spotlightX.get()}px ${spotlightY.get()}px, rgba(37, 99, 235, 0.04), transparent 80%)`,
-                            { damping: 40, stiffness: 150 }
-                        )
-                    }}
-                />
-                
-                <CardHeader className="p-10 relative z-10">
-                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-10 transition-all duration-700 group-hover:scale-110 group-hover:bg-primary group-hover:text-white ${
-                        service.color === 'blue' ? 'bg-primary/5 text-primary' : 'bg-slate-50 text-slate-400'
-                    }`}>
-                        <service.icon className="h-8 w-8" />
+            <div className="h-full bg-white rounded-[2.5rem] border border-blue-50 overflow-hidden transition-all duration-700 hover:border-primary/20 hover:shadow-[0_24px_60px_rgba(27,78,216,0.09)] hover:-translate-y-2 relative">
+                {/* Spotlight */}
+                {hovered && (
+                    <motion.div
+                        className="pointer-events-none absolute inset-0 rounded-[2.5rem] opacity-100"
+                        style={{
+                            background: `radial-gradient(400px circle at ${spotX.get()}px ${spotY.get()}px, rgba(27,78,216,0.05), transparent 70%)`,
+                        }}
+                    />
+                )}
+
+                {/* Top gradient bar */}
+                <div className={`h-1 w-full bg-gradient-to-r ${service.accent}`} />
+
+                <div className="p-10">
+                    {/* Icon */}
+                    <div className={`w-14 h-14 rounded-[16px] bg-gradient-to-br ${service.accent} flex items-center justify-center mb-8 shadow-[0_6px_20px_rgba(27,78,216,0.22)] group-hover:scale-110 group-hover:shadow-[0_10px_30px_rgba(27,78,216,0.30)] transition-all duration-600`}>
+                        <service.icon className="h-7 w-7 text-white" strokeWidth={1.75} />
                     </div>
-                    <CardTitle className="text-3xl font-heading font-black mb-6 transition-colors tracking-tight leading-tight">{service.title}</CardTitle>
-                    <CardDescription className="text-lg text-slate-500 leading-relaxed font-medium tracking-tight">
+
+                    <h3 className="text-2xl font-heading font-black text-navy mb-4 leading-tight tracking-tight group-hover:text-primary transition-colors duration-400">
+                        {service.title}
+                    </h3>
+                    <p className="text-slate-400 leading-relaxed font-medium text-sm tracking-tight mb-8">
                         {service.description}
-                    </CardDescription>
-                </CardHeader>
-                <CardFooter className="px-10 pb-10 pt-0 relative z-10">
-                    <Button variant="ghost" className="p-0 text-primary text-base font-black group/btn items-center hover:bg-transparent tracking-tight">
-                        View Technical Specs <ArrowRight className="ml-3 h-5 w-5 transition-transform group-hover/btn:translate-x-2" />
+                    </p>
+
+                    <Button variant="ghost" className="p-0 text-primary text-sm font-black group/btn items-center hover:bg-transparent tracking-tight">
+                        View Technical Specs
+                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-2" />
                     </Button>
-                </CardFooter>
-            </Card>
+                </div>
+            </div>
         </motion.div>
     );
 };
 
 export const Services = () => {
     return (
-        <section id="services" className="py-48 bg-white relative overflow-hidden">
-            {/* Minimalist Grid and Accent */}
-            <div className="absolute inset-0 scientific-grid opacity-30" />
-            <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary/[0.03] rounded-full blur-[120px]" />
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
-            
+        <section id="services" className="py-40 bg-surface relative overflow-hidden">
+            {/* Background */}
+            <div className="absolute inset-0 scientific-grid opacity-40 pointer-events-none" />
+            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-100 to-transparent" />
+            <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-100 to-transparent" />
+
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="mb-32">
+                {/* Header */}
+                <div className="mb-24">
                     <motion.div
-                        initial={{ opacity: 0, x: -50 }}
+                        initial={{ opacity: 0, x: -40 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                        className="flex flex-col md:flex-row md:items-end justify-between gap-12"
+                        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+                        className="flex flex-col md:flex-row md:items-end justify-between gap-10"
                     >
-                        <div className="max-w-3xl">
-                            <h2 className="text-sm font-mono tracking-[0.4em] text-primary uppercase mb-10 flex items-center gap-4">
-                                <span className="h-px w-12 bg-primary/30" />
+                        <div className="max-w-2xl">
+                            <p className="section-label mb-8">
+                                <span className="h-px w-10 bg-primary/30" />
                                 Specialist Expertise
-                            </h2>
-                            <h3 className="text-5xl md:text-8xl font-heading font-black text-heading mb-10 tracking-tighter leading-[0.9]">
+                            </p>
+                            <h2 className="text-5xl md:text-7xl font-heading font-black text-navy mb-8 tracking-[-0.03em] leading-[0.9]">
                                 CORE<br />
-                                <span className="text-slate-300">CAPABILITIES.</span>
-                            </h3>
-                            <p className="text-xl md:text-2xl text-slate-500 font-medium tracking-tight leading-relaxed">
-                                We build bespoke measurement solutions that integrate into modern research workflows, ensuring extreme data integrity.
+                                <span className="text-navy/20 font-light tracking-tight">CAPABILITIES.</span>
+                            </h2>
+                            <p className="text-lg text-slate-400 font-medium tracking-tight leading-relaxed">
+                                Bespoke measurement solutions that integrate into modern research workflows, ensuring extreme data integrity.
                             </p>
                         </div>
-                        <div className="hidden md:block">
-                            <div className="flex gap-2">
-                                {[1, 2, 3].map(i => (
-                                    <div key={i} className="w-12 h-1.5 rounded-full bg-slate-100" />
-                                ))}
-                            </div>
+
+                        <div className="hidden md:flex items-center gap-3">
+                            {[1, 2, 3, 4].map(i => (
+                                <div key={i} className={`rounded-full bg-primary/20 transition-all ${i === 1 ? 'w-8 h-2' : 'w-2 h-2'}`} />
+                            ))}
                         </div>
                     </motion.div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                {/* Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {services.map((service, index) => (
                         <ServiceCard key={index} service={service} index={index} />
                     ))}
