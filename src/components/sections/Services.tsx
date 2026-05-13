@@ -5,29 +5,29 @@ import { Activity, Beaker, Layers, Code, ArrowRight } from 'lucide-react';
 
 const services = [
     {
-        title: 'Iâ€“V Measurement Systems',
-        description: 'Precision currentâ€“voltage characterization solutions for semiconductor devices, solar cells, and electronic materials research.',
+        title: 'I–V Measurement Systems',
+        description: 'Precision current–voltage characterization solutions for semiconductor devices, solar cells, and electronic materials research.',
         icon: Activity,
         accent: 'from-primary to-primary-light',
         bg: 'from-blue-50 to-white',
     },
     {
-        title: 'Quantum Efficiency',
+        title: 'Quantum Efficiency Measurement for Solar Cells',
         description: 'Advanced EQE/IQE measurement systems designed for accurate photovoltaic characterization and performance analysis.',
         icon: Beaker,
         accent: 'from-accent to-primary-light',
         bg: 'from-cyan-50/60 to-white',
     },
     {
-        title: 'Evaporation Control',
-        description: 'Automation and monitoring solutions for thin-film deposition and evaporation systems, enabling improved process stability.',
+        title: 'Evaporation Process Control',
+        description: 'Automation and monitoring solutions for thin-film deposition and evaporation systems, enabling improved process stability and repeatability.',
         icon: Layers,
         accent: 'from-primary to-accent',
         bg: 'from-blue-50 to-white',
     },
     {
-        title: 'Scientific Software',
-        description: 'Custom software development, instrument interfacing, automation, data acquisition, and analysis solutions for modern labs.',
+        title: 'Scientific Software Consultancy',
+        description: 'Custom software development, instrument interfacing, automation, data acquisition, and analysis solutions for research and industrial applications.',
         icon: Code,
         accent: 'from-primary-light to-primary',
         bg: 'from-indigo-50/50 to-white',

@@ -56,15 +56,19 @@ export const About = () => {
 
                         <div className="space-y-7 text-lg text-slate-500 leading-relaxed font-light tracking-tight">
                             <p>
-                                At Niyantran Instruments, we are building scientific instruments by researchers, for researchers. Our team brings together more than 15 years of hands-on research experience, primarily in semiconductor science and advanced experimental techniques.
+                                At Niyantran Instruments, we are building scientific instruments by researchers, for researchers. Our team brings together more than 15 years of hands-on research experience, primarily in the field of semiconductor science and advanced experimental techniques.
                             </p>
                             <p>
-                                We understand the practical challenges faced in research laboratories because we have worked extensively with sophisticated measurement systems, device characterization, automation, and data acquisition ourselves.
+                                We understand the practical challenges faced in research laboratories because we have worked extensively with sophisticated measurement systems, device characterization, automation, and data acquisition ourselves. This deep research background allows us to design solutions that are reliable, precise, and tailored to real scientific needs.
+                            </p>
+                            <p>
+                                Our mission is to develop advanced measurement systems and intelligent process automation tools that enhance experimental efficiency, accuracy, and usability. By combining strong scientific expertise with modern software and instrumentation engineering, we aim to bridge the gap between cutting-edge research requirements and accessible, high-quality instrumentation.
                             </p>
                             <p className="text-navy font-medium">
-                                Our mission is to develop advanced measurement systems and intelligent process automation tools that enhance experimental efficiency, accuracy, and usability â€” bridging the gap between cutting-edge research requirements and accessible, high-quality instrumentation.
+                                At Niyantran Instruments, innovation is driven not only by technology, but by genuine research experience and a commitment to supporting the scientific community.
                             </p>
                         </div>
+
 
                         {/* Stats row */}
                         <div className="flex flex-wrap gap-12 mt-16 pt-12 border-t border-blue-50">

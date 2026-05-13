@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Activity, Mail, ArrowRight, CheckCircle2, ExternalLink } from 'lucide-react';
+import { Activity, Mail, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export const Contact = () => {
     const [formData, setFormData] = React.useState({
@@ -88,15 +88,6 @@ export const Contact = () => {
                                 <div>
                                     <div className="text-[10px] text-slate-300 font-mono tracking-[0.35em] uppercase font-bold mb-0.5">Scientific Hub</div>
                                     <div className="text-xl font-heading font-black text-navy group-hover:text-primary transition-colors duration-300 tracking-tight">sb@niyantran.org</div>
-                                </div>
-                            </a>
-                            <a href="https://niyantran.org" target="_blank" rel="noopener noreferrer" className="flex items-center gap-5 group cursor-pointer">
-                                <div className="w-14 h-14 rounded-[16px] bg-blue-50 border border-blue-100 flex items-center justify-center group-hover:bg-primary group-hover:border-primary group-hover:shadow-[0_10px_30px_rgba(27,78,216,0.30)] group-hover:scale-105 transition-all duration-500 flex-shrink-0">
-                                    <ExternalLink className="h-6 w-6 text-primary group-hover:text-white transition-colors" strokeWidth={1.75} />
-                                </div>
-                                <div>
-                                    <div className="text-[10px] text-slate-300 font-mono tracking-[0.35em] uppercase font-bold mb-0.5">Research Portal</div>
-                                    <div className="text-xl font-heading font-black text-navy group-hover:text-primary transition-colors duration-300 tracking-tight">niyantran.org</div>
                                 </div>
                             </a>
                         </div>
