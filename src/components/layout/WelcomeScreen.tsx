@@ -1,8 +1,12 @@
 ﻿import React from 'react';
 import { motion } from 'framer-motion';
-import logoSrc from '@/assets/logo.png';
 
 export const WelcomeScreen = ({ onComplete }: { onComplete: () => void }) => {
+    React.useEffect(() => {
+        const t = setTimeout(onComplete, 4200);
+        return () => clearTimeout(t);
+    }, [onComplete]);
+
     return (
         <motion.div
             initial={{ opacity: 1 }}
@@ -50,7 +54,7 @@ export const WelcomeScreen = ({ onComplete }: { onComplete: () => void }) => {
                     className="absolute inset-[-30px] rounded-[3rem] bg-primary/15 blur-3xl"
                 />
                 <div className="relative z-10 w-[88px] h-[88px] rounded-[1.75rem] overflow-hidden shadow-[0_24px_80px_rgba(27,78,216,0.55)]">
-                    <img src={logoSrc} alt="Niyantran" className="w-full h-full object-cover" />
+                    <img src="/logo.png" alt="Niyantran" className="w-full h-full object-cover" />
                 </div>
             </motion.div>
 
@@ -89,7 +93,6 @@ export const WelcomeScreen = ({ onComplete }: { onComplete: () => void }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: [0, 1, 0] }}
                 transition={{ delay: 2.1, duration: 1.6 }}
-                onAnimationComplete={() => onComplete()}
                 className="absolute bottom-16 flex flex-col items-center gap-4"
             >
                 <div className="w-48 h-0.5 bg-white/[0.06] rounded-full overflow-hidden">

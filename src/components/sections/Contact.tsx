@@ -1,10 +1,10 @@
-﻿import React from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Activity, Mail, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Mail, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export const Contact = () => {
     const [formData, setFormData] = React.useState({
@@ -31,7 +31,7 @@ export const Contact = () => {
             });
 
             if (response.ok) {
-                const subject = `Booking Enquiry: ${formData.service} — ${formData.organization}`;
+                const subject = `Inquiry: ${formData.service} — ${formData.organization}`;
                 const body = `Dear Niyantran Instruments Team,\n\nI would like to enquire about: ${formData.service}\n\nMy Details:\nName: ${formData.name}\nOrganization: ${formData.organization}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nRequirements:\n${formData.message}\n\nPlease get back to me at your earliest convenience.\n\nRegards,\n${formData.name}`;
                 const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=sb@niyantran.org&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
                 window.open(gmailUrl, '_blank');
@@ -49,132 +49,134 @@ export const Contact = () => {
         }
     };
 
-    const inputClass = "rounded-[14px] border border-blue-50 bg-blue-50/30 h-14 px-5 font-medium text-navy placeholder:text-slate-300 focus:bg-white focus:border-primary/30 focus:ring-4 focus:ring-primary/6 transition-all duration-400 text-sm";
-
     return (
-        <section id="contact" className="py-40 bg-white relative overflow-hidden">
-            {/* Background */}
-            <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-50/35 to-transparent pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-1/3 h-1/2 bg-gradient-to-tr from-blue-50/20 to-transparent pointer-events-none" />
+        <section id="inquiry" className="py-28 bg-surface relative overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-100 to-transparent" />
+            <div className="absolute inset-0 scientific-grid opacity-[0.03] pointer-events-none" />
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="flex flex-col lg:flex-row gap-20 lg:gap-28 items-start">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
 
                     {/* Left */}
                     <motion.div
-                        initial={{ opacity: 0, x: -40 }}
+                        initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-                        className="lg:w-1/2"
+                        transition={{ duration: 0.8 }}
+                        className="pt-2"
                     >
-                        <p className="section-label mb-8">
-                            <span className="h-px w-10 bg-primary/30" />
-                            Global Outreach
+                        <p className="text-[10px] font-mono font-bold tracking-[0.45em] uppercase text-primary/60 mb-5">Get in Touch</p>
+                        <h2 className="font-heading font-black text-4xl md:text-5xl text-navy tracking-[-0.03em] leading-[1.05] mb-6">
+                            Request a<br />
+                            <span className="text-gradient">Consultation</span>
+                        </h2>
+                        <p className="text-slate-500 text-base font-light leading-relaxed mb-8 max-w-sm">
+                            Tell us about your measurement requirements and we'll propose a system tailored to your research or industrial application.
                         </p>
-                        <h3 className="text-5xl md:text-[5.5rem] font-heading font-black text-navy mb-10 tracking-[-0.03em] leading-[0.9]">
-                            LET'S<br />
-                            <span className="text-gradient">CONNECT.</span>
-                        </h3>
-                        <p className="text-lg text-slate-400 font-medium tracking-tight leading-relaxed max-w-md mb-16">
-                            Ready to transform your laboratory with research-grade automation? Our instrumentation specialists are available for deep-tech consultation.
-                        </p>
-
-                        <div className="space-y-5 mb-16">
-                            <a href="mailto:sb@niyantran.org" className="flex items-center gap-5 group cursor-pointer">
-                                <div className="w-14 h-14 rounded-[16px] bg-gradient-to-br from-primary to-primary-light flex items-center justify-center shadow-[0_6px_20px_rgba(27,78,216,0.25)] group-hover:shadow-[0_10px_30px_rgba(27,78,216,0.40)] group-hover:scale-105 transition-all duration-500 flex-shrink-0">
-                                    <Mail className="h-6 w-6 text-white" strokeWidth={1.75} />
-                                </div>
-                                <div>
-                                    <div className="text-[10px] text-slate-300 font-mono tracking-[0.35em] uppercase font-bold mb-0.5">Scientific Hub</div>
-                                    <div className="text-xl font-heading font-black text-navy group-hover:text-primary transition-colors duration-300 tracking-tight">sb@niyantran.org</div>
-                                </div>
-                            </a>
-                        </div>
-
-                        <div className="inline-flex items-center gap-4 px-7 py-5 rounded-[1.5rem] bg-white border border-blue-50 shadow-[0_4px_24px_rgba(27,78,216,0.06)] hover:shadow-[0_12px_40px_rgba(27,78,216,0.09)] transition-shadow duration-500">
-                            <div className="w-12 h-12 rounded-[14px] bg-gradient-to-br from-primary to-primary-light flex items-center justify-center shadow-[0_4px_14px_rgba(27,78,216,0.25)]">
-                                <Activity className="h-6 w-6 text-white" strokeWidth={1.75} />
-                            </div>
-                            <div>
-                                <div className="text-navy font-heading font-black text-lg tracking-tight">ISO-9001 Facility</div>
-                                <div className="text-slate-400 font-medium text-sm tracking-tight">System validation & research calibration</div>
-                            </div>
-                        </div>
+                        <a
+                            href="mailto:sb@niyantran.org"
+                            className="inline-flex items-center gap-2.5 text-sm font-medium text-primary hover:text-navy transition-colors duration-200"
+                        >
+                            <Mail className="h-4 w-4" />
+                            sb@niyantran.org
+                        </a>
                     </motion.div>
 
-                    {/* Right — form */}
+                    {/* Form */}
                     <motion.div
-                        initial={{ opacity: 0, y: 60 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0, x: 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                        className="lg:w-1/2 w-full"
+                        transition={{ duration: 0.8, delay: 0.1 }}
                     >
-                        <div className="p-10 md:p-14 rounded-[3rem] bg-white border border-blue-50 shadow-[0_24px_80px_rgba(27,78,216,0.07),0_4px_16px_rgba(0,0,0,0.03)] relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 w-60 h-60 bg-primary/[0.03] rounded-full blur-[100px] pointer-events-none group-hover:scale-150 transition-transform duration-[3s]" />
-                            <div className="absolute -top-1 inset-x-0 h-1 bg-gradient-to-r from-primary via-primary-light to-accent" />
-
-                            <form onSubmit={handleSubmit} className="space-y-7 relative z-10">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black font-mono text-slate-400 uppercase tracking-[0.3em]">Full Name</label>
-                                        <Input required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className={inputClass} placeholder="Dr. Alice Chen" />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black font-mono text-slate-400 uppercase tracking-[0.3em]">Organization</label>
-                                        <Input required value={formData.organization} onChange={e => setFormData({ ...formData, organization: e.target.value })} className={inputClass} placeholder="MIT / Bell Labs" />
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black font-mono text-slate-400 uppercase tracking-[0.3em]">Email Address</label>
-                                        <Input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className={inputClass} placeholder="researcher@lab.org" />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black font-mono text-slate-400 uppercase tracking-[0.3em]">Phone</label>
-                                        <Input type="tel" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} className={inputClass} placeholder="+91 98765 00000" />
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black font-mono text-slate-400 uppercase tracking-[0.3em]">Research Category</label>
-                                    <Select required onValueChange={(val: string) => setFormData({ ...formData, service: val })}>
-                                        <SelectTrigger className={`${inputClass} w-full`}>
-                                            <SelectValue placeholder="Select instrumentation" />
-                                        </SelectTrigger>
-                                        <SelectContent className="rounded-[1.5rem] border-blue-50 shadow-[0_20px_60px_rgba(27,78,216,0.12)] p-3">
-                                            {['I–V Measurement Systems', 'Quantum Efficiency Measurement', 'Evaporation Process Control', 'Software Consultancy'].map(cat => (
-                                                <SelectItem key={cat} value={cat} className="rounded-xl py-3 px-4 font-medium text-sm hover:bg-blue-50 transition-colors cursor-pointer">{cat}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black font-mono text-slate-400 uppercase tracking-[0.3em]">Scientific Objectives</label>
-                                    <Textarea required value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} className="rounded-[1.5rem] border border-blue-50 bg-blue-50/30 min-h-[160px] p-5 font-medium text-navy placeholder:text-slate-300 focus:bg-white focus:border-primary/30 focus:ring-4 focus:ring-primary/6 transition-all duration-400 text-sm leading-relaxed" placeholder="Describe your experimental objectives and requirements..." />
-                                </div>
-                                <Button disabled={isLoading || isSubmitted} className="w-full h-16 rounded-[1.5rem] bg-navy hover:bg-primary text-white text-sm font-bold tracking-[0.15em] uppercase shadow-[0_8px_30px_rgba(4,14,33,0.25)] hover:shadow-[0_14px_44px_rgba(27,78,216,0.40)] transition-all duration-500 hover:-translate-y-0.5 active:scale-[0.98] group/btn">
-                                    <AnimatePresence mode="wait">
-                                        {isLoading ? (
-                                            <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-3">
-                                                <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}>
-                                                    <Activity className="h-5 w-5" />
-                                                </motion.div>
-                                                Sending...
-                                            </motion.div>
-                                        ) : isSubmitted ? (
-                                            <motion.span key="done" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-3">
-                                                Inquiry Received <CheckCircle2 className="h-5 w-5 text-emerald-300" />
-                                            </motion.span>
-                                        ) : (
-                                            <span key="default" className="flex items-center gap-3">
-                                                Initiate Consultation
-                                                <ArrowRight className="h-5 w-5 transition-transform group-hover/btn:translate-x-1.5" />
-                                            </span>
-                                        )}
-                                    </AnimatePresence>
-                                </Button>
-                            </form>
+                        <div className="bg-white rounded-[2rem] border border-blue-50 p-8 shadow-[0_8px_40px_rgba(27,78,216,0.06)]">
+                            <AnimatePresence mode="wait">
+                                {isSubmitted ? (
+                                    <motion.div
+                                        key="success"
+                                        initial={{ opacity: 0, scale: 0.96 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.96 }}
+                                        className="flex flex-col items-center justify-center py-16 text-center"
+                                    >
+                                        <CheckCircle2 className="h-12 w-12 text-emerald-500 mb-4" strokeWidth={1.5} />
+                                        <h3 className="font-heading font-bold text-xl text-navy mb-2">Inquiry Received</h3>
+                                        <p className="text-slate-400 text-sm">We'll be in touch within one business day.</p>
+                                    </motion.div>
+                                ) : (
+                                    <motion.form
+                                        key="form"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        onSubmit={handleSubmit}
+                                        className="flex flex-col gap-3.5"
+                                    >
+                                        <div className="grid grid-cols-2 gap-3.5">
+                                            <Input
+                                                placeholder="Your name"
+                                                value={formData.name}
+                                                onChange={e => setFormData(p => ({ ...p, name: e.target.value }))}
+                                                required
+                                                className="rounded-[14px] border-blue-50 bg-blue-50/30 h-12 px-4 text-sm placeholder:text-slate-300 focus:bg-white focus:border-primary/30 focus:ring-2 focus:ring-primary/10 transition-all duration-300"
+                                            />
+                                            <Input
+                                                placeholder="Organisation"
+                                                value={formData.organization}
+                                                onChange={e => setFormData(p => ({ ...p, organization: e.target.value }))}
+                                                required
+                                                className="rounded-[14px] border-blue-50 bg-blue-50/30 h-12 px-4 text-sm placeholder:text-slate-300 focus:bg-white focus:border-primary/30 focus:ring-2 focus:ring-primary/10 transition-all duration-300"
+                                            />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-3.5">
+                                            <Input
+                                                type="email"
+                                                placeholder="Email address"
+                                                value={formData.email}
+                                                onChange={e => setFormData(p => ({ ...p, email: e.target.value }))}
+                                                required
+                                                className="rounded-[14px] border-blue-50 bg-blue-50/30 h-12 px-4 text-sm placeholder:text-slate-300 focus:bg-white focus:border-primary/30 focus:ring-2 focus:ring-primary/10 transition-all duration-300"
+                                            />
+                                            <Input
+                                                placeholder="Phone (optional)"
+                                                value={formData.phone}
+                                                onChange={e => setFormData(p => ({ ...p, phone: e.target.value }))}
+                                                className="rounded-[14px] border-blue-50 bg-blue-50/30 h-12 px-4 text-sm placeholder:text-slate-300 focus:bg-white focus:border-primary/30 focus:ring-2 focus:ring-primary/10 transition-all duration-300"
+                                            />
+                                        </div>
+                                        <Select
+                                            value={formData.service}
+                                            onValueChange={v => setFormData(p => ({ ...p, service: v }))}
+                                        >
+                                            <SelectTrigger className="rounded-[14px] border-blue-50 bg-blue-50/30 h-12 px-4 text-sm data-[placeholder]:text-slate-300 focus:ring-2 focus:ring-primary/10 transition-all duration-300">
+                                                <SelectValue placeholder="Area of interest" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="iv-measurement">I–V Measurement Systems</SelectItem>
+                                                <SelectItem value="quantum-efficiency">Quantum Efficiency Measurement</SelectItem>
+                                                <SelectItem value="evaporation">Evaporation Process Control</SelectItem>
+                                                <SelectItem value="software">Scientific Software Consultancy</SelectItem>
+                                                <SelectItem value="other">Other / General Inquiry</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <Textarea
+                                            placeholder="Describe your requirements..."
+                                            value={formData.message}
+                                            onChange={e => setFormData(p => ({ ...p, message: e.target.value }))}
+                                            rows={4}
+                                            className="rounded-[14px] border-blue-50 bg-blue-50/30 px-4 py-3.5 text-sm placeholder:text-slate-300 focus:bg-white focus:border-primary/30 focus:ring-2 focus:ring-primary/10 transition-all duration-300 resize-none"
+                                        />
+                                        <Button
+                                            type="submit"
+                                            disabled={isLoading}
+                                            className="group w-full rounded-[14px] h-12 bg-navy hover:bg-primary text-white text-sm font-bold tracking-[0.06em] shadow-[0_6px_24px_rgba(4,14,33,0.18)] hover:shadow-[0_8px_32px_rgba(27,78,216,0.30)] transition-all duration-300 mt-1"
+                                        >
+                                            {isLoading ? 'Sending…' : 'Send Inquiry'}
+                                            {!isLoading && <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />}
+                                        </Button>
+                                    </motion.form>
+                                )}
+                            </AnimatePresence>
                         </div>
                     </motion.div>
                 </div>
