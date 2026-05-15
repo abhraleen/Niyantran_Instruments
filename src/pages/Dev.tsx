@@ -2,13 +2,15 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 import { Navbar, Footer } from '@/components/layout/shared';
-import { PlatformCards } from '@/components/sections/PlatformCards';
+import { PlatformCards, type ActiveMode } from '@/components/sections/PlatformCards';
 import { DevContact, type InquiryMode } from '@/components/sections/DevContact';
 
 // ─── Dev-only hero ────────────────────────────────────────────────────────────
-const DevHero = () => {
-    const scrollTo = (id: string) =>
-        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void }) => {
+    const handleMode = (mode: ActiveMode) => {
+        onSelectMode(mode);
+        setTimeout(() => document.getElementById('platform')?.scrollIntoView({ behavior: 'smooth' }), 50);
+    };
 
     return (
         <section className="relative min-h-[88vh] flex items-center justify-center pt-24 pb-20 overflow-hidden bg-background">
@@ -62,14 +64,14 @@ const DevHero = () => {
                     className="flex flex-col sm:flex-row gap-3 justify-center items-center"
                 >
                     <button
-                        onClick={() => scrollTo('industry')}
+                        onClick={() => handleMode('industry')}
                         className="inline-flex items-center gap-2 rounded-[14px] px-8 h-[52px] bg-navy hover:bg-primary text-white text-sm font-bold tracking-[0.08em] uppercase shadow-[0_8px_32px_rgba(4,14,33,0.18)] hover:shadow-[0_12px_40px_rgba(27,78,216,0.30)] transition-all duration-300 hover:-translate-y-0.5 active:scale-95"
                     >
                         Industry Solutions
                         <ArrowRight className="h-4 w-4" />
                     </button>
                     <button
-                        onClick={() => scrollTo('education')}
+                        onClick={() => handleMode('education')}
                         className="inline-flex items-center gap-1.5 rounded-[14px] px-8 h-[52px] text-sm font-semibold text-slate-500 hover:text-navy hover:bg-blue-50/60 transition-all duration-300"
                     >
                         Education &amp; Training
@@ -86,6 +88,7 @@ const DevHero = () => {
 // ─── /dev page ────────────────────────────────────────────────────────────────
 export const Dev = () => {
     const [inquiryMode, setInquiryMode] = React.useState<InquiryMode>('industry');
+    const [activeMode, setActiveMode] = React.useState<ActiveMode>('industry');
 
     const handleSelectMode = (mode: InquiryMode) => {
         setInquiryMode(mode);
@@ -104,8 +107,12 @@ export const Dev = () => {
             <div className="pt-7">
                 <Navbar />
                 <main>
-                    <DevHero />
-                    <PlatformCards onSelectMode={handleSelectMode} />
+                    <DevHero onSelectMode={setActiveMode} />
+                    <PlatformCards
+                        activeMode={activeMode}
+                        onActiveMode={setActiveMode}
+                        onSelectMode={handleSelectMode}
+                    />
                     <DevContact mode={inquiryMode} onModeChange={setInquiryMode} />
                 </main>
                 <Footer />
