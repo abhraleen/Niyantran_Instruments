@@ -1,22 +1,43 @@
 import { pool } from '../db';
 import type { InquiryPayload, InquiryRow } from '../types/inquiry.types';
 
-/**
- * Inquiry service — database operations for contact/inquiry submissions.
- * Implement each method when the inquiry system is built.
- */
 export const inquiryService = {
-  async create(_payload: InquiryPayload): Promise<InquiryRow> {
-    void pool; // placeholder reference
-    throw new Error('Not implemented');
+  /**
+   * Insert a new inquiry row and return its generated id.
+   */
+  async create(payload: InquiryPayload): Promise<{ id: number }> {
+    const { rows } = await pool.query<{ id: number }>(
+      `INSERT INTO inquiries
+         (inquiry_type, full_name, email, phone, organization, qualification, area_of_interest, message)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       RETURNING id`,
+      [
+        payload.inquiryType,
+        payload.fullName,
+        payload.email,
+        payload.phone         ?? null,
+        payload.organization  ?? null,
+        payload.qualification ?? null,
+        payload.areaOfInterest,
+        payload.message,
+      ],
+    );
+    return rows[0];
   },
 
   async findAll(): Promise<InquiryRow[]> {
-    throw new Error('Not implemented');
+    const { rows } = await pool.query<InquiryRow>(
+      'SELECT * FROM inquiries ORDER BY created_at DESC',
+    );
+    return rows;
   },
 
-  async findById(_id: number): Promise<InquiryRow | null> {
-    throw new Error('Not implemented');
+  async findById(id: number): Promise<InquiryRow | null> {
+    const { rows } = await pool.query<InquiryRow>(
+      'SELECT * FROM inquiries WHERE id = $1',
+      [id],
+    );
+    return rows[0] ?? null;
   },
 
   async updateStatus(_id: number, _status: InquiryRow['status']): Promise<InquiryRow> {

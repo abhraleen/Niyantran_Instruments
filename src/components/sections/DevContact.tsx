@@ -49,51 +49,139 @@ const modeConfig = {
     },
 } as const;
 
+const ADMIN_EMAIL = 'sb@niyantran.org';
+
+function buildGmailUrl(subject: string, body: string): string {
+    return (
+        `https://mail.google.com/mail/?view=cm&fs=1` +
+        `&to=${encodeURIComponent(ADMIN_EMAIL)}` +
+        `&su=${encodeURIComponent(subject)}` +
+        `&body=${encodeURIComponent(body)}`
+    );
+}
+
 export const DevContact = ({ mode, onModeChange }: Props) => {
     const [ind, setInd] = React.useState<IndustryData>(IND0);
     const [edu, setEdu] = React.useState<EducationData>(EDU0);
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [isSubmitted, setIsSubmitted] = React.useState(false);
+    type Status = 'idle' | 'loading' | 'preparing' | 'success' | 'error';
+    const [status,   setStatus]   = React.useState<Status>('idle');
+    const [errorMsg, setErrorMsg] = React.useState('');
 
     const si = (k: keyof IndustryData) => (v: string) => setInd(p => ({ ...p, [k]: v }));
     const se = (k: keyof EducationData) => (v: string) => setEdu(p => ({ ...p, [k]: v }));
 
     const submitIndustry = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
+        setErrorMsg('');
+
+        if (!ind.service) {
+            setErrorMsg('Please select the service type.');
+            setStatus('error');
+            return;
+        }
+
+        setStatus('loading');
         try {
             const res = await fetch('/api/inquiries', {
-                method: 'POST',
+                method:  'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...ind, type: 'industry' }),
+                body: JSON.stringify({
+                    inquiryType:    'industry',
+                    fullName:       ind.name,
+                    email:          ind.email,
+                    phone:          ind.phone        || undefined,
+                    organization:   ind.organization || undefined,
+                    areaOfInterest: ind.service,
+                    message:        [ind.requirement, ind.message].filter(Boolean).join('\n\n') || '—',
+                }),
             });
-            if (res.ok) {
-                const subject = `Inquiry [Industry]: ${ind.service} — ${ind.organization}`;
-                const body = `Dear Niyantran Instruments Team,\n\nInquiry Type: Industry\nService Required: ${ind.service}\n\nOrganisation: ${ind.organization}\nName: ${ind.name}\nEmail: ${ind.email}\nPhone: ${ind.phone}\n\nResearch Requirement:\n${ind.requirement}\n\nMessage:\n${ind.message}\n\nRegards,\n${ind.name}`;
-                window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=sb@niyantran.org&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
-                setIsSubmitted(true);
-                setTimeout(() => { setIsSubmitted(false); setInd(IND0); }, 4500);
+
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({})) as { message?: string };
+                throw new Error(data.message ?? `Request failed (${res.status})`);
             }
-        } catch (err) { console.error(err); } finally { setIsLoading(false); }
+
+            const subject = `Industry Inquiry: ${ind.service} — ${ind.organization}`;
+            const body =
+                `Dear Niyantran Instruments Team,\n\n` +
+                `─── INDUSTRY CONSULTATION INQUIRY ───\n\n` +
+                `Name:          ${ind.name}\n` +
+                `Organisation:  ${ind.organization || 'Not provided'}\n` +
+                `Email:         ${ind.email}\n` +
+                `Phone:         ${ind.phone || 'Not provided'}\n\n` +
+                `Service Required:\n${ind.service}\n\n` +
+                `Research Requirement:\n${ind.requirement || 'Not specified'}\n\n` +
+                `Message:\n${ind.message || 'Not provided'}\n\n` +
+                `Regards,\n${ind.name}`;
+
+            setStatus('preparing');
+            setTimeout(() => {
+                window.open(buildGmailUrl(subject, body), '_blank');
+                setStatus('success');
+                setTimeout(() => { setStatus('idle'); setInd(IND0); }, 4500);
+            }, 700);
+
+        } catch (err) {
+            setErrorMsg(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+            setStatus('error');
+        }
     };
 
     const submitEducation = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
+        setErrorMsg('');
+
+        if (!edu.interest) {
+            setErrorMsg('Please select your area of interest.');
+            setStatus('error');
+            return;
+        }
+
+        setStatus('loading');
         try {
             const res = await fetch('/api/inquiries', {
-                method: 'POST',
+                method:  'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...edu, type: 'education' }),
+                body: JSON.stringify({
+                    inquiryType:    'education',
+                    fullName:       edu.name,
+                    email:          edu.email,
+                    phone:          edu.phone         || undefined,
+                    qualification:  edu.qualification || undefined,
+                    areaOfInterest: edu.interest,
+                    message:        [edu.goal, edu.message].filter(Boolean).join('\n\n') || '—',
+                }),
             });
-            if (res.ok) {
-                const subject = `Inquiry [Education]: ${edu.interest} — ${edu.name}`;
-                const body = `Dear Niyantran Instruments Team,\n\nInquiry Type: Education & Training\nArea of Interest: ${edu.interest}\n\nName: ${edu.name}\nEmail: ${edu.email}\nPhone: ${edu.phone}\nQualification: ${edu.qualification}\nCareer Goal: ${edu.goal}\n\nMessage:\n${edu.message}\n\nRegards,\n${edu.name}`;
-                window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=sb@niyantran.org&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
-                setIsSubmitted(true);
-                setTimeout(() => { setIsSubmitted(false); setEdu(EDU0); }, 4500);
+
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({})) as { message?: string };
+                throw new Error(data.message ?? `Request failed (${res.status})`);
             }
-        } catch (err) { console.error(err); } finally { setIsLoading(false); }
+
+            const subject = `Education Inquiry: ${edu.interest} — ${edu.name}`;
+            const body =
+                `Dear Niyantran Instruments Team,\n\n` +
+                `─── EDUCATION & TRAINING INQUIRY ───\n\n` +
+                `Name:           ${edu.name}\n` +
+                `Email:          ${edu.email}\n` +
+                `Phone:          ${edu.phone || 'Not provided'}\n` +
+                `Qualification:  ${edu.qualification || 'Not specified'}\n\n` +
+                `Area of Interest:\n${edu.interest}\n\n` +
+                `Career Goal:\n${edu.goal || 'Not specified'}\n\n` +
+                `Message:\n${edu.message || 'Not provided'}\n\n` +
+                `Regards,\n${edu.name}`;
+
+            setStatus('preparing');
+            setTimeout(() => {
+                window.open(buildGmailUrl(subject, body), '_blank');
+                setStatus('success');
+                setTimeout(() => { setStatus('idle'); setEdu(EDU0); }, 4500);
+            }, 700);
+
+        } catch (err) {
+            setErrorMsg(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+            setStatus('error');
+        }
     };
 
     const cfg = modeConfig[mode];
@@ -172,7 +260,7 @@ export const DevContact = ({ mode, onModeChange }: Props) => {
                     >
                         <div className="bg-white rounded-[2rem] border border-blue-50 p-8 shadow-[0_8px_40px_rgba(27,78,216,0.06)]">
                             <AnimatePresence mode="wait">
-                                {isSubmitted ? (
+                                {status === 'success' ? (
                                     <motion.div
                                         key="success"
                                         initial={{ opacity: 0, scale: 0.96 }}
@@ -224,10 +312,19 @@ export const DevContact = ({ mode, onModeChange }: Props) => {
                                             onChange={e => si('requirement')(e.target.value)} className={fieldCls} />
                                         <Textarea placeholder="Additional details..." value={ind.message}
                                             onChange={e => si('message')(e.target.value)} rows={3} className={areaCls} />
-                                        <button type="submit" disabled={isLoading}
+                                        {status === 'error' && mode === 'industry' && (
+                                            <motion.p
+                                                initial={{ opacity: 0, y: -4 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                className="text-[12px] text-red-500 bg-red-50 border border-red-100 rounded-xl px-4 py-2.5 text-center"
+                                            >
+                                                {errorMsg}
+                                            </motion.p>
+                                        )}
+                                        <button type="submit" disabled={status === 'loading' || status === 'preparing'}
                                             className={`group inline-flex items-center justify-center gap-2 w-full rounded-[12px] h-11 text-white text-[13px] font-bold tracking-[0.06em] mt-1 transition-all duration-300 hover:-translate-y-0.5 active:scale-95 disabled:opacity-60 ${cfg.btnCls}`}>
-                                            {isLoading ? 'Sending…' : cfg.ctaLabel}
-                                            {!isLoading && <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />}
+                                            {status === 'loading' ? 'Saving inquiry…' : status === 'preparing' ? 'Preparing email…' : cfg.ctaLabel}
+                                            {status === 'idle' && <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />}
                                         </button>
                                     </motion.form>
 
@@ -281,10 +378,19 @@ export const DevContact = ({ mode, onModeChange }: Props) => {
                                             onChange={e => se('goal')(e.target.value)} className={fieldCls} />
                                         <Textarea placeholder="Tell us more about yourself..." value={edu.message}
                                             onChange={e => se('message')(e.target.value)} rows={3} className={areaCls} />
-                                        <button type="submit" disabled={isLoading}
+                                        {status === 'error' && mode === 'education' && (
+                                            <motion.p
+                                                initial={{ opacity: 0, y: -4 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                className="text-[12px] text-red-500 bg-red-50 border border-red-100 rounded-xl px-4 py-2.5 text-center"
+                                            >
+                                                {errorMsg}
+                                            </motion.p>
+                                        )}
+                                        <button type="submit" disabled={status === 'loading' || status === 'preparing'}
                                             className={`group inline-flex items-center justify-center gap-2 w-full rounded-[12px] h-11 text-white text-[13px] font-bold tracking-[0.06em] mt-1 transition-all duration-300 hover:-translate-y-0.5 active:scale-95 disabled:opacity-60 ${cfg.btnCls}`}>
-                                            {isLoading ? 'Sending…' : cfg.ctaLabel}
-                                            {!isLoading && <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />}
+                                            {status === 'loading' ? 'Saving inquiry…' : status === 'preparing' ? 'Preparing email…' : cfg.ctaLabel}
+                                            {status === 'idle' && <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />}
                                         </button>
                                     </motion.form>
                                 )}

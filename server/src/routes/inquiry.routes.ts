@@ -5,16 +5,11 @@ import {
   getInquiry,
   updateInquiryStatus,
 } from '../controllers/inquiry.controller';
-import { validateBody } from '../middleware/validateBody';
 
 const router = Router();
 
-// POST /api/inquiries
-router.post(
-  '/',
-  validateBody(['name', 'email', 'message', 'mode']),
-  createInquiry,
-);
+// POST /api/inquiries — validation handled entirely inside createInquiry
+router.post('/', createInquiry);
 
 // GET /api/inquiries  — admin-protected in future
 router.get('/', listInquiries);

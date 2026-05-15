@@ -6,19 +6,19 @@
 
 -- ─── Inquiries (contact / consultation requests) ─────────────────────────────
 CREATE TABLE IF NOT EXISTS inquiries (
-    id           BIGSERIAL    PRIMARY KEY,
-    name         TEXT         NOT NULL,
-    organization TEXT,
-    email        TEXT         NOT NULL,
-    phone        TEXT,
-    mode         TEXT         NOT NULL CHECK (mode IN ('industry', 'education')),
-    service      TEXT,
-    requirement  TEXT,
-    message      TEXT         NOT NULL,
-    status       TEXT         NOT NULL DEFAULT 'pending'
-                              CHECK (status IN ('pending', 'reviewed', 'resolved')),
-    created_at   TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
-    updated_at   TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+    id               BIGSERIAL    PRIMARY KEY,
+    inquiry_type     TEXT         NOT NULL CHECK (inquiry_type IN ('industry', 'education')),
+    full_name        TEXT         NOT NULL,
+    email            TEXT         NOT NULL,
+    phone            TEXT,
+    organization     TEXT,
+    qualification    TEXT,
+    area_of_interest TEXT         NOT NULL,
+    message          TEXT         NOT NULL,
+    status           TEXT         NOT NULL DEFAULT 'pending'
+                                  CHECK (status IN ('pending', 'reviewed', 'resolved')),
+    created_at       TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at       TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
 -- ─── Education enrollments ────────────────────────────────────────────────────

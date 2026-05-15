@@ -1,20 +1,29 @@
-// ─── Inquiry (contact form submission) ───────────────────────────────────────
+// ─── Inquiry request payload (camelCase — matches frontend form) ─────────────
 export interface InquiryPayload {
-  name: string;
-  organization?: string;
-  email: string;
-  phone?: string;
-  mode: 'industry' | 'education';
-  service?: string;
-  requirement?: string;
-  message: string;
+  inquiryType:    'industry' | 'education';
+  fullName:       string;
+  email:          string;
+  phone?:         string;
+  organization?:  string;
+  qualification?: string;
+  areaOfInterest: string;
+  message:        string;
 }
 
-export interface InquiryRow extends InquiryPayload {
-  id: number;
-  status: 'pending' | 'reviewed' | 'resolved';
-  created_at: Date;
-  updated_at: Date;
+// ─── Database row (snake_case — matches PostgreSQL columns) ──────────────────
+export interface InquiryRow {
+  id:               number;
+  inquiry_type:     'industry' | 'education';
+  full_name:        string;
+  email:            string;
+  phone:            string | null;
+  organization:     string | null;
+  qualification:    string | null;
+  area_of_interest: string;
+  message:          string;
+  status:           'pending' | 'reviewed' | 'resolved';
+  created_at:       Date;
+  updated_at:       Date;
 }
 
 // ─── Education enrollment ─────────────────────────────────────────────────────
