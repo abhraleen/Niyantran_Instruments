@@ -20,10 +20,10 @@ export const About = () => {
 
                     {/* Text */}
                     <motion.div
-                        initial={{ opacity: 0, x: -20 }}
+                        initial={{ opacity: 0, x: -24 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
+                        viewport={{ once: true, margin: '-60px' }}
+                        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
                     >
                         <p className="text-[10px] font-mono font-bold tracking-[0.45em] uppercase text-primary/60 mb-5">About Us</p>
                         <h2 className="font-heading font-black text-4xl md:text-5xl text-navy tracking-[-0.03em] leading-[1.05] mb-6">
@@ -42,20 +42,21 @@ export const About = () => {
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
+                        viewport={{ once: true, margin: '-60px' }}
                         transition={{ duration: 0.8, delay: 0.1 }}
                         className="grid grid-cols-2 gap-4"
                     >
                         {stats.map((s, i) => (
                             <motion.div
                                 key={i}
-                                initial={{ opacity: 0, y: 16 }}
+                                initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.15 + i * 0.07, duration: 0.6 }}
-                                className="bg-white rounded-[1.5rem] border border-blue-50 p-7 hover:border-primary/15 hover:shadow-[0_6px_28px_rgba(27,78,216,0.07)] transition-all duration-300"
+                                viewport={{ once: true, margin: '-40px' }}
+                                transition={{ delay: 0.12 + i * 0.08, duration: 0.68, ease: [0.16, 1, 0.3, 1] }}
+                                className="group bg-white rounded-[1.5rem] border border-blue-50 p-7 cursor-default hover:border-primary/18 hover:-translate-y-1.5 hover:shadow-[0_18px_52px_rgba(27,78,216,0.11),0_4px_16px_rgba(0,0,0,0.04)] transition-all duration-500"
+                                style={{ transitionTimingFunction: 'cubic-bezier(0.16,1,0.3,1)' }}
                             >
-                                <div className="text-3xl font-heading font-black text-navy tracking-tight mb-1.5">{s.value}</div>
+                                <div className="text-3xl font-heading font-black text-navy tracking-tight mb-1.5 group-hover:text-primary transition-colors duration-300">{s.value}</div>
                                 <div className="text-[10px] text-slate-400 font-mono tracking-[0.3em] uppercase font-bold leading-relaxed">{s.label}</div>
                             </motion.div>
                         ))}

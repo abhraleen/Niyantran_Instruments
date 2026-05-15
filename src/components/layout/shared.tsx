@@ -44,9 +44,10 @@ export const Navbar = () => {
                             <a
                                 key={link.label}
                                 href={link.href}
-                                className="text-[13px] font-medium text-slate-500 hover:text-navy transition-colors duration-200 tracking-wide"
+                                className="relative text-[13px] font-medium text-slate-500 hover:text-navy transition-colors duration-200 tracking-wide group"
                             >
                                 {link.label}
+                                <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-primary/50 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
                             </a>
                         ))}
                         <a
