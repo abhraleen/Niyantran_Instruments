@@ -80,3 +80,19 @@ export const getInquiry: RequestHandler = async (req, res, next) => {
 export const updateInquiryStatus: RequestHandler = (_req, res) => {
   res.status(501).json({ success: false, message: 'Not implemented' });
 };
+
+export const deleteInquiry: RequestHandler = async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      res.status(400).json({ success: false, message: 'Invalid inquiry id' });
+      return;
+    }
+    const deleted = await inquiryService.delete(id);
+    if (!deleted) {
+      res.status(404).json({ success: false, message: 'Inquiry not found' });
+      return;
+    }
+    res.json({ success: true, message: 'Inquiry deleted' });
+  } catch (err) { next(err); }
+};

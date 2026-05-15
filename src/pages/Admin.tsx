@@ -307,6 +307,56 @@ function DeleteConfirmModal({
     );
 }
 
+// ─── Inquiry Delete Modal ───────────────────────────────────────────────────────
+function InquiryDeleteModal({
+    inquiry,
+    onConfirm,
+    onClose,
+}: {
+    inquiry: Inquiry;
+    onConfirm: () => Promise<void>;
+    onClose: () => void;
+}) {
+    const [deleting, setDeleting] = React.useState(false);
+    return (
+        <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#040E21]/35 backdrop-blur-[3px]"
+            onClick={onClose}
+        >
+            <motion.div
+                initial={{ opacity: 0, scale: 0.96, y: 14 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.96, y: 14 }}
+                transition={{ type: 'spring', stiffness: 340, damping: 32 }}
+                onClick={e => e.stopPropagation()}
+                className="w-full max-w-sm bg-white rounded-[22px] shadow-[0_40px_100px_rgba(4,14,33,0.24)] border border-slate-100 p-8"
+            >
+                <div className="w-12 h-12 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center mx-auto mb-5">
+                    <Trash2 className="h-5 w-5 text-red-500" />
+                </div>
+                <h3 className="text-[17px] font-heading font-black text-[#040E21] text-center">Delete Inquiry?</h3>
+                <p className="text-[13px] text-slate-500 text-center mt-2 mb-6 leading-relaxed">
+                    The inquiry from <strong className="text-[#040E21]">{inquiry.name}</strong> will be permanently removed and cannot be recovered.
+                </p>
+                <div className="flex gap-3">
+                    <button
+                        onClick={async () => { setDeleting(true); await onConfirm(); }}
+                        disabled={deleting}
+                        className="flex-1 h-10 rounded-xl bg-red-600 hover:bg-red-700 text-white text-[13px] font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                        {deleting && <RefreshCw className="h-3.5 w-3.5 animate-spin" />}
+                        {deleting ? 'Deleting…' : 'Delete'}
+                    </button>
+                    <button onClick={onClose} className="px-5 h-10 rounded-xl border border-slate-200 text-slate-500 text-[13px] font-semibold hover:border-slate-300 transition-all">
+                        Cancel
+                    </button>
+                </div>
+            </motion.div>
+        </motion.div>
+    );
+}
+
 // ─── Skeleton Row ─────────────────────────────────────────────────────────────
 function SkeletonRow() {
     return (
@@ -457,7 +507,8 @@ export const AdminDashboard = () => {
     const [services,        setServices]      = React.useState<Service[]>([]);
     const [svcLoading,      setSvcLoading]    = React.useState(false);
     const [svcForm,         setSvcForm]       = React.useState<{ open: boolean; editing: Service | null }>({ open: false, editing: null });
-    const [svcDeleteTarget, setSvcDeleteTarget] = React.useState<Service | null>(null);
+    const [svcDeleteTarget, setSvcDeleteTarget]   = React.useState<Service | null>(null);
+    const [inqDeleteTarget, setInqDeleteTarget]   = React.useState<Inquiry | null>(null);
     const [svcSearch,       setSvcSearch]     = React.useState('');
 
     React.useEffect(() => {
@@ -755,9 +806,21 @@ export const AdminDashboard = () => {
                                                             </td>
                                                             <td className="px-4 py-[14px] text-[11px] text-slate-400 font-mono whitespace-nowrap">{fmtDate(inq.created_at)}</td>
                                                             <td className="pr-6 py-[14px] text-right">
-                                                                <span className="text-[11px] font-semibold text-slate-300 group-hover/row:text-[#1B4ED8] flex items-center gap-1 justify-end transition-colors opacity-0 group-hover/row:opacity-100">
-                                                                    View <ArrowUpRight className="h-3 w-3" />
-                                                                </span>
+                                                                <div className="flex items-center gap-1.5 justify-end opacity-0 group-hover/row:opacity-100 transition-opacity">
+                                                                    <span
+                                                                        onClick={() => setSelected(inq)}
+                                                                        className="text-[11px] font-semibold text-slate-300 hover:text-[#1B4ED8] flex items-center gap-1 cursor-pointer transition-colors"
+                                                                    >
+                                                                        View <ArrowUpRight className="h-3 w-3" />
+                                                                    </span>
+                                                                    <button
+                                                                        onClick={e => { e.stopPropagation(); setInqDeleteTarget(inq); }}
+                                                                        className="ml-1 h-6 w-6 rounded-lg bg-slate-50 hover:bg-red-50 border border-slate-100 hover:border-red-200 flex items-center justify-center transition-all"
+                                                                        title="Delete inquiry"
+                                                                    >
+                                                                        <Trash2 className="h-3 w-3 text-slate-300 hover:text-red-500 transition-colors" />
+                                                                    </button>
+                                                                </div>
                                                             </td>
                                                         </motion.tr>
                                                     );
@@ -1118,6 +1181,21 @@ export const AdminDashboard = () => {
                             setSvcDeleteTarget(null);
                         }}
                         onClose={() => setSvcDeleteTarget(null)}
+                    />
+                )}
+            </AnimatePresence>
+
+            {/* ── Inquiry Delete Modal ─────────────────────────────────────── */}
+            <AnimatePresence>
+                {inqDeleteTarget && (
+                    <InquiryDeleteModal
+                        inquiry={inqDeleteTarget}
+                        onConfirm={async () => {
+                            setInquiries(prev => prev.filter(i => i.id !== inqDeleteTarget.id));
+                            setInqDeleteTarget(null);
+                            await fetch(`/api/inquiries/${inqDeleteTarget.id}`, { method: 'DELETE' });
+                        }}
+                        onClose={() => setInqDeleteTarget(null)}
                     />
                 )}
             </AnimatePresence>

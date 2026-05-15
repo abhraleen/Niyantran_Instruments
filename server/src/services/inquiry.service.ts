@@ -43,4 +43,12 @@ export const inquiryService = {
   async updateStatus(_id: number, _status: InquiryRow['status']): Promise<InquiryRow> {
     throw new Error('Not implemented');
   },
+
+  async delete(id: number): Promise<boolean> {
+    const { rowCount } = await pool.query(
+      'DELETE FROM inquiries WHERE id = $1',
+      [id],
+    );
+    return (rowCount ?? 0) > 0;
+  },
 };

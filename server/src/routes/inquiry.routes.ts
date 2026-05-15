@@ -4,6 +4,7 @@ import {
   listInquiries,
   getInquiry,
   updateInquiryStatus,
+  deleteInquiry,
 } from '../controllers/inquiry.controller';
 
 const router = Router();
@@ -19,5 +20,8 @@ router.get('/:id', getInquiry);
 
 // PATCH /api/inquiries/:id/status
 router.patch('/:id/status', updateInquiryStatus);
+
+// DELETE /api/inquiries/:id
+router.delete('/:id', deleteInquiry);
 
 export default router;
