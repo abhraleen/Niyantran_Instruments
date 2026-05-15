@@ -28,7 +28,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
     Activity, Beaker, Layers, Code, Zap, FlaskConical, CheckCircle2, Cpu,
 };
 
-function ServiceIcon({ name, className }: { name: string; className?: string }) {
+export function ServiceIcon({ name, className }: { name: string; className?: string }) {
     const Icon = ICON_MAP[name] ?? Activity;
     return <Icon className={className} strokeWidth={1.75} />;
 }
@@ -68,7 +68,7 @@ function SectionLabel({ icon, label }: { icon: React.ReactNode; label: string })
 }
 
 // ─── Service Detail Panel ─────────────────────────────────────────────────────
-function ServicePanel({ service, onClose }: { service: Service; onClose: () => void }) {
+export function ServicePanel({ service, onClose }: { service: Service; onClose: () => void }) {
     const isDesktop = useIsDesktop();
 
     const modeLabel =
@@ -339,7 +339,13 @@ export const Services = () => {
         fetch('/api/services')
             .then(async r => {
                 const json = await r.json();
-                const data: Service[] = Array.isArray(json.data) ? json.data : Array.isArray(json) ? json : [];
+                const raw: Service[] = Array.isArray(json.data) ? json.data : Array.isArray(json) ? json : [];
+                // Normalise: ensure applications/features are always arrays
+                const data = raw.map(s => ({
+                    ...s,
+                    applications: Array.isArray(s.applications) ? s.applications : [],
+                    features:     Array.isArray(s.features)     ? s.features     : [],
+                }));
                 setServices(data.length > 0 ? data : FALLBACK);
             })
             .catch(() => setServices(FALLBACK))

@@ -5,6 +5,8 @@ import {
     GraduationCap, BookOpen, Users, Briefcase,
     ArrowRight,
 } from 'lucide-react';
+import type { Service } from '@/components/sections/Services';
+import { ServicePanel, ServiceIcon } from '@/components/sections/Services';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 export type ActiveMode = 'industry' | 'education';
@@ -160,7 +162,31 @@ export const PlatformCards = ({
 }: PlatformCardsProps) => {
     const c = modeContent[activeMode];
 
+    // ── Live services from DB ──────────────────────────────────────────
+    const [services, setServices]             = React.useState<Service[]>([]);
+    const [selectedService, setSelectedService] = React.useState<Service | null>(null);
+
+    React.useEffect(() => {
+        fetch('/api/services')
+            .then(async r => {
+                const json = await r.json();
+                const raw: Service[] = Array.isArray(json.data) ? json.data : [];
+                setServices(raw.map(s => ({
+                    ...s,
+                    applications: Array.isArray(s.applications) ? s.applications : [],
+                    features:     Array.isArray(s.features)     ? s.features     : [],
+                })));
+            })
+            .catch(() => {});
+    }, []);
+
+    // Services visible in industry mode (mode=industry or mode=both), max 4
+    const industryServices = services
+        .filter(s => s.mode === 'industry' || s.mode === 'both')
+        .slice(0, 4);
+
     return (
+        <>
         <section id="platform" className="py-32 bg-white relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-100 to-transparent" />
 
@@ -260,34 +286,72 @@ export const PlatformCards = ({
 
                             {/* Feature grid 2×2 */}
                             <div className="grid grid-cols-2 gap-3 mb-10">
-                                {c.features.map((feat, j) => (
-                                    <motion.div
-                                        key={feat.label}
-                                        initial={{ opacity: 0, y: 8 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{
-                                            delay: 0.06 + j * 0.07,
-                                            duration: 0.45,
-                                            ease: [0.16, 1, 0.3, 1],
-                                        }}
-                                        className="flex items-start gap-3 p-4 rounded-2xl border"
-                                        style={{
-                                            background: c.featBg,
-                                            borderColor: c.featBorder,
-                                        }}
-                                    >
-                                        <div
-                                            className={`w-8 h-8 rounded-[10px] bg-gradient-to-br ${c.featIconBg} flex items-center justify-center flex-shrink-0`}
-                                            style={{ boxShadow: '0 3px 10px rgba(0,0,0,0.10)' }}
+                                {activeMode === 'industry' && industryServices.length > 0 ? (
+                                    industryServices.map((svc, j) => (
+                                        <motion.button
+                                            key={svc.id}
+                                            initial={{ opacity: 0, y: 8 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{
+                                                delay: 0.06 + j * 0.07,
+                                                duration: 0.45,
+                                                ease: [0.16, 1, 0.3, 1],
+                                            }}
+                                            whileHover={{ y: -2, scale: 1.01 }}
+                                            whileTap={{ scale: 0.98 }}
+                                            onClick={() => setSelectedService(svc)}
+                                            className="flex items-start gap-3 p-4 rounded-2xl border text-left group cursor-pointer transition-shadow duration-200 hover:shadow-[0_4px_18px_rgba(27,78,216,0.13)]"
+                                            style={{
+                                                background: c.featBg,
+                                                borderColor: c.featBorder,
+                                            }}
                                         >
-                                            <feat.icon className="h-3.5 w-3.5 text-white" strokeWidth={1.75} />
-                                        </div>
-                                        <div className="min-w-0">
-                                            <p className="text-[12px] font-bold text-navy/90 leading-tight mb-0.5 truncate">{feat.label}</p>
-                                            <p className="text-[11px] text-slate-400 font-light leading-tight">{feat.detail}</p>
-                                        </div>
-                                    </motion.div>
-                                ))}
+                                            <div
+                                                className={`w-8 h-8 rounded-[10px] bg-gradient-to-br ${c.featIconBg} flex items-center justify-center flex-shrink-0 transition-shadow duration-200 group-hover:shadow-[0_4px_14px_rgba(27,78,216,0.30)]`}
+                                                style={{ boxShadow: '0 3px 10px rgba(0,0,0,0.10)' }}
+                                            >
+                                                <ServiceIcon name={svc.icon} className="h-3.5 w-3.5 text-white" />
+                                            </div>
+                                            <div className="min-w-0">
+                                                <p className="text-[12px] font-bold text-navy/90 leading-tight mb-0.5 truncate">{svc.title}</p>
+                                                <p className="text-[11px] text-slate-400 font-light leading-tight truncate">
+                                                    {svc.short_description.length > 40
+                                                        ? svc.short_description.slice(0, 40) + '…'
+                                                        : svc.short_description}
+                                                </p>
+                                            </div>
+                                        </motion.button>
+                                    ))
+                                ) : (
+                                    c.features.map((feat, j) => (
+                                        <motion.div
+                                            key={feat.label}
+                                            initial={{ opacity: 0, y: 8 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{
+                                                delay: 0.06 + j * 0.07,
+                                                duration: 0.45,
+                                                ease: [0.16, 1, 0.3, 1],
+                                            }}
+                                            className="flex items-start gap-3 p-4 rounded-2xl border"
+                                            style={{
+                                                background: c.featBg,
+                                                borderColor: c.featBorder,
+                                            }}
+                                        >
+                                            <div
+                                                className={`w-8 h-8 rounded-[10px] bg-gradient-to-br ${c.featIconBg} flex items-center justify-center flex-shrink-0`}
+                                                style={{ boxShadow: '0 3px 10px rgba(0,0,0,0.10)' }}
+                                            >
+                                                <feat.icon className="h-3.5 w-3.5 text-white" strokeWidth={1.75} />
+                                            </div>
+                                            <div className="min-w-0">
+                                                <p className="text-[12px] font-bold text-navy/90 leading-tight mb-0.5 truncate">{feat.label}</p>
+                                                <p className="text-[11px] text-slate-400 font-light leading-tight">{feat.detail}</p>
+                                            </div>
+                                        </motion.div>
+                                    ))
+                                )}
                             </div>
 
                             {/* CTA row */}
@@ -390,5 +454,17 @@ export const PlatformCards = ({
 
             <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-100 to-transparent" />
         </section>
+
+        {/* Service detail panel (shared with Services section) */}
+        <AnimatePresence>
+            {selectedService && (
+                <ServicePanel
+                    key={selectedService.id}
+                    service={selectedService}
+                    onClose={() => setSelectedService(null)}
+                />
+            )}
+        </AnimatePresence>
+        </>
     );
 };
