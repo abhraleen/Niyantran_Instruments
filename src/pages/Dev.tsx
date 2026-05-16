@@ -41,9 +41,9 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
                     className="font-heading font-black tracking-[-0.035em] leading-[1.05] text-navy mb-7"
                     style={{ fontSize: 'clamp(2.4rem, 6vw, 5rem)' }}
                 >
-                    Instrumentation<br />
-                    for Industry &amp;<br />
-                    <span className="text-gradient">Science for Everyone</span>
+                    Instrumentation for<br />
+                    Industry and<br />
+                    <span className="text-gradient">Research</span>
                 </motion.h1>
 
                 {/* Subheadline */}
@@ -105,7 +105,7 @@ export const Dev = () => {
                 Development Preview — not for production
             </div>
             <div className="pt-7">
-                <Navbar />
+                <Navbar activeMode={activeMode} onActiveMode={setActiveMode} />
                 <main>
                     <DevHero onSelectMode={setActiveMode} />
                     <PlatformCards

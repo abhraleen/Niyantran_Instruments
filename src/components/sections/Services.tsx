@@ -373,82 +373,41 @@ export const Services = () => {
                         </h2>
                     </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        {displayServices.map((svc, i) => {
-                            const isSelected = selected?.id === svc.id;
-                            return (
-                                <motion.button
-                                    key={svc.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: i * 0.08, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-                                    whileHover={{ y: -3, scale: 1.006 }}
-                                    whileTap={{ scale: 0.99 }}
-                                    onClick={() => setSelected(isSelected ? null : svc)}
-                                    className={`group relative rounded-[1.5rem] p-8 text-left w-full overflow-hidden transition-all duration-300 ${
-                                        isSelected
-                                            ? 'border-[1.5px] border-[#1B4ED8]/30 bg-gradient-to-br from-white via-blue-50/20 to-blue-50/50 shadow-[0_0_0_4px_rgba(27,78,216,0.05),0_12px_40px_rgba(27,78,216,0.12)]'
-                                            : 'border border-blue-50 bg-surface hover:border-[#1B4ED8]/20 hover:bg-white hover:shadow-[0_8px_36px_rgba(27,78,216,0.09)]'
-                                    }`}
-                                >
-                                    {/* Hover glow wash */}
-                                    <div className="absolute inset-0 rounded-[1.5rem] bg-gradient-to-br from-blue-50/0 to-blue-100/25 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {displayServices.map((svc, i) => (
+                            <motion.button
+                                key={svc.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.08, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                                whileHover={{ y: -3 }}
+                                whileTap={{ scale: 0.99 }}
+                                onClick={() => setSelected(svc)}
+                                className="group flex flex-col rounded-[1.75rem] p-7 text-left w-full border border-slate-200/70 bg-white hover:border-[#1B4ED8]/20 hover:shadow-[0_8px_36px_rgba(27,78,216,0.09)] transition-all duration-300"
+                            >
+                                {/* Icon */}
+                                <div className="w-11 h-11 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center mb-6 text-slate-400 group-hover:text-[#1B4ED8] group-hover:bg-blue-50/60 group-hover:border-blue-100/80 transition-all duration-300">
+                                    <ServiceIcon name={svc.icon} className="h-5 w-5" />
+                                </div>
 
-                                    {/* Selected left bar */}
-                                    <AnimatePresence>
-                                        {isSelected && (
-                                            <motion.span
-                                                initial={{ scaleY: 0, opacity: 0 }}
-                                                animate={{ scaleY: 1, opacity: 1 }}
-                                                exit={{ scaleY: 0, opacity: 0 }}
-                                                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                                                className="absolute left-0 top-8 bottom-8 w-[3px] bg-[#1B4ED8] rounded-full origin-center"
-                                            />
-                                        )}
-                                    </AnimatePresence>
+                                {/* Title */}
+                                <h3 className="font-heading font-bold text-[1.15rem] text-navy leading-snug mb-3 flex-1 text-left">
+                                    {svc.title}
+                                </h3>
 
-                                    <div className="relative flex items-start justify-between mb-5">
-                                        <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
-                                            isSelected
-                                                ? 'bg-gradient-to-br from-[#1B4ED8] to-[#3B82F6] shadow-[0_4px_22px_rgba(27,78,216,0.42)]'
-                                                : 'bg-gradient-to-br from-primary to-primary-light shadow-[0_4px_14px_rgba(27,78,216,0.22)] group-hover:shadow-[0_6px_22px_rgba(27,78,216,0.34)]'
-                                        }`}>
-                                            <ServiceIcon name={svc.icon} className="h-5 w-5 text-white" />
-                                        </div>
+                                {/* Description */}
+                                <p className="text-slate-500 text-sm font-light leading-relaxed mb-8">
+                                    {svc.short_description}
+                                </p>
 
-                                        <span className={`text-[10px] font-bold flex items-center gap-1 mt-0.5 transition-colors duration-300 ${
-                                            isSelected ? 'text-[#1B4ED8]' : 'text-slate-300 group-hover:text-[#1B4ED8]'
-                                        }`}>
-                                            {isSelected ? 'Close' : 'Details'}
-                                            <ArrowUpRight className={`h-3 w-3 transition-transform duration-300 ${
-                                                isSelected ? 'rotate-90' : 'group-hover:translate-x-0.5 group-hover:-translate-y-0.5'
-                                            }`} />
-                                        </span>
-                                    </div>
-
-                                    <h3 className="relative font-heading font-bold text-xl text-navy tracking-tight mb-2.5">{svc.title}</h3>
-                                    <p className="relative text-slate-500 text-sm font-light leading-relaxed">{svc.short_description}</p>
-
-                                    {(svc.applications.length > 0 || svc.features.length > 0) && (
-                                        <div className="relative mt-4 pt-4 border-t border-blue-50/80 flex items-center gap-4 flex-wrap">
-                                            {svc.applications.length > 0 && (
-                                                <span className="flex items-center gap-1.5 text-[11px] text-slate-400">
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-[#1B4ED8]/40" />
-                                                    {svc.applications.length} use cases
-                                                </span>
-                                            )}
-                                            {svc.features.length > 0 && (
-                                                <span className="flex items-center gap-1.5 text-[11px] text-slate-400">
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/60" />
-                                                    {svc.features.length} capabilities
-                                                </span>
-                                            )}
-                                        </div>
-                                    )}
-                                </motion.button>
-                            );
-                        })}
+                                {/* CTA */}
+                                <span className="flex items-center gap-1.5 text-[#1B4ED8] text-[13px] font-bold group-hover:gap-2.5 transition-all duration-200">
+                                    View Technical Specs
+                                    <ArrowUpRight className="h-3.5 w-3.5" />
+                                </span>
+                            </motion.button>
+                        ))}
                     </div>
                 </div>
             </section>

@@ -62,7 +62,7 @@ export const Hero = () => {
                     className="font-heading font-black tracking-[-0.038em] leading-[1.06] text-navy mb-7"
                     style={{ fontSize: 'clamp(2.4rem, 6vw, 5rem)' }}
                 >
-                    {(['Advanced Scientific', 'Instrumentation &'] as const).map((line, i) => (
+                    {(['Instrumentation', 'for Industry'] as const).map((line, i) => (
                         <div key={i} className="overflow-hidden">
                             <motion.span
                                 initial={{ y: '110%' }}
@@ -81,7 +81,7 @@ export const Hero = () => {
                             transition={{ delay: 0.27, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                             className="block text-gradient"
                         >
-                            Research Automation
+                            and Research
                         </motion.span>
                     </div>
                 </h1>

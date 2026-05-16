@@ -2,9 +2,21 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Mail } from 'lucide-react';
 
+type ActiveMode = 'industry' | 'education';
+const modeOpts: { id: ActiveMode; label: string; dot: string }[] = [
+    { id: 'industry',  label: 'Industry',  dot: '#1b4ed8' },
+    { id: 'education', label: 'Education', dot: '#0ea5e9' },
+];
+
 const ease = { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] } as const;
 
-export const Navbar = () => {
+export const Navbar = ({
+    activeMode,
+    onActiveMode,
+}: {
+    activeMode?: ActiveMode;
+    onActiveMode?: (m: ActiveMode) => void;
+} = {}) => {
     const [isOpen, setIsOpen] = React.useState(false);
     const [scrolled, setScrolled] = React.useState(false);
 
@@ -22,6 +34,43 @@ export const Navbar = () => {
 
     return (
         <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
+            {/* Mode switch — top-right corner, only when activeMode is provided */}
+            {activeMode !== undefined && onActiveMode && (
+                <div className="absolute top-4 right-5 pointer-events-auto z-10 hidden md:block">
+                    <div className="inline-flex items-center gap-0.5 p-[3px] rounded-full border border-slate-200/80 bg-white/92 backdrop-blur-sm shadow-[0_2px_12px_rgba(4,14,33,0.09)]">
+                        {modeOpts.map(opt => {
+                            const isActive = activeMode === opt.id;
+                            return (
+                                <button
+                                    key={opt.id}
+                                    onClick={() => onActiveMode(opt.id)}
+                                    className="relative px-4 h-7 rounded-full text-[10px] font-mono font-bold tracking-[0.18em] uppercase focus:outline-none select-none"
+                                >
+                                    {isActive && (
+                                        <motion.div
+                                            layoutId="nav-mode-pill"
+                                            className="absolute inset-0 rounded-full"
+                                            style={{
+                                                background: opt.id === 'industry'
+                                                    ? 'linear-gradient(135deg, #040e21 0%, #1b4ed8 100%)'
+                                                    : 'linear-gradient(135deg, #0ea5e9 0%, #22d3ee 100%)',
+                                            }}
+                                            transition={{ type: 'spring', stiffness: 380, damping: 34 }}
+                                        />
+                                    )}
+                                    <span className={`relative z-10 flex items-center gap-1.5 transition-colors duration-300 ${
+                                        isActive ? 'text-white' : 'text-slate-400 hover:text-slate-600'
+                                    }`}>
+                                        <span className="w-[5px] h-[5px] rounded-full flex-shrink-0" style={{ background: isActive ? 'rgba(255,255,255,0.65)' : opt.dot }} />
+                                        {opt.label}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+
             {/* Centering shell — constrains max expanded width */}
             <div className="flex justify-center px-6">
                 <motion.div

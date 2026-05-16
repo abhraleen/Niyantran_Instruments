@@ -213,28 +213,6 @@ export const PlatformCards = ({
 
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-                {/* Static section header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-80px' }}
-                    transition={{ duration: 0.75 }}
-                    className="mb-10 text-center"
-                >
-                    <p className="text-[10px] font-mono font-bold tracking-[0.45em] uppercase text-primary/60 mb-4">
-                        Platform
-                    </p>
-                    <h2 className="font-heading font-black text-4xl md:text-5xl text-navy tracking-[-0.03em] leading-[1.05] mb-5">
-                        Choose Your Path
-                    </h2>
-                    <p className="text-slate-400 text-base md:text-lg font-light leading-relaxed max-w-xl mx-auto">
-                        One scientific ecosystem — precision solutions for industry, open pathways for the next generation.
-                    </p>
-                </motion.div>
-
-                {/* Mode switch */}
-                <ModeSwitch active={activeMode} onChange={mode => onActiveMode?.(mode)} />
-
                 {/* ── Adaptive content panel ── */}
                 <AnimatePresence mode="wait" initial={false}>
                     <motion.div
