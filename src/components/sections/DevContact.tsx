@@ -36,7 +36,7 @@ const modeConfig = {
         line2: 'Inquiry',
         sub: "Tell us about your measurement requirements and we'll propose a system tailored to your laboratory.",
         ctaLabel: 'Submit Industry Inquiry',
-        btnCls: 'bg-navy hover:bg-primary shadow-[0_4px_18px_rgba(4,14,33,0.20)] hover:shadow-[0_8px_32px_rgba(27,78,216,0.28)]',
+        btnCls: 'bg-navy hover:bg-primary shadow-[0_1px_0_rgba(255,255,255,0.12)_inset,0_4px_18px_rgba(4,14,33,0.20)] hover:shadow-[0_1px_0_rgba(255,255,255,0.16)_inset,0_10px_32px_rgba(27,78,216,0.30)]',
         pillCls: 'bg-navy text-white',
     },
     education: {
@@ -44,7 +44,7 @@ const modeConfig = {
         line2: 'Inquiry',
         sub: "Share your background and goals — we'll match you with the right program or internship track.",
         ctaLabel: 'Submit Training Inquiry',
-        btnCls: 'bg-accent hover:bg-cyan-600 shadow-[0_4px_18px_rgba(14,165,233,0.18)] hover:shadow-[0_8px_32px_rgba(14,165,233,0.28)]',
+        btnCls: 'bg-accent hover:bg-cyan-600 shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_4px_18px_rgba(14,165,233,0.18)] hover:shadow-[0_1px_0_rgba(255,255,255,0.22)_inset,0_10px_32px_rgba(14,165,233,0.30)]',
         pillCls: 'bg-accent text-white',
     },
 } as const;
@@ -190,16 +190,22 @@ export const DevContact = ({ mode, onModeChange }: Props) => {
         <section id="inquiry" className="py-16 sm:py-24 lg:py-28 bg-surface relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-100 to-transparent" />
             <div className="absolute inset-0 scientific-grid opacity-[0.03] pointer-events-none" />
+            {/* Atmospheric depth glow — top-center light source */}
+            <div
+                aria-hidden="true"
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: 'radial-gradient(ellipse 85% 52% at 50% 0%, rgba(27,78,216,0.045) 0%, transparent 65%)' }}
+            />
 
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
 
                     {/* ── Left panel ────────────────────────── */}
                     <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
+                        initial={{ opacity: 0, y: 24, filter: 'blur(4px)' }}
+                        whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                        viewport={{ once: true, margin: '-8%' }}
+                        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
                         className="pt-2"
                     >
                         <p className="text-[10px] font-mono font-bold tracking-[0.45em] uppercase text-primary/60 mb-5">
@@ -214,8 +220,10 @@ export const DevContact = ({ mode, onModeChange }: Props) => {
                                     onClick={() => onModeChange(m)}
                                     className={`rounded-full px-5 py-2 text-[11px] font-bold tracking-[0.22em] uppercase transition-all duration-300 ${
                                         mode === m
-                                            ? cfg.pillCls + ' shadow-sm'
-                                            : 'text-slate-400 hover:text-slate-600'
+                                            ? cfg.pillCls + (mode === 'industry'
+                                                ? ' shadow-[0_1px_0_rgba(255,255,255,0.14)_inset,0_4px_14px_rgba(4,14,33,0.22)]'
+                                                : ' shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_4px_14px_rgba(14,165,233,0.26)]')
+                                            : 'text-slate-300 hover:text-slate-500'
                                     }`}
                                 >
                                     {m === 'industry' ? 'Industry' : 'Education'}
@@ -253,12 +261,18 @@ export const DevContact = ({ mode, onModeChange }: Props) => {
 
                     {/* ── Right panel (form card) ─────────── */}
                     <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, delay: 0.1 }}
+                        initial={{ opacity: 0, y: 24, filter: 'blur(4px)' }}
+                        whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                        viewport={{ once: true, margin: '-8%' }}
+                        transition={{ duration: 0.85, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
                     >
-                        <div className="bg-white rounded-[1.5rem] sm:rounded-[2rem] border border-blue-50 p-5 sm:p-8 shadow-[0_8px_40px_rgba(27,78,216,0.06)]">
+                        <div className="bg-white rounded-[1.5rem] sm:rounded-[2rem] border border-blue-50/80 p-5 sm:p-8 shadow-[0_1px_0_rgba(255,255,255,0.95)_inset,0_8px_40px_rgba(27,78,216,0.08),0_24px_64px_rgba(4,14,33,0.04)] relative overflow-hidden">
+                            {/* Inner top highlight */}
+                            <div
+                                aria-hidden="true"
+                                className="absolute top-0 inset-x-0 h-px pointer-events-none z-10"
+                                style={{ background: 'linear-gradient(90deg, transparent 5%, rgba(219,234,254,0.80) 35%, rgba(255,255,255,0.72) 50%, rgba(219,234,254,0.80) 65%, transparent 95%)' }}
+                            />
                             <AnimatePresence mode="wait">
                                 {status === 'success' ? (
                                     <motion.div
@@ -321,11 +335,17 @@ export const DevContact = ({ mode, onModeChange }: Props) => {
                                                 {errorMsg}
                                             </motion.p>
                                         )}
-                                        <button type="submit" disabled={status === 'loading' || status === 'preparing'}
-                                            className={`group inline-flex items-center justify-center gap-2 w-full rounded-[12px] h-11 text-white text-[13px] font-bold tracking-[0.06em] mt-1 transition-all duration-300 hover:-translate-y-0.5 active:scale-95 disabled:opacity-60 ${cfg.btnCls}`}>
+                                        <motion.button
+                                            type="submit"
+                                            disabled={status === 'loading' || status === 'preparing'}
+                                            whileHover={{ scale: 1.015, y: -1 }}
+                                            whileTap={{ scale: 0.97 }}
+                                            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                                            className={`group inline-flex items-center justify-center gap-2 w-full rounded-[12px] h-11 text-white text-[13px] font-bold tracking-[0.06em] mt-1 disabled:opacity-60 dev-btn-sweep ${cfg.btnCls}`}
+                                        >
                                             {status === 'loading' ? 'Saving inquiry…' : status === 'preparing' ? 'Preparing email…' : cfg.ctaLabel}
                                             {status === 'idle' && <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />}
-                                        </button>
+                                        </motion.button>
                                     </motion.form>
 
                                 ) : (
@@ -387,11 +407,17 @@ export const DevContact = ({ mode, onModeChange }: Props) => {
                                                 {errorMsg}
                                             </motion.p>
                                         )}
-                                        <button type="submit" disabled={status === 'loading' || status === 'preparing'}
-                                            className={`group inline-flex items-center justify-center gap-2 w-full rounded-[12px] h-11 text-white text-[13px] font-bold tracking-[0.06em] mt-1 transition-all duration-300 hover:-translate-y-0.5 active:scale-95 disabled:opacity-60 ${cfg.btnCls}`}>
+                                        <motion.button
+                                            type="submit"
+                                            disabled={status === 'loading' || status === 'preparing'}
+                                            whileHover={{ scale: 1.015, y: -1 }}
+                                            whileTap={{ scale: 0.97 }}
+                                            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                                            className={`group inline-flex items-center justify-center gap-2 w-full rounded-[12px] h-11 text-white text-[13px] font-bold tracking-[0.06em] mt-1 disabled:opacity-60 dev-btn-sweep ${cfg.btnCls}`}
+                                        >
                                             {status === 'loading' ? 'Saving inquiry…' : status === 'preparing' ? 'Preparing email…' : cfg.ctaLabel}
                                             {status === 'idle' && <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />}
-                                        </button>
+                                        </motion.button>
                                     </motion.form>
                                 )}
                             </AnimatePresence>

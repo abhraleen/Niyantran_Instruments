@@ -37,7 +37,7 @@ export const Navbar = ({
             {/* Mode switch — top-right corner, only when activeMode is provided */}
             {activeMode !== undefined && onActiveMode && (
                 <div className="absolute top-4 right-5 pointer-events-auto z-10 hidden md:block">
-                    <div className="inline-flex items-center gap-0.5 p-[3px] rounded-full border border-slate-200/80 bg-white/92 backdrop-blur-sm shadow-[0_2px_12px_rgba(4,14,33,0.09)]">
+                    <div className="inline-flex items-center gap-0.5 p-[3px] rounded-full border border-slate-100/90 bg-white/96 backdrop-blur-md shadow-[0_1px_0_rgba(255,255,255,0.90)_inset,0_3px_16px_rgba(4,14,33,0.10),0_0_0_1px_rgba(219,234,254,0.55)]">
                         {modeOpts.map(opt => {
                             const isActive = activeMode === opt.id;
                             return (
@@ -54,12 +54,15 @@ export const Navbar = ({
                                                 background: opt.id === 'industry'
                                                     ? 'linear-gradient(135deg, #040e21 0%, #1b4ed8 100%)'
                                                     : 'linear-gradient(135deg, #0ea5e9 0%, #22d3ee 100%)',
+                                            boxShadow: opt.id === 'industry'
+                                                    ? '0 1px 0 rgba(255,255,255,0.18) inset, 0 4px 22px rgba(27,78,216,0.42), 0 1px 6px rgba(4,14,33,0.20)'
+                                                    : '0 1px 0 rgba(255,255,255,0.22) inset, 0 4px 22px rgba(14,165,233,0.40), 0 1px 6px rgba(14,165,233,0.16)',
                                             }}
                                             transition={{ type: 'spring', stiffness: 380, damping: 34 }}
                                         />
                                     )}
                                     <span className={`relative z-10 flex items-center gap-1.5 transition-colors duration-300 ${
-                                        isActive ? 'text-white' : 'text-slate-400 hover:text-slate-600'
+                                        isActive ? 'text-white' : 'text-slate-300 hover:text-slate-500'
                                     }`}>
                                         <span className="w-[5px] h-[5px] rounded-full flex-shrink-0" style={{ background: isActive ? 'rgba(255,255,255,0.65)' : opt.dot }} />
                                         {opt.label}
@@ -94,8 +97,8 @@ export const Navbar = ({
                             paddingRight: scrolled ? 26 : 10,
                             height: scrolled ? 72 : 46,
                             boxShadow: scrolled
-                                ? '0 10px_40px rgba(27,78,216,0.10), 0 2px 12px rgba(0,0,0,0.06)'
-                                : '0 2px 16px rgba(0,0,0,0.06)',
+                                ? '0 1px 0 rgba(255,255,255,0.90) inset, 0 16px 48px rgba(27,78,216,0.12), 0 4px 16px rgba(0,0,0,0.05), 0 0 0 1px rgba(219,234,254,0.60)'
+                                : '0 4px 24px rgba(4,14,33,0.06)',
                         }}
                         style={{
                             backdropFilter: 'blur(28px)',
@@ -157,7 +160,7 @@ export const Navbar = ({
                                     ))}
                                     <a
                                         href="#inquiry"
-                                        className="inline-flex items-center gap-2 rounded-full px-6 h-[44px] bg-navy hover:bg-primary text-white text-[13.5px] font-bold tracking-[0.04em] shadow-[0_4px_16px_rgba(4,14,33,0.22)] hover:shadow-[0_6px_24px_rgba(27,78,216,0.35)] transition-all duration-300 whitespace-nowrap"
+                                        className="inline-flex items-center gap-2 rounded-full px-6 h-[44px] bg-navy hover:bg-primary text-white text-[13.5px] font-bold tracking-[0.04em] dev-btn-sweep shadow-[0_1px_0_rgba(255,255,255,0.12)_inset,0_4px_16px_rgba(4,14,33,0.22)] hover:shadow-[0_1px_0_rgba(255,255,255,0.15)_inset,0_8px_28px_rgba(27,78,216,0.38)] transition-all duration-300 whitespace-nowrap"
                                     >
                                         <Mail className="h-3.5 w-3.5" />
                                         Get in Touch
@@ -234,7 +237,13 @@ export const Footer = () => {
     return (
         <footer className="py-10 border-t border-blue-50 bg-white">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                <motion.div
+                    className="flex flex-col sm:flex-row items-center justify-between gap-6"
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-5%' }}
+                    transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                >
                     {/* Logo */}
                     <a href="/" className="flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded-[8px] overflow-hidden">
@@ -268,7 +277,7 @@ export const Footer = () => {
                         <span className="hidden sm:block text-slate-200">·</span>
                         <span className="text-[11px] text-slate-300">© {new Date().getFullYear()} Niyantran Instruments</span>
                     </div>
-                </div>
+                </motion.div>
             </div>
         </footer>
     );

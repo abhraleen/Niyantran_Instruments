@@ -49,15 +49,15 @@ const ModeSwitch = ({
                                         ? 'linear-gradient(135deg, #040e21 0%, #1b4ed8 100%)'
                                         : 'linear-gradient(135deg, #0ea5e9 0%, #22d3ee 100%)',
                                     boxShadow: opt.id === 'industry'
-                                        ? '0 4px 18px rgba(27,78,216,0.35), 0 1px 4px rgba(4,14,33,0.18)'
-                                        : '0 4px 18px rgba(14,165,233,0.32), 0 1px 4px rgba(14,165,233,0.14)',
+                                        ? '0 1px 0 rgba(255,255,255,0.18) inset, 0 4px 22px rgba(27,78,216,0.42), 0 1px 6px rgba(4,14,33,0.20)'
+                                        : '0 1px 0 rgba(255,255,255,0.22) inset, 0 4px 22px rgba(14,165,233,0.40), 0 1px 6px rgba(14,165,233,0.16)',
                                 }}
                                 transition={{ type: 'spring', stiffness: 380, damping: 34 }}
                             />
                         )}
                         <span
                             className={`relative z-10 flex items-center gap-2 transition-colors duration-300 ${
-                                isOpt ? 'text-white' : 'text-slate-400 hover:text-slate-600'
+                                isOpt ? 'text-white' : 'text-slate-300 hover:text-slate-500'
                             }`}
                         >
                             <span
@@ -94,13 +94,13 @@ const modeContent = {
         iconGradient: 'from-primary to-primary-light' as const,
         headingGradient: 'linear-gradient(135deg, #040e21, #1b4ed8)',
         ctaBg: 'linear-gradient(135deg, #040e21 0%, #1b4ed8 100%)',
-        ctaShadow: '0 6px 24px rgba(27,78,216,0.30)',
+        ctaShadow: '0 1px 0 rgba(255,255,255,0.14) inset, 0 6px 24px rgba(27,78,216,0.30)',
         tagStyle: { background: 'rgba(27,78,216,0.06)', borderColor: 'rgba(27,78,216,0.18)', color: 'rgba(27,78,216,0.80)' },
         featBorder: 'rgba(27,78,216,0.09)',
         featBg: 'rgba(239,246,255,0.55)',
         featIconBg: 'from-primary to-primary-light' as const,
         visualBorder: 'rgba(27,78,216,0.12)',
-        visualShadow: '0 24px 64px rgba(27,78,216,0.08), 0 4px 20px rgba(4,14,33,0.05)',
+        visualShadow: '0 1px 0 rgba(255,255,255,0.92) inset, 0 8px 32px rgba(27,78,216,0.09), 0 24px 64px rgba(27,78,216,0.06), 0 48px 96px rgba(4,14,33,0.04)',
         visualGlow: 'rgba(27,78,216,0.10)',
         iconShadow: '0 12px 40px rgba(27,78,216,0.28), 0 4px 12px rgba(27,78,216,0.16)',
         statusBg: '#1b4ed8',
@@ -129,13 +129,13 @@ const modeContent = {
         iconGradient: 'from-accent to-cyan-400' as const,
         headingGradient: 'linear-gradient(135deg, #0ea5e9, #22d3ee)',
         ctaBg: 'linear-gradient(135deg, #0ea5e9 0%, #22d3ee 100%)',
-        ctaShadow: '0 6px 24px rgba(14,165,233,0.30)',
+        ctaShadow: '0 1px 0 rgba(255,255,255,0.18) inset, 0 6px 24px rgba(14,165,233,0.30)',
         tagStyle: { background: 'rgba(14,165,233,0.06)', borderColor: 'rgba(14,165,233,0.22)', color: 'rgba(14,165,233,0.90)' },
         featBorder: 'rgba(14,165,233,0.10)',
         featBg: 'rgba(236,254,255,0.50)',
         featIconBg: 'from-accent to-cyan-400' as const,
         visualBorder: 'rgba(14,165,233,0.14)',
-        visualShadow: '0 24px 64px rgba(14,165,233,0.08), 0 4px 20px rgba(4,14,33,0.04)',
+        visualShadow: '0 1px 0 rgba(255,255,255,0.92) inset, 0 8px 32px rgba(14,165,233,0.08), 0 24px 64px rgba(14,165,233,0.05), 0 48px 96px rgba(4,14,33,0.03)',
         visualGlow: 'rgba(14,165,233,0.09)',
         iconShadow: '0 12px 40px rgba(14,165,233,0.30), 0 4px 12px rgba(14,165,233,0.16)',
         statusBg: '#0ea5e9',
@@ -211,7 +211,23 @@ export const PlatformCards = ({
                 className="absolute inset-0 pointer-events-none"
             />
 
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            {/* Depth floor — soft gradient grounds the section */}
+            <div
+                aria-hidden="true"
+                className="absolute bottom-0 inset-x-0 pointer-events-none"
+                style={{
+                    height: '42%',
+                    background: 'linear-gradient(to top, rgba(241,245,249,0.28) 0%, transparent 100%)',
+                }}
+            />
+
+            <motion.div
+                className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+                initial={{ opacity: 0, y: 28, filter: 'blur(5px)' }}
+                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                viewport={{ once: true, margin: '-8%' }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            >
 
                 {/* ── Adaptive content panel ── */}
                 <AnimatePresence mode="wait" initial={false}>
@@ -275,10 +291,10 @@ export const PlatformCards = ({
                                                 duration: 0.45,
                                                 ease: [0.16, 1, 0.3, 1],
                                             }}
-                                            whileHover={{ y: -2, scale: 1.01 }}
-                                            whileTap={{ scale: 0.98 }}
+                                            whileHover={{ y: -3, scale: 1.015, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
+                                            whileTap={{ scale: 0.97 }}
                                             onClick={() => setSelectedService(svc)}
-                                            className="flex items-start gap-3 p-4 rounded-2xl border text-left group cursor-pointer transition-shadow duration-200 hover:shadow-[0_4px_18px_rgba(27,78,216,0.13)]"
+                                            className="flex items-start gap-3 p-4 rounded-2xl border text-left group cursor-pointer shadow-[0_1px_0_rgba(255,255,255,0.90)_inset,0_2px_8px_rgba(27,78,216,0.04)] hover:shadow-[0_1px_0_rgba(255,255,255,0.96)_inset,0_8px_28px_rgba(27,78,216,0.12),0_0_0_1px_rgba(27,78,216,0.09)] transition-all duration-300"
                                             style={{
                                                 background: c.featBg,
                                                 borderColor: c.featBorder,
@@ -311,7 +327,8 @@ export const PlatformCards = ({
                                                 duration: 0.45,
                                                 ease: [0.16, 1, 0.3, 1],
                                             }}
-                                            className="flex items-start gap-3 p-4 rounded-2xl border"
+                                            whileHover={{ y: -2, scale: 1.01, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
+                                            className="flex items-start gap-3 p-4 rounded-2xl border shadow-[0_1px_0_rgba(255,255,255,0.90)_inset,0_2px_8px_rgba(27,78,216,0.04)] hover:shadow-[0_1px_0_rgba(255,255,255,0.96)_inset,0_6px_20px_rgba(27,78,216,0.09),0_0_0_1px_rgba(27,78,216,0.07)] transition-all duration-300"
                                             style={{
                                                 background: c.featBg,
                                                 borderColor: c.featBorder,
@@ -339,9 +356,12 @@ export const PlatformCards = ({
                                 transition={{ delay: 0.22, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                                 className="flex items-center gap-4 flex-wrap"
                             >
-                                <button
+                                <motion.button
                                     onClick={() => onSelectMode?.(activeMode)}
-                                    className="inline-flex items-center gap-2 rounded-[14px] px-6 sm:px-8 h-[48px] sm:h-[52px] w-full sm:w-auto justify-center text-white text-sm font-bold tracking-[0.06em] hover:-translate-y-0.5 active:scale-95 transition-all duration-300"
+                                    whileHover={{ scale: 1.025, y: -2 }}
+                                    whileTap={{ scale: 0.97 }}
+                                    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                                    className="inline-flex items-center gap-2 rounded-[14px] px-6 sm:px-8 h-[48px] sm:h-[52px] w-full sm:w-auto justify-center text-white text-sm font-bold tracking-[0.06em] dev-btn-sweep"
                                     style={{
                                         background: c.ctaBg,
                                         boxShadow: c.ctaShadow,
@@ -349,7 +369,7 @@ export const PlatformCards = ({
                                 >
                                     {c.cta}
                                     <ArrowRight className="h-4 w-4" />
-                                </button>
+                                </motion.button>
                                 <span className="text-[12px] text-slate-400 font-light">
                                     {c.ctaSub}
                                 </span>
@@ -358,14 +378,21 @@ export const PlatformCards = ({
 
                         {/* Right: visual panel */}
                         <div className="w-full lg:w-[320px] xl:w-[340px] flex-shrink-0">
-                            <div
+                            <motion.div
                                 className="relative rounded-[2.5rem] overflow-hidden"
+                                whileHover={{ y: -5, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
                                 style={{
                                     background: c.visualBgGradient,
                                     border: `1.5px solid ${c.visualBorder}`,
                                     boxShadow: c.visualShadow,
                                 }}
                             >
+                                {/* Inner top highlight edge */}
+                                <div
+                                    aria-hidden="true"
+                                    className="absolute top-0 inset-x-0 h-px z-20 pointer-events-none"
+                                    style={{ background: 'linear-gradient(90deg, transparent 8%, rgba(255,255,255,0.88) 38%, rgba(255,255,255,0.96) 50%, rgba(255,255,255,0.88) 62%, transparent 92%)' }}
+                                />
                                 {/* Fine grid texture */}
                                 <div className="absolute inset-0 fine-grid opacity-[0.18] pointer-events-none" />
 
@@ -424,11 +451,11 @@ export const PlatformCards = ({
                                         ))}
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
                         </div>
                     </motion.div>
                 </AnimatePresence>
-            </div>
+            </motion.div>
 
             <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-100 to-transparent" />
         </section>
