@@ -2,12 +2,14 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Mail } from 'lucide-react';
 
+const ease = { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] } as const;
+
 export const Navbar = () => {
     const [isOpen, setIsOpen] = React.useState(false);
     const [scrolled, setScrolled] = React.useState(false);
 
     React.useEffect(() => {
-        const handleScroll = () => setScrolled(window.scrollY > 40);
+        const handleScroll = () => setScrolled(window.scrollY > 60);
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
@@ -19,66 +21,133 @@ export const Navbar = () => {
     ];
 
     return (
-        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${scrolled ? 'py-3' : 'py-6'}`}>
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className={`flex justify-between items-center transition-all duration-700 rounded-[1.75rem] px-6 ${
-                    scrolled
-                        ? 'bg-white/80 backdrop-blur-2xl h-[64px] border border-blue-100/80 shadow-[0_8px_40px_rgba(27,78,216,0.07),0_2px_12px_rgba(0,0,0,0.04)]'
-                        : 'h-[76px] bg-transparent'
-                }`}>
-
-                    {/* Logo */}
-                    <a href="/" className="flex items-center gap-3 group cursor-pointer">
-                        <div className="w-9 h-9 rounded-[10px] overflow-hidden shadow-[0_4px_16px_rgba(27,78,216,0.25)] group-hover:shadow-[0_8px_24px_rgba(27,78,216,0.40)] group-hover:scale-105 transition-all duration-500 flex-shrink-0">
-                            <img src="/logo.png" alt="Niyantran" className="w-full h-full object-cover" />
-                        </div>
-                        <div className="flex flex-col leading-none">
-                            <span className="text-[16px] font-heading font-black tracking-[-0.04em] text-navy">NIYANTRAN</span>
-                            <span className="text-[8px] font-mono text-primary/60 tracking-[0.25em] uppercase font-bold">Instruments</span>
-                        </div>
-                    </a>
-
-                    {/* Desktop nav */}
-                    <div className="hidden md:flex items-center gap-8">
-                        {navLinks.map(link => (
-                            <a
-                                key={link.label}
-                                href={link.href}
-                                className="relative text-[13px] font-medium text-slate-500 hover:text-navy transition-colors duration-200 tracking-wide group"
-                            >
-                                {link.label}
-                                <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-primary/50 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
-                            </a>
-                        ))}
-                        <a
-                            href="#inquiry"
-                            className="inline-flex items-center gap-2 rounded-[12px] px-5 h-[40px] bg-navy hover:bg-primary text-white text-[13px] font-bold tracking-[0.06em] shadow-[0_4px_16px_rgba(4,14,33,0.20)] hover:shadow-[0_6px_22px_rgba(27,78,216,0.35)] transition-all duration-300"
-                        >
-                            <Mail className="h-3.5 w-3.5" />
-                            Get in Touch
-                        </a>
-                    </div>
-
-                    {/* Mobile toggle */}
-                    <button
-                        className="md:hidden w-10 h-10 flex items-center justify-center rounded-[12px] text-navy hover:bg-blue-50 transition-colors"
-                        onClick={() => setIsOpen(v => !v)}
-                        aria-label="Toggle menu"
+        <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
+            {/* Centering shell — constrains max expanded width */}
+            <div className="flex justify-center px-6">
+                <motion.div
+                    className="pointer-events-auto w-full"
+                    style={{ maxWidth: 860 }}
+                    animate={{ marginTop: scrolled ? 14 : 20 }}
+                    transition={ease}
+                >
+                    {/* The pill */}
+                    <motion.div
+                        className="mx-auto flex items-center justify-between rounded-full border"
+                        animate={{
+                            width: scrolled ? '100%' : 'auto',
+                            backgroundColor: scrolled
+                                ? 'rgba(255,255,255,0.90)'
+                                : 'rgba(255,255,255,0.04)',
+                            borderColor: scrolled
+                                ? 'rgba(219,234,254,0.90)'
+                                : 'rgba(255,255,255,0.08)',
+                            paddingLeft: scrolled ? 30 : 10,
+                            paddingRight: scrolled ? 26 : 10,
+                            height: scrolled ? 72 : 46,
+                            boxShadow: scrolled
+                                ? '0 10px_40px rgba(27,78,216,0.10), 0 2px 12px rgba(0,0,0,0.06)'
+                                : '0 2px 16px rgba(0,0,0,0.06)',
+                        }}
+                        style={{
+                            backdropFilter: 'blur(28px)',
+                            WebkitBackdropFilter: 'blur(28px)',
+                        }}
+                        transition={ease}
                     >
-                        {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-                    </button>
-                </div>
+                        {/* LEFT — Logo (icon always, text on expand) */}
+                        <a href="/" className="flex items-center gap-3 group cursor-pointer flex-shrink-0">
+                            <motion.div
+                                className="overflow-hidden flex-shrink-0 shadow-[0_4px_14px_rgba(27,78,216,0.22)] group-hover:shadow-[0_6px_22px_rgba(27,78,216,0.36)] transition-shadow duration-300"
+                                animate={{
+                                    width: scrolled ? 42 : 30,
+                                    height: scrolled ? 42 : 30,
+                                    borderRadius: scrolled ? '11px' : '8px',
+                                }}
+                                transition={ease}
+                            >
+                                <img src="/logo.png" alt="Niyantran" className="w-full h-full object-cover" />
+                            </motion.div>
+                            <AnimatePresence>
+                                {scrolled && (
+                                    <motion.div
+                                        key="logo-text"
+                                        initial={{ opacity: 0, x: -10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: -10 }}
+                                        transition={{ duration: 0.26, delay: 0.07 }}
+                                        className="flex flex-col leading-none"
+                                        style={{ whiteSpace: 'nowrap' }}
+                                    >
+                                        <span className="text-[15px] font-heading font-black tracking-[-0.04em] text-navy">NIYANTRAN</span>
+                                        <span className="text-[8px] font-mono text-primary/60 tracking-[0.22em] uppercase font-bold">Instruments</span>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </a>
+
+                        {/* RIGHT — Nav links + CTA, desktop only, on expand */}
+                        <AnimatePresence>
+                            {scrolled && (
+                                <motion.div
+                                    key="nav-right"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.24, delay: 0.14 }}
+                                    className="hidden md:flex items-center gap-10 flex-shrink-0"
+                                >
+                                    {navLinks.map(link => (
+                                        <a
+                                            key={link.label}
+                                            href={link.href}
+                                            className="relative text-[14px] font-medium text-slate-500 hover:text-navy transition-colors duration-200 tracking-wide whitespace-nowrap group"
+                                        >
+                                            {link.label}
+                                            <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-primary/50 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
+                                        </a>
+                                    ))}
+                                    <a
+                                        href="#inquiry"
+                                        className="inline-flex items-center gap-2 rounded-full px-6 h-[44px] bg-navy hover:bg-primary text-white text-[13.5px] font-bold tracking-[0.04em] shadow-[0_4px_16px_rgba(4,14,33,0.22)] hover:shadow-[0_6px_24px_rgba(27,78,216,0.35)] transition-all duration-300 whitespace-nowrap"
+                                    >
+                                        <Mail className="h-3.5 w-3.5" />
+                                        Get in Touch
+                                    </a>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* Mobile hamburger — always visible on mobile */}
+                        <button
+                            className="md:hidden w-9 h-9 flex items-center justify-center rounded-full text-navy hover:bg-blue-50/80 transition-colors flex-shrink-0 ml-2"
+                            onClick={() => setIsOpen(v => !v)}
+                            aria-label="Toggle menu"
+                        >
+                            <AnimatePresence mode="wait">
+                                {isOpen ? (
+                                    <motion.span key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}>
+                                        <X className="h-4 w-4" />
+                                    </motion.span>
+                                ) : (
+                                    <motion.span key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}>
+                                        <Menu className="h-4 w-4" />
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
+                        </button>
+                    </motion.div>
+                </motion.div>
             </div>
 
-            {/* Mobile menu */}
+            {/* Mobile dropdown */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: -8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.2 }}
-                        className="md:hidden mt-2 mx-4 bg-white/95 backdrop-blur-xl rounded-[1.5rem] border border-blue-100 shadow-[0_12px_40px_rgba(27,78,216,0.10)] overflow-hidden"
+                        initial={{ opacity: 0, scale: 0.96, y: -10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.96, y: -10 }}
+                        transition={{ duration: 0.22, ease: 'easeOut' }}
+                        className="pointer-events-auto absolute top-[76px] left-4 right-4 bg-white/95 backdrop-blur-xl rounded-[1.5rem] border border-blue-100 shadow-[0_12px_40px_rgba(27,78,216,0.12)] overflow-hidden"
                     >
                         <div className="flex flex-col p-4 gap-1">
                             {navLinks.map(link => (
@@ -102,7 +171,7 @@ export const Navbar = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </nav>
+        </div>
     );
 };
 
