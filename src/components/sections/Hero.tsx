@@ -14,7 +14,7 @@ export const Hero = () => {
         document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
     return (
-        <section className="relative min-h-[96vh] flex items-center justify-center pt-28 pb-24 overflow-hidden bg-background">
+        <section className="relative min-h-[96vh] flex items-center justify-center pt-20 sm:pt-28 pb-16 sm:pb-24 overflow-hidden bg-background">
 
             {/* ── Background atmosphere ── */}
             <div className="absolute inset-0 fine-grid opacity-[0.42] pointer-events-none" />
@@ -48,7 +48,7 @@ export const Hero = () => {
                     initial={{ opacity: 0, y: 14 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-                    className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-blue-100 bg-white text-[10px] font-mono font-bold tracking-[0.4em] uppercase text-primary/70 mb-10 shadow-[0_2px_12px_rgba(27,78,216,0.07)]"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-blue-100 bg-white text-[9px] sm:text-[10px] font-mono font-bold tracking-[0.3em] sm:tracking-[0.4em] uppercase text-primary/70 mb-8 sm:mb-10 shadow-[0_2px_12px_rgba(27,78,216,0.07)]"
                 >
                     <span className="relative flex h-1.5 w-1.5">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60" />
@@ -91,7 +91,7 @@ export const Hero = () => {
                     initial={{ opacity: 0, y: 14 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.38, duration: 0.72 }}
-                    className="text-base md:text-lg text-slate-400 max-w-xl mx-auto mb-11 leading-relaxed font-light"
+                    className="text-sm sm:text-base md:text-lg text-slate-400 max-w-xl mx-auto mb-8 sm:mb-11 leading-relaxed font-light px-2 sm:px-0"
                 >
                     Precision measurement systems and automation solutions for modern research laboratories.
                 </motion.p>
@@ -101,14 +101,14 @@ export const Hero = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.46, duration: 0.68 }}
-                    className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-16"
+                    className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-12 sm:mb-16 w-full px-4 sm:px-0"
                 >
                     <motion.button
                         onClick={() => scrollTo('inquiry')}
                         whileHover={{ y: -2.5, scale: 1.024 }}
                         whileTap={{ scale: 0.966 }}
                         transition={{ type: 'spring', stiffness: 420, damping: 28 }}
-                        className="inline-flex items-center gap-2 rounded-[14px] px-8 h-[52px] bg-navy hover:bg-primary text-white text-sm font-bold tracking-[0.08em] uppercase shadow-[0_8px_32px_rgba(4,14,33,0.18)] hover:shadow-[0_14px_44px_rgba(27,78,216,0.32)] transition-colors transition-shadow duration-300"
+                        className="inline-flex items-center gap-2 rounded-[14px] px-6 sm:px-8 h-[48px] sm:h-[52px] w-full sm:w-auto justify-center bg-navy hover:bg-primary text-white text-sm font-bold tracking-[0.08em] uppercase shadow-[0_8px_32px_rgba(4,14,33,0.18)] hover:shadow-[0_14px_44px_rgba(27,78,216,0.32)] transition-colors transition-shadow duration-300"
                     >
                         Request Consultation
                         <ArrowRight className="h-4 w-4" />
@@ -118,7 +118,7 @@ export const Hero = () => {
                         whileHover={{ y: -2, scale: 1.016 }}
                         whileTap={{ scale: 0.972 }}
                         transition={{ type: 'spring', stiffness: 420, damping: 28 }}
-                        className="inline-flex items-center gap-1.5 rounded-[14px] px-8 h-[52px] text-sm font-semibold text-slate-500 hover:text-navy hover:bg-blue-50/70 transition-all duration-300"
+                        className="inline-flex items-center gap-1.5 rounded-[14px] px-6 sm:px-8 h-[48px] sm:h-[52px] w-full sm:w-auto justify-center text-sm font-semibold text-slate-500 hover:text-navy hover:bg-blue-50/70 transition-all duration-300"
                     >
                         View Services
                         <ChevronRight className="h-4 w-4 opacity-60" />
@@ -130,11 +130,11 @@ export const Hero = () => {
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.60, duration: 0.75 }}
-                    className="inline-flex items-center justify-center flex-wrap rounded-[1.5rem] border border-blue-50 bg-white/70 backdrop-blur-sm shadow-[0_2px_16px_rgba(27,78,216,0.05)] px-2 py-1"
+                    className="inline-flex items-center justify-center flex-wrap rounded-[1.5rem] border border-blue-50 bg-white/70 backdrop-blur-sm shadow-[0_2px_16px_rgba(27,78,216,0.05)] px-1 py-1 w-full sm:w-auto"
                 >
                     {METRICS.map((m, i) => (
                         <React.Fragment key={i}>
-                            <div className="px-5 py-3 text-center">
+                            <div className="px-3 sm:px-5 py-3 text-center flex-1 sm:flex-none">
                                 <div className="font-heading font-black text-[1.25rem] text-navy tracking-tight leading-none mb-0.5">
                                     {m.value}
                                 </div>

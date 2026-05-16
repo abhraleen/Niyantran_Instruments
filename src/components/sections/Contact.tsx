@@ -50,12 +50,12 @@ export const Contact = () => {
     };
 
     return (
-        <section id="inquiry" className="py-28 bg-surface relative overflow-hidden">
+        <section id="inquiry" className="py-16 sm:py-24 lg:py-28 bg-surface relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-100 to-transparent" />
             <div className="absolute inset-0 scientific-grid opacity-[0.03] pointer-events-none" />
 
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
 
                     {/* Left */}
                     <motion.div
@@ -66,7 +66,7 @@ export const Contact = () => {
                         className="pt-2"
                     >
                         <p className="text-[10px] font-mono font-bold tracking-[0.45em] uppercase text-primary/60 mb-5">Get in Touch</p>
-                        <h2 className="font-heading font-black text-4xl md:text-5xl text-navy tracking-[-0.03em] leading-[1.05] mb-6">
+                        <h2 className="font-heading font-black text-3xl sm:text-4xl md:text-5xl text-navy tracking-[-0.03em] leading-[1.05] mb-6">
                             Request a<br />
                             <span className="text-gradient">Consultation</span>
                         </h2>
@@ -89,7 +89,7 @@ export const Contact = () => {
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, delay: 0.1 }}
                     >
-                        <div className="bg-white rounded-[2rem] border border-blue-50 p-8 shadow-[0_8px_40px_rgba(27,78,216,0.06)]">
+                        <div className="bg-white rounded-[1.5rem] sm:rounded-[2rem] border border-blue-50 p-5 sm:p-8 shadow-[0_8px_40px_rgba(27,78,216,0.06)]">
                             <AnimatePresence mode="wait">
                                 {isSubmitted ? (
                                     <motion.div
@@ -112,7 +112,7 @@ export const Contact = () => {
                                         onSubmit={handleSubmit}
                                         className="flex flex-col gap-3.5"
                                     >
-                                        <div className="grid grid-cols-2 gap-3.5">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                                             <Input
                                                 placeholder="Your name"
                                                 value={formData.name}
@@ -128,7 +128,7 @@ export const Contact = () => {
                                                 className="rounded-[14px] border-blue-50 bg-blue-50/30 h-12 px-4 text-sm placeholder:text-slate-300 focus:bg-white focus:border-primary/30 focus:ring-2 focus:ring-primary/10 transition-all duration-300"
                                             />
                                         </div>
-                                        <div className="grid grid-cols-2 gap-3.5">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                                             <Input
                                                 type="email"
                                                 placeholder="Email address"

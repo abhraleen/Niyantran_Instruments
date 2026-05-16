@@ -187,7 +187,7 @@ export const PlatformCards = ({
 
     return (
         <>
-        <section id="platform" className="py-32 bg-white relative overflow-hidden">
+        <section id="platform" className="py-16 sm:py-24 lg:py-32 bg-white relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-100 to-transparent" />
 
             {/* Adaptive atmosphere */}
@@ -243,7 +243,7 @@ export const PlatformCards = ({
                         animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                         exit={{ opacity: 0, y: -12, filter: 'blur(3px)' }}
                         transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
-                        className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center"
+                        className="flex flex-col lg:flex-row gap-8 md:gap-12 lg:gap-16 items-center"
                     >
                         {/* Left: text content */}
                         <div className="flex-1 min-w-0">
@@ -285,7 +285,7 @@ export const PlatformCards = ({
                             </p>
 
                             {/* Feature grid 2×2 */}
-                            <div className="grid grid-cols-2 gap-3 mb-10">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8 sm:mb-10">
                                 {activeMode === 'industry' && industryServices.length > 0 ? (
                                     industryServices.map((svc, j) => (
                                         <motion.button
@@ -359,11 +359,11 @@ export const PlatformCards = ({
                                 initial={{ opacity: 0, y: 8 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.22, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                                className="flex items-center gap-5 flex-wrap"
+                                className="flex items-center gap-4 flex-wrap"
                             >
                                 <button
                                     onClick={() => onSelectMode?.(activeMode)}
-                                    className="inline-flex items-center gap-2 rounded-[14px] px-8 h-[52px] text-white text-sm font-bold tracking-[0.06em] hover:-translate-y-0.5 active:scale-95 transition-all duration-300"
+                                    className="inline-flex items-center gap-2 rounded-[14px] px-6 sm:px-8 h-[48px] sm:h-[52px] w-full sm:w-auto justify-center text-white text-sm font-bold tracking-[0.06em] hover:-translate-y-0.5 active:scale-95 transition-all duration-300"
                                     style={{
                                         background: c.ctaBg,
                                         boxShadow: c.ctaShadow,
@@ -379,7 +379,7 @@ export const PlatformCards = ({
                         </div>
 
                         {/* Right: visual panel */}
-                        <div className="w-full lg:w-[340px] flex-shrink-0">
+                        <div className="w-full lg:w-[320px] xl:w-[340px] flex-shrink-0">
                             <div
                                 className="relative rounded-[2.5rem] overflow-hidden"
                                 style={{
@@ -399,7 +399,7 @@ export const PlatformCards = ({
                                     }}
                                 />
 
-                                <div className="relative p-10 flex flex-col items-center">
+                                <div className="relative p-6 sm:p-10 flex flex-col items-center">
 
                                     {/* Status indicator */}
                                     <div className="flex items-center gap-2 mb-9">

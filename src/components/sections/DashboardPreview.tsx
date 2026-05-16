@@ -19,13 +19,13 @@ const ChartBar = ({ height, delay, highlight }: { height: string; delay: number;
 
 export const DashboardPreview = () => {
     return (
-        <section className="py-36 bg-white overflow-hidden relative">
+        <section className="py-16 sm:py-24 lg:py-36 bg-white overflow-hidden relative">
             {/* Atmospheric glow */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[700px] bg-primary/[0.04] rounded-full blur-[180px] pointer-events-none" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Header */}
-                <div className="text-center mb-20">
+                <div className="text-center mb-10 sm:mb-16 lg:mb-20">
                     <motion.div
                         initial={{ opacity: 0, y: 24 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -33,7 +33,7 @@ export const DashboardPreview = () => {
                         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                     >
                         <p className="section-label justify-center mb-6">Operational Intelligence</p>
-                        <h3 className="text-5xl md:text-7xl font-heading font-black text-navy mb-8 leading-[0.9] tracking-[-0.03em]">
+                        <h3 className="text-3xl sm:text-5xl md:text-7xl font-heading font-black text-navy mb-6 sm:mb-8 leading-[0.9] tracking-[-0.03em]">
                             Advanced Monitoring<br />
                             <span className="text-gradient">for Modern Labs</span>
                         </h3>
@@ -49,10 +49,10 @@ export const DashboardPreview = () => {
                     whileInView={{ opacity: 1, y: 0, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1] }}
-                    className="rounded-[3rem] overflow-hidden border border-blue-50 shadow-[0_40px_120px_rgba(27,78,216,0.10),0_8px_32px_rgba(0,0,0,0.04)]"
+                    className="rounded-[1.5rem] sm:rounded-[2.5rem] lg:rounded-[3rem] overflow-hidden border border-blue-50 shadow-[0_40px_120px_rgba(27,78,216,0.10),0_8px_32px_rgba(0,0,0,0.04)]"
                 >
                     {/* Window chrome */}
-                    <div className="bg-navy px-8 py-5 flex items-center justify-between border-b border-white/[0.05]">
+                    <div className="bg-navy px-4 sm:px-8 py-4 sm:py-5 flex items-center justify-between border-b border-white/[0.05]">
                         <div className="flex items-center gap-4">
                             <div className="flex gap-2">
                                 <div className="w-3 h-3 rounded-full bg-red-400/70" />
@@ -80,12 +80,12 @@ export const DashboardPreview = () => {
                     </div>
 
                     {/* Dashboard content */}
-                    <div className="bg-white p-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <div className="bg-white p-4 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8">
 
                         {/* Main content area */}
                         <div className="lg:col-span-8 space-y-8">
                             {/* KPI cards */}
-                            <div className="grid grid-cols-3 gap-5">
+                            <div className="grid grid-cols-3 gap-3 sm:gap-5">
                                 {[
                                     { label: 'Active Nodes', val: '32', icon: Layers, trend: '+4%', pos: true },
                                     { label: 'Live Experiments', val: '12', icon: Activity, trend: 'Stable', pos: null },
@@ -98,9 +98,9 @@ export const DashboardPreview = () => {
                                         viewport={{ once: true }}
                                         transition={{ delay: 0.3 + i * 0.1 }}
                                         whileHover={{ y: -4 }}
-                                        className="p-7 bg-surface rounded-[1.5rem] border border-blue-50 hover:border-primary/18 hover:shadow-[0_12px_40px_rgba(27,78,216,0.08)] hover:bg-white transition-all duration-500 group cursor-default"
+                                        className="p-4 sm:p-7 bg-surface rounded-[1rem] sm:rounded-[1.5rem] border border-blue-50 hover:border-primary/18 hover:shadow-[0_12px_40px_rgba(27,78,216,0.08)] hover:bg-white transition-all duration-500 group cursor-default"
                                     >
-                                        <div className="flex justify-between items-center mb-6">
+                                        <div className="flex justify-between items-center mb-3 sm:mb-6">
                                             <div className="w-9 h-9 rounded-[10px] bg-gradient-to-br from-primary to-primary-light flex items-center justify-center group-hover:shadow-[0_4px_14px_rgba(27,78,216,0.30)] transition-shadow duration-500">
                                                 <card.icon className="h-4.5 w-4.5 text-white" strokeWidth={2} />
                                             </div>
@@ -108,15 +108,15 @@ export const DashboardPreview = () => {
                                                 {card.trend}
                                             </span>
                                         </div>
-                                        <div className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.35em] mb-1">{card.label}</div>
-                                        <div className="text-4xl font-heading font-black text-navy tracking-tighter">{card.val}</div>
+                                        <div className="text-[9px] sm:text-[10px] font-bold text-slate-300 uppercase tracking-[0.35em] mb-1">{card.label}</div>
+                                        <div className="text-2xl sm:text-4xl font-heading font-black text-navy tracking-tighter">{card.val}</div>
                                     </motion.div>
                                 ))}
                             </div>
 
                             {/* Chart */}
-                            <div className="p-9 bg-white rounded-[2rem] border border-blue-50 shadow-[0_2px_16px_rgba(27,78,216,0.04)] group">
-                                <div className="flex items-center justify-between mb-10">
+                            <div className="p-5 sm:p-9 bg-white rounded-[1.5rem] sm:rounded-[2rem] border border-blue-50 shadow-[0_2px_16px_rgba(27,78,216,0.04)] group">
+                                <div className="flex items-center justify-between mb-6 sm:mb-10">
                                     <h5 className="text-base font-heading font-black tracking-tight text-navy flex items-center gap-3">
                                         <div className="h-2 w-2 bg-gradient-to-br from-primary to-primary-light rounded-full" />
                                         Signal Stability Analysis
@@ -145,7 +145,7 @@ export const DashboardPreview = () => {
                                 <div className="absolute -bottom-8 left-0 w-40 h-40 bg-accent/10 rounded-full blur-[80px]" />
                                 <div className="h-1 bg-gradient-to-r from-primary via-primary-light to-accent" />
 
-                                <div className="p-8 relative z-10">
+                                <div className="p-5 sm:p-8 relative z-10">
                                     <h5 className="text-xl font-heading font-black mb-7 leading-tight text-white tracking-tight">
                                         System Reliability<br />Protocols
                                     </h5>

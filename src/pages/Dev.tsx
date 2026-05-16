@@ -65,7 +65,7 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
                 >
                     <button
                         onClick={() => handleMode('industry')}
-                        className="inline-flex items-center gap-2 rounded-[14px] px-8 h-[52px] bg-navy hover:bg-primary text-white text-sm font-bold tracking-[0.08em] uppercase shadow-[0_8px_32px_rgba(4,14,33,0.18)] hover:shadow-[0_12px_40px_rgba(27,78,216,0.30)] transition-all duration-300 hover:-translate-y-0.5 active:scale-95"
+                        className="inline-flex items-center justify-center gap-2 rounded-[14px] px-8 h-[52px] w-full sm:w-auto bg-navy hover:bg-primary text-white text-sm font-bold tracking-[0.08em] uppercase shadow-[0_8px_32px_rgba(4,14,33,0.18)] hover:shadow-[0_12px_40px_rgba(27,78,216,0.30)] transition-all duration-300 hover:-translate-y-0.5 active:scale-95"
                     >
                         Industry Solutions
                         <ArrowRight className="h-4 w-4" />

@@ -208,7 +208,7 @@ export const Footer = () => {
                     </div>
 
                     {/* Email + copyright */}
-                    <div className="flex flex-col sm:flex-row items-center gap-3 text-right">
+                    <div className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-right">
                         <a
                             href="mailto:sb@niyantran.org"
                             className="inline-flex items-center gap-1.5 text-[12px] text-slate-400 hover:text-primary transition-colors"
