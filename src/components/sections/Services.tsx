@@ -35,10 +35,38 @@ export function ServiceIcon({ name, className }: { name: string; className?: str
 
 // ─── Fallback static data ─────────────────────────────────────────────────────
 const FALLBACK: Service[] = [
-    { id: 1, title: 'I–V Measurement Systems',        slug: 'iv-measurement-systems',        mode: 'industry',  short_description: 'Precision current–voltage characterisation for semiconductor devices, solar cells, and electronic materials research.',                                                    full_description: '', applications: [], features: [], icon: 'Activity',     status: 'active', sort_order: 1, created_at: '', updated_at: '' },
-    { id: 2, title: 'Quantum Efficiency Measurement',  slug: 'quantum-efficiency-measurement', mode: 'industry',  short_description: 'Advanced EQE/IQE measurement systems designed for accurate photovoltaic characterisation and performance analysis.',                                                    full_description: '', applications: [], features: [], icon: 'Beaker',       status: 'active', sort_order: 2, created_at: '', updated_at: '' },
-    { id: 3, title: 'Evaporation Process Control',     slug: 'evaporation-process-control',    mode: 'industry',  short_description: 'Automation and monitoring for thin-film deposition systems — improved process stability and repeatable results.',                                                       full_description: '', applications: [], features: [], icon: 'Layers',       status: 'active', sort_order: 3, created_at: '', updated_at: '' },
-    { id: 4, title: 'Scientific Software Consultancy', slug: 'scientific-software-consultancy', mode: 'both',     short_description: 'Custom instrument interfacing, automation, data acquisition, and analysis software for research and industrial applications.', full_description: '', applications: [], features: [], icon: 'Code',         status: 'active', sort_order: 4, created_at: '', updated_at: '' },
+    {
+        id: 1, slug: 'iv-measurement-systems', mode: 'industry', icon: 'Activity', status: 'active', sort_order: 1, created_at: '', updated_at: '',
+        title: 'I–V Measurement Systems',
+        short_description: 'Precision current–voltage characterisation for semiconductor devices, solar cells, and electronic materials research.',
+        full_description: 'Our I–V Measurement Systems deliver sub-nanoampere resolution current-voltage characterisation for a wide range of electronic materials and devices. Built around high-accuracy source measure units (SMUs), these systems support temperature-dependent measurements, multi-contact probing, and real-time data acquisition. Ideal for research labs, quality control, and device qualification workflows.',
+        applications: ['Solar cell J-V characterisation', 'Semiconductor device testing', 'Organic electronics research', 'Thin-film transistor evaluation', 'Diode and MOSFET parameter extraction', 'Temperature-dependent IV sweeps'],
+        features: ['Sub-nA current resolution', 'Automated voltage sweep control', 'Multi-contact probe station integration', 'Real-time plotting and data export', 'Python & LabVIEW interfaces', 'Temperature stage support (77K–450K)'],
+    },
+    {
+        id: 2, slug: 'quantum-efficiency-measurement', mode: 'industry', icon: 'Beaker', status: 'active', sort_order: 2, created_at: '', updated_at: '',
+        title: 'Quantum Efficiency Measurement',
+        short_description: 'Advanced EQE/IQE measurement systems designed for accurate photovoltaic characterisation and performance analysis.',
+        full_description: 'Quantum Efficiency Measurement systems from Niyantran Instruments provide spectral-resolved photocurrent analysis for photovoltaic and optoelectronic devices. Our EQE/IQE systems cover 300–1200 nm spectral range with high signal-to-noise ratio, supporting both research-grade and production-line measurements. Lock-in amplifier-based signal recovery ensures accuracy even for low-efficiency devices.',
+        applications: ['Perovskite solar cell EQE', 'Silicon PV characterisation', 'III-V multi-junction cell analysis', 'Organic photovoltaic research', 'Space-grade photodetector qualification', 'LED internal quantum efficiency'],
+        features: ['Spectral range 300–1200 nm', 'Lock-in amplifier signal recovery', 'Bifacial measurement support', 'Monochromator-based illumination', 'Bias light and voltage control', 'Automated wavelength scanning'],
+    },
+    {
+        id: 3, slug: 'evaporation-process-control', mode: 'industry', icon: 'Layers', status: 'active', sort_order: 3, created_at: '', updated_at: '',
+        title: 'Evaporation Process Control',
+        short_description: 'Automation and monitoring for thin-film deposition systems — improved process stability and repeatable results.',
+        full_description: 'Niyantran Evaporation Process Control systems provide closed-loop automation for thermal and e-beam evaporation chambers. Real-time thickness monitoring via quartz crystal microbalance (QCM), combined with feedback-controlled power supplies, ensures precise deposition rates and target thicknesses. Suitable for metallic, organic, and dielectric thin-film processes.',
+        applications: ['Metal electrode deposition', 'Organic semiconductor thin films', 'Dielectric layer deposition', 'Multi-layer stack fabrication', 'Transparent conducting oxide coating', 'Defense-grade optical coatings'],
+        features: ['QCM-based real-time thickness monitoring', 'Closed-loop deposition rate control', 'Multi-source sequencing', 'Recipe storage and recall', 'Interlocks and safety shutdown', 'Data logging and process reports'],
+    },
+    {
+        id: 4, slug: 'scientific-software-consultancy', mode: 'both', icon: 'Code', status: 'active', sort_order: 4, created_at: '', updated_at: '',
+        title: 'Scientific Software Consultancy',
+        short_description: 'Custom instrument interfacing, automation, data acquisition, and analysis software for research and industrial applications.',
+        full_description: 'Our Scientific Software Consultancy service delivers bespoke instrument control and data acquisition solutions tailored to your lab or production environment. From SCPI-controlled bench instruments to complex multi-instrument automated test systems, we design, develop, and deploy software that integrates seamlessly with your existing hardware. We work with Python, LabVIEW, MATLAB, and C++ to deliver reliable, maintainable codebases.',
+        applications: ['PPMS automation scripts', 'SCPI instrument control frameworks', 'Automated test and measurement (ATE)', 'Multi-channel data acquisition', 'Lab notebook and LIMS integration', 'Custom GUI dashboards for instrument control'],
+        features: ['Python, LabVIEW, MATLAB, C++', 'GPIB, USB, RS-232, Ethernet support', 'Real-time data visualisation', 'Automated report generation', 'Version-controlled deliverables', 'Post-delivery support and training'],
+    },
 ];
 
 // ─── Responsive hook ──────────────────────────────────────────────────────────
@@ -336,9 +364,12 @@ export const Services = () => {
     const [selected, setSelected] = React.useState<Service | null>(null);
 
     React.useEffect(() => {
+        console.log('🔵 Services: Starting fetch from /api/services');
         fetch('/api/services')
             .then(async r => {
+                console.log('🟡 Services: Response status', r.status);
                 const json = await r.json();
+                console.log('🟢 Services: Response data', json);
                 const raw: Service[] = Array.isArray(json.data) ? json.data : Array.isArray(json) ? json : [];
                 // Normalise: ensure applications/features are always arrays
                 const data = raw.map(s => ({
@@ -346,9 +377,13 @@ export const Services = () => {
                     applications: Array.isArray(s.applications) ? s.applications : [],
                     features:     Array.isArray(s.features)     ? s.features     : [],
                 }));
+                console.log('🟢 Services: Setting services state with', data.length, 'items');
                 setServices(data.length > 0 ? data : FALLBACK);
             })
-            .catch(() => setServices(FALLBACK))
+            .catch(err => {
+                console.error('🔴 Services: Fetch failed:', err);
+                setServices(FALLBACK);
+            })
             .finally(() => setLoading(false));
     }, []);
 

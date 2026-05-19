@@ -296,12 +296,28 @@ export const Navbar = ({
     );
 };
 
-export const Footer = () => {
+interface FooterProps {
+    onLoginClick?: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onLoginClick }) => {
+    const [clickCount, setClickCount] = React.useState(0);
     const navLinks = [
         { label: 'About', href: '#about' },
         { label: 'Services', href: '#services' },
         { label: 'Inquiry', href: '#inquiry' },
     ];
+
+    const handleLogoClick = () => {
+        setClickCount(c => c + 1);
+        if (clickCount === 4) {
+            // 5 clicks (0-4) on logo triggers admin login
+            onLoginClick?.();
+            setClickCount(0);
+        } else if (clickCount > 5) {
+            setClickCount(0);
+        }
+    };
 
     return (
         <footer className="py-10 border-t border-blue-50 footer-glow bg-white">
@@ -313,13 +329,17 @@ export const Footer = () => {
                     viewport={{ once: true, margin: '-5%' }}
                     transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    {/* Logo */}
-                    <a href="/" className="flex items-center gap-2.5 group">
+                    {/* Logo — secret 5-click button for admin login */}
+                    <button
+                        onClick={handleLogoClick}
+                        className="flex items-center gap-2.5 group hover:opacity-75 transition-opacity focus:outline-none"
+                        title={clickCount > 0 ? `${5 - clickCount - 1} more clicks for admin...` : ''}
+                    >
                         <div className="w-8 h-8 rounded-[8px] overflow-hidden shadow-[0_2px_8px_rgba(27,78,216,0.14)] group-hover:shadow-[0_4px_16px_rgba(27,78,216,0.24)] transition-shadow duration-300">
                             <img src="/logo.png" alt="Niyantran" className="w-full h-full object-cover" />
                         </div>
                         <span className="text-[14px] font-heading font-black tracking-[-0.03em] text-navy group-hover:text-primary transition-colors duration-300">NIYANTRAN</span>
-                    </a>
+                    </button>
 
                     {/* Nav links */}
                     <div className="flex items-center gap-6">

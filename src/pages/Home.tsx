@@ -7,7 +7,7 @@ import { Services } from '@/components/sections/Services';
 import { Contact } from '@/components/sections/Contact';
 import { WelcomeScreen } from '@/components/layout/WelcomeScreen';
 
-export const Home = () => {
+export const Home: React.FC<{ onLoginClick?: () => void }> = ({ onLoginClick }) => {
     const [showWelcome, setShowWelcome] = React.useState(true);
 
     const handleComplete = React.useCallback(() => {
@@ -30,7 +30,7 @@ export const Home = () => {
                     <Services />
                     <Contact />
                 </main>
-                <Footer />
+                <Footer onLoginClick={onLoginClick} />
             </div>
         </>
     );

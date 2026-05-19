@@ -89,10 +89,10 @@ const modeContent = {
         description:
             'Precision measurement instruments, custom automation software, and process control systems engineered for semiconductor laboratories, photovoltaic research, and industrial measurement applications.',
         features: [
-            { icon: Activity,  label: 'I–V & QE Measurement',  detail: 'Solar cell characterization' },
-            { icon: Cpu,       label: 'Process Automation',     detail: 'Semiconductor workflows' },
-            { icon: BarChart3, label: 'Data Acquisition',       detail: 'Custom DAQ software' },
-            { icon: Layers,    label: 'Evaporation Control',    detail: 'Thin-film deposition' },
+            { icon: Activity,  label: 'I–V Measurement Systems',        detail: 'Precision current–voltage characterisation for semiconductor devices and solar cells.' },
+            { icon: Cpu,       label: 'Quantum Efficiency Measurement',  detail: 'Advanced EQE/IQE systems for photovoltaic characterisation and performance analysis.' },
+            { icon: BarChart3, label: 'Evaporation Process Control',     detail: 'Closed-loop automation for thin-film deposition with real-time QCM monitoring.' },
+            { icon: Layers,    label: 'Scientific Software Consultancy', detail: 'Custom instrument interfacing, automation, and data acquisition software.' },
         ],
         cta: 'Request a Consultation',
         ctaSub: 'Enterprise & laboratory inquiries',
@@ -177,35 +177,60 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.06 + j * 0.07, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-        whileHover={{ y: -3, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
-        whileTap={{ scale: 0.99 }}
+        whileHover={{ y: -5, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
+        whileTap={{ scale: 0.985 }}
         onClick={onClick}
         className={[
-            'group flex flex-col rounded-[1.75rem] border border-slate-200/70 bg-white',
-            'hover:border-[#1B4ED8]/25 hover:shadow-[0_8px_32px_rgba(59,126,248,0.08)]',
-            'transition-all duration-200',
+            'group relative flex flex-col overflow-hidden rounded-[1.75rem]',
+            'border border-slate-200/80',
+            'hover:border-[#1B4ED8]/30 hover:shadow-[0_16px_48px_rgba(27,78,216,0.11),0_2px_8px_rgba(27,78,216,0.06)]',
+            'transition-all duration-300',
             onClick ? 'cursor-pointer' : 'cursor-default',
             carousel ? 'snap-start flex-shrink-0 w-[74vw] max-w-[268px] p-5' : 'p-7',
-        ].filter(Boolean).join(` `)}
+        ].filter(Boolean).join(' ')}
+        style={{ background: 'linear-gradient(158deg, #f8faff 0%, #ffffff 55%)' }}
     >
+        {/* Top accent bar — appears on hover */}
+        <div
+            aria-hidden
+            className="absolute top-0 inset-x-0 h-[2px] rounded-t-[1.75rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            style={{ background: 'linear-gradient(90deg, transparent 5%, rgba(27,78,216,0.55) 35%, rgba(59,130,246,0.65) 65%, transparent 95%)' }}
+        />
+
+        {/* Radial glow on hover */}
+        <div
+            aria-hidden
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+            style={{ background: 'radial-gradient(ellipse 80% 55% at 50% 0%, rgba(27,78,216,0.04), transparent)' }}
+        />
+
+        {/* Card index */}
+        <span
+            aria-hidden
+            className="absolute top-5 right-5 text-[10px] font-mono font-black text-slate-200 group-hover:text-[#1B4ED8]/35 transition-colors duration-300 tabular-nums select-none"
+        >
+            {String(j + 1).padStart(2, '0')}
+        </span>
+
         {/* Icon */}
-        <div className="w-11 h-11 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center mb-6 text-slate-400 group-hover:text-[#1B4ED8] group-hover:bg-blue-50/60 group-hover:border-blue-100/80 transition-all duration-300 flex-shrink-0">
-            {iconEl}
+        <div className="relative w-11 h-11 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center mb-5 text-slate-400 group-hover:text-[#1B4ED8] group-hover:bg-blue-50/70 group-hover:border-blue-100/80 transition-all duration-300 flex-shrink-0 overflow-hidden">
+            <div aria-hidden className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-blue-50/80 to-transparent transition-opacity duration-300" />
+            <span className="relative z-10">{iconEl}</span>
         </div>
 
         {/* Title */}
-        <h4 className="font-heading font-bold text-[1.05rem] text-navy leading-snug mb-3 flex-1">
+        <h4 className="font-heading font-bold text-[1.02rem] text-[#040E21] leading-snug mb-2.5 flex-1 pr-6">
             {label}
         </h4>
 
         {/* Description */}
-        <p className="text-slate-500 text-sm font-light leading-relaxed mb-6">
+        <p className="text-slate-400 text-[12.5px] font-light leading-relaxed mb-5 line-clamp-2">
             {detail}
         </p>
 
         {/* CTA — only for clickable industry-mode service cards */}
         {onClick && (
-            <span className="flex items-center gap-1.5 text-[#1B4ED8] text-[13px] font-bold group-hover:gap-2.5 transition-all duration-200">
+            <span className="flex items-center gap-1.5 text-[#1B4ED8] text-[12px] font-bold group-hover:gap-2.5 transition-all duration-200">
                 View Technical Specs
                 <span className="transition-transform duration-[150ms] group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
                     <ArrowUpRight className="h-3.5 w-3.5" />
@@ -228,17 +253,23 @@ export const PlatformCards = ({
     const [selectedService, setSelectedService] = React.useState<Service | null>(null);
 
     React.useEffect(() => {
+        console.log('🔵 PlatformCards: Starting fetch from /api/services');
         fetch('/api/services')
             .then(async r => {
+                console.log('🟡 PlatformCards: Response status', r.status);
                 const json = await r.json();
+                console.log('🟢 PlatformCards: Response data', json);
                 const raw: Service[] = Array.isArray(json.data) ? json.data : [];
+                console.log('🟢 PlatformCards: Setting services state with', raw.length, 'items');
                 setServices(raw.map(s => ({
                     ...s,
                     applications: Array.isArray(s.applications) ? s.applications : [],
                     features:     Array.isArray(s.features)     ? s.features     : [],
                 })));
             })
-            .catch(() => {});
+            .catch(err => {
+                console.error('🔴 PlatformCards: Fetch failed:', err);
+            });
     }, []);
 
     // Services visible in industry mode (mode=industry or mode=both), max 4

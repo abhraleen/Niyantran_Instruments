@@ -416,7 +416,7 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
         </BeamsBackground>
     );
 };
-export const Dev = () => {
+export const Dev: React.FC<{ onLoginClick?: () => void }> = ({ onLoginClick }) => {
     const [inquiryMode, setInquiryMode] = React.useState<InquiryMode>('industry');
     const [activeMode, setActiveMode] = React.useState<ActiveMode>('industry');
 
@@ -439,7 +439,7 @@ export const Dev = () => {
                 />
                 <DevContact mode={inquiryMode} onModeChange={setInquiryMode} />
             </main>
-            <Footer />
+            <Footer onLoginClick={onLoginClick} />
         </div>
     );
 };

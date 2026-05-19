@@ -7,11 +7,13 @@ import {
     Building2, GraduationCap, Briefcase, ChevronRight,
     ExternalLink, Layers, AlertCircle, Beaker, Code,
     PlusCircle, Pencil, Trash2, Zap, FlaskConical,
-    ToggleLeft, ToggleRight, Package,
+    ToggleLeft, ToggleRight, Package, LogOut,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useAdminAuth } from '@/context/AdminAuthContext';
 import type { Service } from '@/components/sections/Services';
+import { ServicePanel, ServiceIcon as SvcDetailIcon } from '@/components/sections/Services';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 interface Inquiry {
@@ -493,6 +495,7 @@ function InquiryModal({ inquiry, onClose }: { inquiry: Inquiry; onClose: () => v
 
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 export const AdminDashboard = () => {
+    const { logout } = useAdminAuth();
     const [inquiries, setInquiries]           = React.useState<Inquiry[]>([]);
     const [loading, setLoading]               = React.useState(true);
     const [demoMode, setDemoMode]             = React.useState(false);
@@ -510,6 +513,7 @@ export const AdminDashboard = () => {
     const [svcDeleteTarget, setSvcDeleteTarget]   = React.useState<Service | null>(null);
     const [inqDeleteTarget, setInqDeleteTarget]   = React.useState<Inquiry | null>(null);
     const [svcSearch,       setSvcSearch]     = React.useState('');
+    const [svcPreview,      setSvcPreview]    = React.useState<Service | null>(null);
 
     React.useEffect(() => {
         setLoading(true);
@@ -528,12 +532,20 @@ export const AdminDashboard = () => {
     React.useEffect(() => {
         if (view !== 'services') return;
         setSvcLoading(true);
+        console.log('🔵 Admin Services: Starting fetch from /api/services/all');
         fetch('/api/services/all')
             .then(async r => {
+                console.log('🟡 Admin Services: Response status', r.status);
                 const json = await r.json();
-                setServices(Array.isArray(json.data) ? json.data : []);
+                console.log('🟢 Admin Services: Response data', json);
+                const services = Array.isArray(json.data) ? json.data : [];
+                console.log('🟢 Admin Services: Setting services state with', services.length, 'items');
+                setServices(services);
             })
-            .catch(() => setServices([]))
+            .catch(err => {
+                console.error('🔴 Admin Services: Fetch failed:', err);
+                setServices([]);
+            })
             .finally(() => setSvcLoading(false));
     }, [view, tick]);
 
@@ -656,6 +668,17 @@ export const AdminDashboard = () => {
                                 <AlertCircle className="h-3 w-3" /> Demo data
                             </span>
                         )}
+                        <button
+                            onClick={() => {
+                                logout();
+                                window.location.href = '/';
+                            }}
+                            title="Logout"
+                            className="h-9 px-3 rounded-xl bg-red-50 border border-red-200 flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-100 hover:border-red-300 transition-all font-semibold text-[12px]"
+                        >
+                            <LogOut className="h-[13px] w-[13px]" />
+                            Logout
+                        </button>
                     </div>
                 </header>
 
@@ -1082,6 +1105,13 @@ export const AdminDashboard = () => {
                                                             <td className="pr-6 py-[14px]">
                                                                 <div className="flex items-center gap-1.5 justify-end opacity-0 group-hover/srow:opacity-100 transition-opacity">
                                                                     <button
+                                                                        onClick={() => setSvcPreview(svc)}
+                                                                        className="h-7 w-7 rounded-lg bg-slate-50 hover:bg-blue-50 border border-slate-100 hover:border-blue-200 flex items-center justify-center transition-all"
+                                                                        title="Preview"
+                                                                    >
+                                                                        <ExternalLink className="h-3 w-3 text-slate-400 hover:text-[#1B4ED8]" />
+                                                                    </button>
+                                                                    <button
                                                                         onClick={() => setSvcForm({ open: true, editing: svc })}
                                                                         className="h-7 w-7 rounded-lg bg-slate-50 hover:bg-blue-50 border border-slate-100 hover:border-blue-200 flex items-center justify-center transition-all"
                                                                         title="Edit"
@@ -1150,6 +1180,17 @@ export const AdminDashboard = () => {
             {/* ── Detail Modal ──────────────────────────────────────────────── */}
             <AnimatePresence>
                 {selected && <InquiryModal inquiry={selected} onClose={() => setSelected(null)} />}
+            </AnimatePresence>
+
+            {/* ── Service Preview Panel ────────────────────────────────────── */}
+            <AnimatePresence>
+                {svcPreview && (
+                    <ServicePanel
+                        key={svcPreview.id}
+                        service={svcPreview}
+                        onClose={() => setSvcPreview(null)}
+                    />
+                )}
             </AnimatePresence>
 
             {/* ── Service Form Modal ───────────────────────────────────────── */}

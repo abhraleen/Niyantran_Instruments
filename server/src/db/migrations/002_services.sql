@@ -82,4 +82,14 @@ VALUES
     'active',
     4
 )
-ON CONFLICT (slug) DO NOTHING;
+ON CONFLICT (slug) DO UPDATE SET
+    title             = EXCLUDED.title,
+    mode              = EXCLUDED.mode,
+    short_description = EXCLUDED.short_description,
+    full_description  = EXCLUDED.full_description,
+    applications      = EXCLUDED.applications,
+    features          = EXCLUDED.features,
+    icon              = EXCLUDED.icon,
+    status            = EXCLUDED.status,
+    sort_order        = EXCLUDED.sort_order,
+    updated_at        = NOW();
