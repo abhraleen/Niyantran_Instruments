@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Activity, Cpu, BarChart3, Layers,
@@ -177,8 +177,8 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.06 + j * 0.07, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-        whileHover={{ y: -5, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
-        whileTap={{ scale: 0.985 }}
+        whileHover={carousel ? undefined : { y: -5, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
+        whileTap={carousel ? undefined : { scale: 0.985 }}
         onClick={onClick}
         className={[
             'group relative flex flex-col overflow-hidden rounded-[1.75rem]',
@@ -188,7 +188,13 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
             onClick ? 'cursor-pointer' : 'cursor-default',
             carousel ? 'snap-start flex-shrink-0 w-[74vw] max-w-[268px] p-5' : 'p-7',
         ].filter(Boolean).join(' ')}
-        style={{ background: 'linear-gradient(158deg, #f8faff 0%, #ffffff 55%)' }}
+        style={{
+            background: 'linear-gradient(158deg, #f8faff 0%, #ffffff 55%)',
+            // Tell the browser (and Framer Motion) to let horizontal pan pass through
+            // to the parent native scroll container — without this, Framer Motion's
+            // gesture detection blocks the swipe from reaching the carousel scroll.
+            ...(carousel ? { touchAction: 'pan-x' } : {}),
+        }}
     >
         {/* Top accent bar — appears on hover */}
         <div
@@ -277,46 +283,25 @@ export const PlatformCards = ({
         .filter(s => s.mode === 'industry' || s.mode === 'both')
         .slice(0, 4);
 
-    // ── Carousel drag-to-scroll ────────────────────────────────────────
+    // ── Carousel native-scroll dot tracker ───────────────────────────
     const carouselRef = useRef<HTMLDivElement>(null);
-    const dragState = useRef({ active: false, startX: 0, scrollLeft: 0 });
     const [activeDot, setActiveDot] = useState(0);
 
-    const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-        const el = carouselRef.current;
-        if (!el) return;
-        dragState.current = { active: true, startX: e.clientX, scrollLeft: el.scrollLeft };
-        el.style.cursor = 'grabbing';
-        el.style.userSelect = 'none';
-        // Disable snap while dragging for smooth continuous scroll
-        el.style.scrollSnapType = 'none';
-    }, []);
-
-    const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-        if (!dragState.current.active || !carouselRef.current) return;
-        const dx = e.clientX - dragState.current.startX;
-        carouselRef.current.scrollLeft = dragState.current.scrollLeft - dx;
-    }, []);
-
-    const onPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-        const el = carouselRef.current;
-        if (!el) return;
-        dragState.current.active = false;
-        el.style.cursor = 'grab';
-        el.style.userSelect = '';
-        // Re-enable snap so the card snaps into place on release
-        el.style.scrollSnapType = 'x mandatory';
-    }, []);
+    // Reset dot position when switching modes (carousel DOM is remounted by AnimatePresence)
+    useEffect(() => {
+        setActiveDot(0);
+    }, [activeMode]);
 
     const onScroll = useCallback(() => {
         const el = carouselRef.current;
         if (!el || el.children.length === 0) return;
-        // Get the first card element to measure its width (excluding spacer)
         const firstCard = el.children[0] as HTMLElement;
         if (!firstCard) return;
-        const cardWidth = firstCard.offsetWidth + 12; // card width + gap (3 = 0.75rem)
+        // gap-3 = 12px
+        const cardWidth = firstCard.offsetWidth + 12;
         const cardIndex = Math.round(el.scrollLeft / cardWidth);
-        setActiveDot(Math.max(0, Math.min(cardIndex, el.children.length - 2))); // -2 to exclude spacer
+        // -2 to exclude trailing spacer from count
+        setActiveDot(Math.max(0, Math.min(cardIndex, el.children.length - 2)));
     }, []);
 
     return (
@@ -380,6 +365,7 @@ export const PlatformCards = ({
                         exit={{ opacity: 0, y: -12 }}
                         transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
                         className="flex flex-col lg:flex-row gap-8 md:gap-12 lg:gap-16 items-center"
+                        style={{ touchAction: 'pan-x pan-y' }}
                     >
                         {/* Left: text content */}
                         <div className="flex-1 min-w-0">
@@ -463,11 +449,7 @@ export const PlatformCards = ({
                                             <div
                                                 ref={carouselRef}
                                                 className="md:hidden -mx-4 px-4 overflow-x-auto pb-4 flex gap-3 snap-x snap-mandatory"
-                                                style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', cursor: 'grab', touchAction: 'pan-x' } as React.CSSProperties}
-                                                onPointerDown={onPointerDown}
-                                                onPointerMove={onPointerMove}
-                                                onPointerUp={onPointerUp}
-                                                onPointerCancel={onPointerUp}
+                                                style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', touchAction: 'pan-x' } as React.CSSProperties}
                                                 onScroll={onScroll}
                                             >
                                                 {Array.from({ length: count }, (_, j) => makeCard(true, j))}
