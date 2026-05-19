@@ -202,8 +202,8 @@ export const DevContact = ({ mode, onModeChange }: Props) => {
 
                     {/* ── Left panel ────────────────────────── */}
                     <motion.div
-                        initial={{ opacity: 0, y: 24, filter: 'blur(4px)' }}
-                        whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                        initial={{ opacity: 0, y: 24 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: '-8%' }}
                         transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
                         className="pt-2"
@@ -286,8 +286,8 @@ export const DevContact = ({ mode, onModeChange }: Props) => {
 
                     {/* ── Right panel (form card) ─────────── */}
                     <motion.div
-                        initial={{ opacity: 0, y: 24, filter: 'blur(4px)' }}
-                        whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                        initial={{ opacity: 0, y: 24 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: '-8%' }}
                         transition={{ duration: 0.85, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
                     >

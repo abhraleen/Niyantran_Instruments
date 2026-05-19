@@ -128,7 +128,7 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
                             top: '-12%', left: '-8%',
                             width: '75vw', height: '70vh',
                             background: 'radial-gradient(ellipse at 35% 40%, rgba(27,78,216,0.062) 0%, transparent 55%)',
-                            filter: 'blur(72px)',
+                            filter: 'blur(36px)',
                             borderRadius: '50%',
                             willChange: 'transform',
                         }}
@@ -143,7 +143,7 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
                             bottom: '-10%', right: '-10%',
                             width: '68vw', height: '62vh',
                             background: 'radial-gradient(ellipse at 65% 60%, rgba(14,165,233,0.055) 0%, transparent 55%)',
-                            filter: 'blur(96px)',
+                            filter: 'blur(48px)',
                             borderRadius: '50%',
                             willChange: 'transform',
                         }}
@@ -158,7 +158,7 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
                             top: '22%', left: '22%',
                             width: '56vw', height: '48vh',
                             background: 'radial-gradient(ellipse at center, rgba(27,78,216,0.038) 0%, transparent 60%)',
-                            filter: 'blur(88px)',
+                            filter: 'blur(44px)',
                             borderRadius: '50%',
                             willChange: 'transform',
                         }}
@@ -182,7 +182,7 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
                         top: '2%', left: '-4%',
                         width: '52vw', height: '54vh',
                         background: 'radial-gradient(ellipse at 28% 32%, rgba(27,78,216,0.072) 0%, transparent 62%)',
-                        filter: 'blur(28px)',
+                        filter: 'blur(18px)',
                     }}
                 />
                 {/* Glow — right-center */}
@@ -192,7 +192,7 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
                         top: '28%', right: '-3%',
                         width: '44vw', height: '48vh',
                         background: 'radial-gradient(ellipse at 72% 48%, rgba(14,165,233,0.058) 0%, transparent 62%)',
-                        filter: 'blur(48px)',
+                        filter: 'blur(28px)',
                     }}
                 />
                 {/* Glow — lower-center, very faint */}
@@ -202,7 +202,7 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
                         bottom: '6%', left: '28%',
                         width: '44vw', height: '28vh',
                         background: 'radial-gradient(ellipse at center, rgba(27,78,216,0.045) 0%, transparent 65%)',
-                        filter: 'blur(56px)',
+                        filter: 'blur(28px)',
                     }}
                 />
             </motion.div>
@@ -222,7 +222,7 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
                         top: '4%', right: '7%',
                         width: '400px', height: '400px',
                         background: 'radial-gradient(circle at center, rgba(14,165,233,0.085) 0%, transparent 62%)',
-                        filter: 'blur(58px)',
+                        filter: 'blur(30px)',
                         borderRadius: '50%',
                         willChange: 'transform',
                     }}
@@ -236,7 +236,7 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
                         bottom: '10%', left: '4%',
                         width: '300px', height: '300px',
                         background: 'radial-gradient(circle at center, rgba(27,78,216,0.078) 0%, transparent 62%)',
-                        filter: 'blur(48px)',
+                        filter: 'blur(26px)',
                         borderRadius: '50%',
                         willChange: 'transform',
                     }}
@@ -250,7 +250,7 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
                         top: '38%', left: '14%',
                         width: '190px', height: '190px',
                         background: 'radial-gradient(circle at center, rgba(59,130,246,0.065) 0%, transparent 65%)',
-                        filter: 'blur(34px)',
+                        filter: 'blur(18px)',
                         borderRadius: '50%',
                         willChange: 'transform',
                     }}
@@ -264,7 +264,7 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
                         top: '-6%', left: '32%',
                         width: '480px', height: '320px',
                         background: 'radial-gradient(ellipse at center, rgba(27,78,216,0.058) 0%, transparent 58%)',
-                        filter: 'blur(76px)',
+                        filter: 'blur(38px)',
                         borderRadius: '50%',
                         willChange: 'transform',
                     }}

@@ -1,11 +1,21 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" style="background-color:#040E21">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Niyantran Instruments | Precision Research Instrumentation</title>
+    <!--
+      FOUC guard: !important overrides any external CSS (e.g. Tailwind bg-background:white)
+      that loads before React mounts. Removed by WelcomeScreen's useEffect after first paint.
+    -->
+    <style id="fouc-guard">html,body,#root{background-color:#040E21!important;min-height:100vh}</style>
   </head>
-  <body>
+  <body style="background-color:#040E21">
+    <!--
+      Splash overlay: pure-HTML dark screen visible from the very first byte of HTML,
+      above everything (z-index:9999). Removed synchronously once WelcomeScreen mounts.
+    -->
+    <div id="splash" style="position:fixed;inset:0;background:#040E21;z-index:9999;pointer-events:none;"></div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -153,8 +153,6 @@ export function BeamsBackground({
             }
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // Reduce blur on low-end — ctx.filter is expensive every frame
-            ctx.filter = isLowEnd ? "blur(6px)" : "blur(20px)";
 
             const totalBeams = beamsRef.current.length;
             beamsRef.current.forEach((beam, index) => {
@@ -188,10 +186,11 @@ export function BeamsBackground({
                 className
             )}
         >
-            {/* Animated beams canvas */}
+            {/* Animated beams canvas — CSS filter uses GPU compositor, ctx.filter does not */}
             <canvas
                 ref={canvasRef}
                 className="absolute inset-0"
+                style={{ filter: isLowEnd ? 'blur(6px)' : 'blur(20px)', willChange: 'transform' }}
             />
 
             {/* Soft radial white bloom — dialled back so beams show through */}

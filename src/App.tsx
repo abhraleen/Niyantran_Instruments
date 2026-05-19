@@ -24,6 +24,15 @@ function AppContent() {
     // Skip main welcome screen if admin is already authenticated
     const shouldShowWelcome = showWelcome && !isAuthenticated;
 
+    // Fallback: if WelcomeScreen won't show (admin flow), remove FOUC overlays now
+    React.useEffect(() => {
+        if (!shouldShowWelcome) {
+            document.getElementById('fouc-guard')?.remove();
+            document.getElementById('splash')?.remove();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // intentionally only on mount — we want the initial shouldShowWelcome value
+
     return (
         <>
             <AnimatePresence mode="wait">

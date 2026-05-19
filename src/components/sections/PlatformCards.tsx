@@ -324,26 +324,34 @@ export const PlatformCards = ({
         <section id="platform" className="py-16 sm:py-24 lg:py-32 bg-white relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-100 to-transparent" />
 
-            {/* Adaptive atmosphere */}
+            {/* Adaptive atmosphere — radial gradient (no blur filter = no repaint overhead) */}
             <motion.div
                 animate={{ opacity: activeMode === 'industry' ? 1 : 0.15 }}
                 transition={{ duration: 1.1, ease: 'easeInOut' }}
-                className="absolute top-1/2 -translate-y-1/2 -left-40 w-[700px] h-[700px] bg-primary/[0.03] rounded-full blur-[160px] pointer-events-none"
+                className="absolute top-1/2 -translate-y-1/2 -left-40 w-[700px] h-[700px] rounded-full pointer-events-none"
+                style={{ background: 'radial-gradient(circle, rgba(27,78,216,0.07) 0%, transparent 60%)' }}
             />
             <motion.div
                 animate={{ opacity: activeMode === 'education' ? 1 : 0.15 }}
                 transition={{ duration: 1.1, ease: 'easeInOut' }}
-                className="absolute top-1/2 -translate-y-1/2 -right-40 w-[700px] h-[700px] bg-cyan-400/[0.03] rounded-full blur-[160px] pointer-events-none"
+                className="absolute top-1/2 -translate-y-1/2 -right-40 w-[700px] h-[700px] rounded-full pointer-events-none"
+                style={{ background: 'radial-gradient(circle, rgba(14,165,233,0.07) 0%, transparent 60%)' }}
             />
-            <motion.div
-                animate={{
-                    background: activeMode === 'industry'
-                        ? 'radial-gradient(ellipse 70% 55% at 8% 50%, rgba(27,78,216,0.022), transparent)'
-                        : 'radial-gradient(ellipse 70% 55% at 92% 50%, rgba(14,165,233,0.020), transparent)',
-                }}
-                transition={{ duration: 1.3, ease: 'easeInOut' }}
-                className="absolute inset-0 pointer-events-none"
-            />
+            {/* Two static overlays cross-faded via opacity (GPU composited, not background paint) */}
+            <div aria-hidden className="absolute inset-0 pointer-events-none">
+                <motion.div
+                    animate={{ opacity: activeMode === 'industry' ? 1 : 0 }}
+                    transition={{ duration: 1.3, ease: 'easeInOut' }}
+                    className="absolute inset-0"
+                    style={{ background: 'radial-gradient(ellipse 70% 55% at 8% 50%, rgba(27,78,216,0.022), transparent)' }}
+                />
+                <motion.div
+                    animate={{ opacity: activeMode === 'education' ? 1 : 0 }}
+                    transition={{ duration: 1.3, ease: 'easeInOut' }}
+                    className="absolute inset-0"
+                    style={{ background: 'radial-gradient(ellipse 70% 55% at 92% 50%, rgba(14,165,233,0.020), transparent)' }}
+                />
+            </div>
 
             {/* Depth floor — soft gradient grounds the section */}
             <div
@@ -357,8 +365,8 @@ export const PlatformCards = ({
 
             <motion.div
                 className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
-                initial={{ opacity: 0, y: 28, filter: 'blur(5px)' }}
-                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-8%' }}
                 transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
             >
@@ -367,9 +375,9 @@ export const PlatformCards = ({
                 <AnimatePresence mode="wait" initial={false}>
                     <motion.div
                         key={activeMode}
-                        initial={{ opacity: 0, y: 18, filter: 'blur(3px)' }}
-                        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                        exit={{ opacity: 0, y: -12, filter: 'blur(3px)' }}
+                        initial={{ opacity: 0, y: 18 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -12 }}
                         transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
                         className="flex flex-col lg:flex-row gap-8 md:gap-12 lg:gap-16 items-center"
                     >

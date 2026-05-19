@@ -72,13 +72,19 @@ const HUD_LABELS = [
 export const WelcomeScreen = ({ onComplete }: { onComplete: () => void }) => {    const { isLowEnd } = usePerformance();
     const PARTICLES = isLowEnd ? PARTICLES_LITE : ALL_PARTICLES;
     React.useEffect(() => {
+        // Remove FOUC-prevention overlays now that WelcomeScreen is painted at opacity:1.
+        // Both the #fouc-guard style and #splash div are removed instantly — no visual
+        // change since WelcomeScreen (bg #040E21, opacity:1) fully covers the page.
+        document.getElementById('fouc-guard')?.remove();
+        document.getElementById('splash')?.remove();
+
         const t = setTimeout(onComplete, 3300);
         return () => clearTimeout(t);
     }, [onComplete]);
 
     return (
         <motion.div
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 1 }}
             animate={{ opacity: 1 }}
             exit={{
                 opacity: 0,
@@ -86,7 +92,7 @@ export const WelcomeScreen = ({ onComplete }: { onComplete: () => void }) => {  
                 filter: 'blur(14px)',
                 transition: { duration: 0.75, ease: [0.4, 0, 0.6, 1] },
             }}
-            transition={{ duration: 0.38 }}
+            transition={{ duration: 0 }}
             className="fixed inset-0 z-[100] overflow-hidden select-none"
             style={{ backgroundColor: '#040E21' }}
             aria-label="Loading Niyantran Instruments"
