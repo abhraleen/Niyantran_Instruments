@@ -1,9 +1,10 @@
 ﻿import React from 'react';
 import { motion } from 'framer-motion';
+import { usePerformance } from '@/hooks/usePerformance';
 
-// ─── Static configuration ─────────────────────────────────────────────────────
+// ─── Static configuration ──────────────────────────────────────────────────
 
-const PARTICLES = Array.from({ length: 22 }, (_, i) => ({
+const ALL_PARTICLES = Array.from({ length: 22 }, (_, i) => ({
     id:    i,
     x:     5  + ((i * 4.73 + 3.1) % 90),
     y:     5  + ((i * 9.31 + 7.7) % 90),
@@ -12,6 +13,8 @@ const PARTICLES = Array.from({ length: 22 }, (_, i) => ({
     delay: (i * 0.29) % 3.2,
     cyan:  i % 3 === 0,
 }));
+// Sparse set for low-end: 6 evenly spaced particles
+const PARTICLES_LITE = ALL_PARTICLES.filter((_, i) => i % 4 === 0).slice(0, 6);
 
 const STATUS_LINES = [
     { text: 'Initializing Precision Systems',     delay: 1.30, accent: false },
@@ -66,7 +69,8 @@ const HUD_LABELS = [
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export const WelcomeScreen = ({ onComplete }: { onComplete: () => void }) => {
+export const WelcomeScreen = ({ onComplete }: { onComplete: () => void }) => {    const { isLowEnd } = usePerformance();
+    const PARTICLES = isLowEnd ? PARTICLES_LITE : ALL_PARTICLES;
     React.useEffect(() => {
         const t = setTimeout(onComplete, 3300);
         return () => clearTimeout(t);
@@ -339,14 +343,14 @@ export const WelcomeScreen = ({ onComplete }: { onComplete: () => void }) => {
                         viewBox="0 0 260 260"
                         style={{ top: '-86px', left: '-86px' }}
                     >
-                        {/* Outermost dashed — CW rotation */}
+                        {/* Outermost dashed — CW rotation (static on low-end) */}
                         <motion.circle
                             cx={CX} cy={CY} r={120}
                             fill="none"
                             stroke="rgba(27,78,216,0.30)"
                             strokeWidth="0.75"
                             strokeDasharray="7 3.5"
-                            animate={{ rotate: 360 }}
+                            animate={isLowEnd ? undefined : { rotate: 360 }}
                             transition={{ duration: 26, repeat: Infinity, ease: 'linear' }}
                             style={{ transformOrigin: `${CX}px ${CY}px` }}
                         />
@@ -358,14 +362,14 @@ export const WelcomeScreen = ({ onComplete }: { onComplete: () => void }) => {
                             strokeWidth="0.5"
                             strokeDasharray="2 7"
                         />
-                        {/* Inner dashed — CCW rotation */}
+                        {/* Inner dashed — CCW rotation (static on low-end) */}
                         <motion.circle
                             cx={CX} cy={CY} r={88}
                             fill="none"
                             stroke="rgba(14,165,233,0.28)"
                             strokeWidth="0.75"
                             strokeDasharray="5 6"
-                            animate={{ rotate: -360 }}
+                            animate={isLowEnd ? undefined : { rotate: -360 }}
                             transition={{ duration: 19, repeat: Infinity, ease: 'linear' }}
                             style={{ transformOrigin: `${CX}px ${CY}px` }}
                         />

@@ -451,3 +451,56 @@ textarea:focus {
 .footer-glow {
     background: linear-gradient(to top, rgba(239, 246, 255, 0.6), transparent);
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   REDUCED MOTION — stops all infinite/decorative CSS animations when the
+   user has enabled "Reduce Motion" in their OS accessibility settings.
+   This pairs with the usePerformance() hook that also detects low-end GPUs.
+───────────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    /* Stop infinite decorative CSS animations */
+    .animate-ping,
+    .light-beam,
+    .shimmer-text,
+    .text-gradient,
+    .badge-float,
+    .mode-ring-pulse {
+        animation: none !important;
+    }
+
+    /* Freeze background-position animations (gradient-shift, shimmer) */
+    .text-gradient,
+    .shimmer-text {
+        background-position: 0% 50% !important;
+        -webkit-text-fill-color: unset !important;
+        background-clip: unset !important;
+        -webkit-background-clip: unset !important;
+        color: var(--color-primary);
+    }
+
+    /* Disable hover lift transforms on cards */
+    .premium-card:hover,
+    .glow-card:hover,
+    .feat-card-hover:hover,
+    .dev-elevated:hover {
+        transform: none !important;
+    }
+
+    /* Disable CTA sweep hover animation */
+    .dev-btn-sweep:hover::before {
+        animation: none !important;
+    }
+
+    /* Remove backdrop-filter blur on glass elements (expensive composite) */
+    .glass,
+    .glass-navy,
+    .glass-blue {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    /* Snap scroll instantly instead of smooth */
+    html {
+        scroll-behavior: auto !important;
+    }
+}

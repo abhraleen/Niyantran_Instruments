@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { usePerformance } from "@/hooks/usePerformance";
 
 interface AnimatedGradientBackgroundProps {
     className?: string;
@@ -48,7 +49,9 @@ export function BeamsBackground({
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const beamsRef = useRef<Beam[]>([]);
     const animationFrameRef = useRef<number>(0);
-    const MINIMUM_BEAMS = 20;
+    const frameCountRef = useRef<number>(0);
+    const { isLowEnd } = usePerformance();
+    const MINIMUM_BEAMS = isLowEnd ? 6 : 20;
 
     const opacityMap = {
         subtle: 0.7,
@@ -64,14 +67,15 @@ export function BeamsBackground({
         if (!ctx) return;
 
         const updateCanvasSize = () => {
-            const dpr = window.devicePixelRatio || 1;
+            // Cap DPR at 1 on low-end devices — avoids 4× pixel overdraw on Retina
+            const dpr = isLowEnd ? 1 : Math.min(window.devicePixelRatio || 1, 2);
             canvas.width = window.innerWidth * dpr;
             canvas.height = window.innerHeight * dpr;
             canvas.style.width = `${window.innerWidth}px`;
             canvas.style.height = `${window.innerHeight}px`;
             ctx.scale(dpr, dpr);
 
-            const totalBeams = MINIMUM_BEAMS * 1.5;
+            const totalBeams = isLowEnd ? MINIMUM_BEAMS : Math.round(MINIMUM_BEAMS * 1.5);
             beamsRef.current = Array.from({ length: totalBeams }, () =>
                 createBeam(canvas.width, canvas.height)
             );
@@ -139,9 +143,18 @@ export function BeamsBackground({
         function animate() {
             if (!canvas || !ctx) return;
 
+            // On low-end devices render every other frame (~30 fps) to cut GPU load
+            if (isLowEnd) {
+                frameCountRef.current += 1;
+                if (frameCountRef.current % 2 !== 0) {
+                    animationFrameRef.current = requestAnimationFrame(animate);
+                    return;
+                }
+            }
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // 20px blur — soft but keeps beams perceptible on light bg
-            ctx.filter = "blur(20px)";
+            // Reduce blur on low-end — ctx.filter is expensive every frame
+            ctx.filter = isLowEnd ? "blur(6px)" : "blur(20px)";
 
             const totalBeams = beamsRef.current.length;
             beamsRef.current.forEach((beam, index) => {
@@ -166,7 +179,7 @@ export function BeamsBackground({
                 cancelAnimationFrame(animationFrameRef.current);
             }
         };
-    }, [intensity]);
+    }, [intensity, isLowEnd]);
 
     return (
         <div
@@ -190,20 +203,22 @@ export function BeamsBackground({
                 }}
             />
 
-            {/* Slow breathing overlay — blue radial pulse, 0→0.08→0 over 8s */}
-            <motion.div
-                className="absolute inset-0 pointer-events-none"
-                animate={{ opacity: [0, 0.08, 0] }}
-                transition={{
-                    duration: 8,
-                    ease: "easeInOut",
-                    repeat: Infinity,
-                }}
-                style={{
-                    background:
-                        "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(160,180,255,0.3), transparent)",
-                }}
-            />
+            {/* Slow breathing overlay — skip on low-end devices */}
+            {!isLowEnd && (
+                <motion.div
+                    className="absolute inset-0 pointer-events-none"
+                    animate={{ opacity: [0, 0.08, 0] }}
+                    transition={{
+                        duration: 8,
+                        ease: "easeInOut",
+                        repeat: Infinity,
+                    }}
+                    style={{
+                        background:
+                            "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(160,180,255,0.3), transparent)",
+                    }}
+                />
+            )}
 
             {/* Children render above beams */}
             <div className="relative z-10 w-full">

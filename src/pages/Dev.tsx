@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
+import { usePerformance } from '@/hooks/usePerformance';
 import { ArrowRight, ChevronRight, Zap, Activity, Cpu, GraduationCap } from 'lucide-react';
 import { MeshGradient } from '@paper-design/shaders-react';
 import { BeamsBackground } from '@/components/ui/beams-background';
@@ -66,17 +67,19 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
         <BeamsBackground intensity="medium" className="min-h-[88vh]">
         <section className="relative min-h-[88vh] flex items-center justify-center pt-24 pb-20">
 
-            {/* ── Layer -1: WebGL MeshGradient — animated blue plasma ── */}
-            <div aria-hidden="true" className="absolute inset-0 pointer-events-none z-0 opacity-[0.28]">
-                <Suspense fallback={null}>
-                    <MeshGradient
-                        className="w-full h-full"
-                        colors={['#f8faff', '#dbeafe', '#93c5fd', '#1b4ed8']}
-                        speed={0.28}
-                        backgroundColor="#f8faff"
-                    />
-                </Suspense>
-            </div>
+            {/* ── Layer -1: WebGL MeshGradient — skip on low-end (full GPU shader) ── */}
+            {!isLowEnd && (
+                <div aria-hidden="true" className="absolute inset-0 pointer-events-none z-0 opacity-[0.28]">
+                    <Suspense fallback={null}>
+                        <MeshGradient
+                            className="w-full h-full"
+                            colors={['#f8faff', '#dbeafe', '#93c5fd', '#1b4ed8']}
+                            speed={0.28}
+                            backgroundColor="#f8faff"
+                        />
+                    </Suspense>
+                </div>
+            )}
 
             {/* ── Layer 0: Scientific precision grid texture ── */}
             <div className="absolute inset-0 pointer-events-none z-[1]" aria-hidden="true">
@@ -102,54 +105,59 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
                 />
             </div>
 
-            {/* ── Layer 1: Animated mesh gradient — cinematic slow drift ── */}
-            {/* Blob A — primary blue, top-left origin */}
-            <motion.div
-                aria-hidden="true"
-                className="absolute pointer-events-none z-[2]"
-                style={{
-                    top: '-12%', left: '-8%',
-                    width: '75vw', height: '70vh',
-                    background: 'radial-gradient(ellipse at 35% 40%, rgba(27,78,216,0.062) 0%, transparent 55%)',
-                    filter: 'blur(72px)',
-                    borderRadius: '50%',
-                    willChange: 'transform',
-                }}
-                animate={{ x: [0, 38, 12, 0], y: [0, -28, 8, 0], scale: [1, 1.05, 1.01, 1] }}
-                transition={{ duration: 28, repeat: Infinity, ease: 'easeInOut' }}
-            />
-            {/* Blob B — cyan, bottom-right origin */}
-            <motion.div
-                aria-hidden="true"
-                className="absolute pointer-events-none z-[2]"
-                style={{
-                    bottom: '-10%', right: '-10%',
-                    width: '68vw', height: '62vh',
-                    background: 'radial-gradient(ellipse at 65% 60%, rgba(14,165,233,0.055) 0%, transparent 55%)',
-                    filter: 'blur(96px)',
-                    borderRadius: '50%',
-                    willChange: 'transform',
-                }}
-                animate={{ x: [0, -32, -10, 0], y: [0, 22, -6, 0], scale: [1, 1.04, 0.98, 1] }}
-                transition={{ duration: 32, repeat: Infinity, ease: 'easeInOut', delay: 6 }}
-            />
-            {/* Blob C — mid-field, very slow oscillation */}
-            <motion.div
-                aria-hidden="true"
-                className="absolute pointer-events-none z-[2]"
-                style={{
-                    top: '22%', left: '22%',
-                    width: '56vw', height: '48vh',
-                    background: 'radial-gradient(ellipse at center, rgba(27,78,216,0.038) 0%, transparent 60%)',
-                    filter: 'blur(88px)',
-                    borderRadius: '50%',
-                    willChange: 'transform',
-                }}
-                animate={{ x: [0, 18, -6, 0], y: [0, -16, 4, 0], scale: [1, 1.03, 1.01, 1] }}
-                transition={{ duration: 24, repeat: Infinity, ease: 'easeInOut', delay: 11 }}
-            />
+            {/* ── Layer 1: Animated blobs — skip on low-end (large blur filters + infinite animation) ── */}
+            {!isLowEnd && (
+                <>
+                    {/* Blob A — primary blue, top-left origin */}
+                    <motion.div
+                        aria-hidden="true"
+                        className="absolute pointer-events-none z-[2]"
+                        style={{
+                            top: '-12%', left: '-8%',
+                            width: '75vw', height: '70vh',
+                            background: 'radial-gradient(ellipse at 35% 40%, rgba(27,78,216,0.062) 0%, transparent 55%)',
+                            filter: 'blur(72px)',
+                            borderRadius: '50%',
+                            willChange: 'transform',
+                        }}
+                        animate={{ x: [0, 38, 12, 0], y: [0, -28, 8, 0], scale: [1, 1.05, 1.01, 1] }}
+                        transition={{ duration: 28, repeat: Infinity, ease: 'easeInOut' }}
+                    />
+                    {/* Blob B — cyan, bottom-right origin */}
+                    <motion.div
+                        aria-hidden="true"
+                        className="absolute pointer-events-none z-[2]"
+                        style={{
+                            bottom: '-10%', right: '-10%',
+                            width: '68vw', height: '62vh',
+                            background: 'radial-gradient(ellipse at 65% 60%, rgba(14,165,233,0.055) 0%, transparent 55%)',
+                            filter: 'blur(96px)',
+                            borderRadius: '50%',
+                            willChange: 'transform',
+                        }}
+                        animate={{ x: [0, -32, -10, 0], y: [0, 22, -6, 0], scale: [1, 1.04, 0.98, 1] }}
+                        transition={{ duration: 32, repeat: Infinity, ease: 'easeInOut', delay: 6 }}
+                    />
+                    {/* Blob C — mid-field, very slow oscillation */}
+                    <motion.div
+                        aria-hidden="true"
+                        className="absolute pointer-events-none z-[2]"
+                        style={{
+                            top: '22%', left: '22%',
+                            width: '56vw', height: '48vh',
+                            background: 'radial-gradient(ellipse at center, rgba(27,78,216,0.038) 0%, transparent 60%)',
+                            filter: 'blur(88px)',
+                            borderRadius: '50%',
+                            willChange: 'transform',
+                        }}
+                        animate={{ x: [0, 18, -6, 0], y: [0, -16, 4, 0], scale: [1, 1.03, 1.01, 1] }}
+                        transition={{ duration: 24, repeat: Infinity, ease: 'easeInOut', delay: 11 }}
+                    />
+                </>
+            )}
 
-            {/* ── Layer 2: Asymmetric ambient glow — cursor parallax ── */}
+            {/* ── Layer 2: Asymmetric ambient glow — cursor parallax (skipped on low-end) ── */}
+            {!isLowEnd && (
             <motion.div
                 aria-hidden="true"
                 className="absolute inset-0 pointer-events-none z-[3]"
@@ -186,8 +194,10 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
                     }}
                 />
             </motion.div>
+            )}
 
-            {/* ── Layer 3: Floating blur orbs — cursor parallax + float ── */}
+            {/* ── Layer 3: Floating blur orbs — skipped on low-end ── */}
+            {!isLowEnd && (
             <motion.div
                 aria-hidden="true"
                 className="absolute inset-0 pointer-events-none z-[4]"
@@ -250,9 +260,10 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
                     transition={{ duration: 26, repeat: Infinity, ease: 'easeInOut', delay: 9 }}
                 />
             </motion.div>
+            )}
 
-            {/* ── Layer 4: Floating data particles ── */}
-            <div aria-hidden="true" className="absolute inset-0 pointer-events-none z-[5]">
+            {/* ── Layer 4: Floating data particles — skip on low-end ── */}
+            {!isLowEnd && <div aria-hidden="true" className="absolute inset-0 pointer-events-none z-[5]">
                 {/* Top-left corner accent */}
                 <motion.div
                     className="absolute top-[18%] left-[6%] flex items-center gap-2 opacity-0"
@@ -297,7 +308,7 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
                         <span className="text-[9px] font-mono text-primary/55 font-bold">Open Enrollment</span>
                     </div>
                 </motion.div>
-            </div>
+            </div>}
 
             {/* ── Layer 5: Content backing — white radial gives text a depth plane ── */}
             <div
