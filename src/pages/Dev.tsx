@@ -14,10 +14,19 @@ const MagneticBtn = ({
 }: {
     className: string; onClick?: () => void; children: React.ReactNode; strength?: number;
 }) => {
+    const { isLowEnd } = usePerformance();
     const x = useMotionValue(0);
     const y = useMotionValue(0);
     const sx = useSpring(x, { stiffness: 200, damping: 22, restDelta: 0.001 });
     const sy = useSpring(y, { stiffness: 200, damping: 22, restDelta: 0.001 });
+    // On low-end devices skip the spring physics — just a regular button
+    if (isLowEnd) {
+        return (
+            <button onClick={onClick} className={className}>
+                {children}
+            </button>
+        );
+    }
     return (
         <motion.button
             style={{ x: sx, y: sy }}
@@ -39,6 +48,7 @@ const MagneticBtn = ({
 
 // ─── Dev-only hero ────────────────────────────────────────────────────────────
 const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void }) => {
+    const { isLowEnd } = usePerformance();
     const handleMode = (mode: ActiveMode) => {
         onSelectMode(mode);
         setTimeout(() => document.getElementById('platform')?.scrollIntoView({ behavior: 'smooth' }), 50);
@@ -54,14 +64,16 @@ const DevHero = ({ onSelectMode }: { onSelectMode: (mode: ActiveMode) => void })
     const p3x = useTransform(smoothX, [0, 1], [6, -6]);
     const p3y = useTransform(smoothY, [0, 1], [4, -4]);
 
+    // Only track cursor on capable devices — mousemove fires hundreds of times/s
     React.useEffect(() => {
+        if (isLowEnd) return;
         const onMove = (e: MouseEvent) => {
             rawX.set(e.clientX / window.innerWidth);
             rawY.set(e.clientY / window.innerHeight);
         };
         window.addEventListener('mousemove', onMove, { passive: true });
         return () => window.removeEventListener('mousemove', onMove);
-    }, [rawX, rawY]);
+    }, [rawX, rawY, isLowEnd]);
 
     return (
         <BeamsBackground intensity="medium" className="min-h-[88vh]">
