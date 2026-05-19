@@ -172,79 +172,98 @@ interface FeatureCardProps {
 
 const FeatureCard: React.FC<FeatureCardProps> = ({
     label, detail, iconEl, j, onClick, carousel,
-}) => (
-    <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.06 + j * 0.07, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-        whileHover={carousel ? undefined : { y: -5, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
-        whileTap={carousel ? undefined : { scale: 0.985 }}
-        onClick={onClick}
-        className={[
-            'group relative flex flex-col overflow-hidden rounded-[1.75rem]',
-            'border border-slate-200/80',
-            'hover:border-[#1B4ED8]/30 hover:shadow-[0_16px_48px_rgba(27,78,216,0.11),0_2px_8px_rgba(27,78,216,0.06)]',
-            'transition-all duration-300',
-            onClick ? 'cursor-pointer' : 'cursor-default',
-            carousel ? 'snap-start flex-shrink-0 w-[74vw] max-w-[268px] p-5' : 'p-7',
-        ].filter(Boolean).join(' ')}
-        style={{
-            background: 'linear-gradient(158deg, #f8faff 0%, #ffffff 55%)',
-            // Tell the browser (and Framer Motion) to let horizontal pan pass through
-            // to the parent native scroll container — without this, Framer Motion's
-            // gesture detection blocks the swipe from reaching the carousel scroll.
-            ...(carousel ? { touchAction: 'pan-x' } : {}),
-        }}
-    >
-        {/* Top accent bar — appears on hover */}
-        <div
-            aria-hidden
-            className="absolute top-0 inset-x-0 h-[2px] rounded-t-[1.75rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-            style={{ background: 'linear-gradient(90deg, transparent 5%, rgba(27,78,216,0.55) 35%, rgba(59,130,246,0.65) 65%, transparent 95%)' }}
-        />
+}) => {
+    const baseClass = [
+        'group relative flex flex-col overflow-hidden rounded-[1.75rem]',
+        'border border-slate-200/80',
+        'hover:border-[#1B4ED8]/30 hover:shadow-[0_16px_48px_rgba(27,78,216,0.11),0_2px_8px_rgba(27,78,216,0.06)]',
+        'transition-all duration-300',
+        onClick ? 'cursor-pointer' : 'cursor-default',
+        carousel ? 'snap-start flex-shrink-0 w-[74vw] max-w-[268px] p-5' : 'p-7',
+    ].filter(Boolean).join(' ');
 
-        {/* Radial glow on hover */}
-        <div
-            aria-hidden
-            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-            style={{ background: 'radial-gradient(ellipse 80% 55% at 50% 0%, rgba(27,78,216,0.04), transparent)' }}
-        />
+    const cardBg = { background: 'linear-gradient(158deg, #f8faff 0%, #ffffff 55%)' };
 
-        {/* Card index */}
-        <span
-            aria-hidden
-            className="absolute top-5 right-5 text-[10px] font-mono font-black text-slate-200 group-hover:text-[#1B4ED8]/35 transition-colors duration-300 tabular-nums select-none"
-        >
-            {String(j + 1).padStart(2, '0')}
-        </span>
-
-        {/* Icon */}
-        <div className="relative w-11 h-11 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center mb-5 text-slate-400 group-hover:text-[#1B4ED8] group-hover:bg-blue-50/70 group-hover:border-blue-100/80 transition-all duration-300 flex-shrink-0 overflow-hidden">
-            <div aria-hidden className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-blue-50/80 to-transparent transition-opacity duration-300" />
-            <span className="relative z-10">{iconEl}</span>
-        </div>
-
-        {/* Title */}
-        <h4 className="font-heading font-bold text-[1.02rem] text-[#040E21] leading-snug mb-2.5 flex-1 pr-6">
-            {label}
-        </h4>
-
-        {/* Description */}
-        <p className="text-slate-400 text-[12.5px] font-light leading-relaxed mb-5 line-clamp-2">
-            {detail}
-        </p>
-
-        {/* CTA — only for clickable industry-mode service cards */}
-        {onClick && (
-            <span className="flex items-center gap-1.5 text-[#1B4ED8] text-[12px] font-bold group-hover:gap-2.5 transition-all duration-200">
-                View Technical Specs
-                <span className="transition-transform duration-[150ms] group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
-                    <ArrowUpRight className="h-3.5 w-3.5" />
-                </span>
+    // Shared card body — identical markup for both carousel and grid modes
+    const body = (
+        <>
+            {/* Top accent bar — appears on hover */}
+            <div
+                aria-hidden
+                className="absolute top-0 inset-x-0 h-[2px] rounded-t-[1.75rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{ background: 'linear-gradient(90deg, transparent 5%, rgba(27,78,216,0.55) 35%, rgba(59,130,246,0.65) 65%, transparent 95%)' }}
+            />
+            {/* Radial glow on hover */}
+            <div
+                aria-hidden
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{ background: 'radial-gradient(ellipse 80% 55% at 50% 0%, rgba(27,78,216,0.04), transparent)' }}
+            />
+            {/* Card index */}
+            <span
+                aria-hidden
+                className="absolute top-5 right-5 text-[10px] font-mono font-black text-slate-200 group-hover:text-[#1B4ED8]/35 transition-colors duration-300 tabular-nums select-none"
+            >
+                {String(j + 1).padStart(2, '0')}
             </span>
-        )}
-    </motion.div>
-);
+            {/* Icon */}
+            <div className="relative w-11 h-11 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center mb-5 text-slate-400 group-hover:text-[#1B4ED8] group-hover:bg-blue-50/70 group-hover:border-blue-100/80 transition-all duration-300 flex-shrink-0 overflow-hidden">
+                <div aria-hidden className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-blue-50/80 to-transparent transition-opacity duration-300" />
+                <span className="relative z-10">{iconEl}</span>
+            </div>
+            {/* Title */}
+            <h4 className="font-heading font-bold text-[1.02rem] text-[#040E21] leading-snug mb-2.5 flex-1 pr-6">
+                {label}
+            </h4>
+            {/* Description */}
+            <p className="text-slate-400 text-[12.5px] font-light leading-relaxed mb-5 line-clamp-2">
+                {detail}
+            </p>
+            {/* CTA — only for clickable industry-mode service cards */}
+            {onClick && (
+                <span className="flex items-center gap-1.5 text-[#1B4ED8] text-[12px] font-bold group-hover:gap-2.5 transition-all duration-200">
+                    View Technical Specs
+                    <span className="transition-transform duration-[150ms] group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
+                        <ArrowUpRight className="h-3.5 w-3.5" />
+                    </span>
+                </span>
+            )}
+        </>
+    );
+
+    // ── Carousel mode: plain <div> — NO Framer Motion. ──────────────────────────
+    // motion.div registers internal gesture lifecycle handlers on every mount.
+    // Those handlers capture pointerdown on the card BEFORE the browser can
+    // classify the touch as a horizontal scroll swipe, making the carousel
+    // appear frozen. A plain div has zero gesture overhead.
+    if (carousel) {
+        return (
+            <div
+                onClick={onClick}
+                className={baseClass}
+                style={{ ...cardBg, touchAction: 'pan-x' }}
+            >
+                {body}
+            </div>
+        );
+    }
+
+    // ── Grid mode: motion.div with full hover / tap animations ──────────────────
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.06 + j * 0.07, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ y: -5, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
+            whileTap={{ scale: 0.985 }}
+            onClick={onClick}
+            className={baseClass}
+            style={cardBg}
+        >
+            {body}
+        </motion.div>
+    );
+};
 
 // ─── Component ─────────────────────────────────────────────────────────────────
 export const PlatformCards = ({
@@ -368,7 +387,9 @@ export const PlatformCards = ({
                         style={{ touchAction: 'pan-x pan-y' }}
                     >
                         {/* Left: text content */}
-                        <div className="flex-1 min-w-0">
+                        {/* w-full ensures the column fills container width on mobile (flex-col items-center
+                            would otherwise shrink it to content width, breaking the -mx-4 carousel trick) */}
+                        <div className="flex-1 min-w-0 w-full lg:w-auto">
 
                             {/* Eyebrow + tag */}
                             <div className="flex items-center gap-3 mb-7">
