@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Activity, Cpu, BarChart3, Layers,
     GraduationCap, BookOpen, Users, Briefcase,
-    ArrowRight,
+    ArrowRight, ArrowUpRight,
 } from 'lucide-react';
 import type { Service } from '@/components/sections/Services';
 import { ServicePanel, ServiceIcon } from '@/components/sections/Services';
@@ -12,9 +12,9 @@ import { ServicePanel, ServiceIcon } from '@/components/sections/Services';
 export type ActiveMode = 'industry' | 'education';
 
 // ─── Mode Switch ──────────────────────────────────────────────────────────────
-const modeSwitchOptions: { id: ActiveMode; label: string; dot: string }[] = [
-    { id: 'industry',  label: 'Industry Mode',  dot: '#1b4ed8' },
-    { id: 'education', label: 'Education Mode', dot: '#0ea5e9' },
+const modeSwitchOptions: { id: ActiveMode; label: string; dot: string; Icon: React.FC<{ className?: string; strokeWidth?: number }> }[] = [
+    { id: 'industry',  label: 'Industry Mode',  dot: '#1b4ed8', Icon: Cpu },
+    { id: 'education', label: 'Education Mode', dot: '#0ea5e9', Icon: GraduationCap },
 ];
 
 const ModeSwitch = ({
@@ -31,38 +31,44 @@ const ModeSwitch = ({
         transition={{ duration: 0.55, delay: 0.15 }}
         className="flex justify-center mb-12"
     >
-        <div className="inline-flex items-center gap-1 p-1 rounded-full border border-slate-200/70 bg-white/90 backdrop-blur-sm shadow-[0_2px_16px_rgba(4,14,33,0.07),0_1px_3px_rgba(4,14,33,0.04)]">
+        <div
+            className="inline-flex items-center p-1 rounded-[18px] border border-slate-200/60 bg-white/97 backdrop-blur-xl"
+            style={{
+                boxShadow: '0 2px 0 rgba(255,255,255,1) inset, 0 4px 24px rgba(4,14,33,0.08), 0 8px 40px rgba(27,78,216,0.06), 0 0 0 1px rgba(219,234,254,0.50)',
+            }}
+        >
             {modeSwitchOptions.map(opt => {
                 const isOpt = active === opt.id;
+                const { Icon } = opt;
                 return (
                     <button
                         key={opt.id}
                         onClick={() => onChange(opt.id)}
-                        className="relative px-5 h-[38px] rounded-full text-[11px] font-mono font-bold tracking-[0.22em] uppercase focus:outline-none select-none"
+                        className="relative px-5 h-[40px] rounded-[14px] text-[11px] font-bold tracking-[0.18em] uppercase focus:outline-none select-none min-w-[136px] transition-colors duration-200"
                     >
                         {isOpt && (
                             <motion.div
                                 layoutId="mode-pill"
-                                className="absolute inset-0 rounded-full"
+                                className="absolute inset-0 rounded-[14px]"
                                 style={{
                                     background: opt.id === 'industry'
                                         ? 'linear-gradient(135deg, #040e21 0%, #1b4ed8 100%)'
-                                        : 'linear-gradient(135deg, #0ea5e9 0%, #22d3ee 100%)',
+                                        : 'linear-gradient(135deg, #0284c7 0%, #22d3ee 100%)',
                                     boxShadow: opt.id === 'industry'
-                                        ? '0 1px 0 rgba(255,255,255,0.18) inset, 0 4px 22px rgba(27,78,216,0.42), 0 1px 6px rgba(4,14,33,0.20)'
-                                        : '0 1px 0 rgba(255,255,255,0.22) inset, 0 4px 22px rgba(14,165,233,0.40), 0 1px 6px rgba(14,165,233,0.16)',
+                                        ? '0 1px 0 rgba(255,255,255,0.18) inset, 0 6px 26px rgba(27,78,216,0.42), 0 2px 8px rgba(4,14,33,0.20)'
+                                        : '0 1px 0 rgba(255,255,255,0.22) inset, 0 6px 26px rgba(14,165,233,0.42), 0 2px 8px rgba(14,165,233,0.16)',
                                 }}
-                                transition={{ type: 'spring', stiffness: 380, damping: 34 }}
+                                transition={{ type: 'spring', stiffness: 420, damping: 36 }}
                             />
                         )}
                         <span
-                            className={`relative z-10 flex items-center gap-2 transition-colors duration-300 ${
-                                isOpt ? 'text-white' : 'text-slate-300 hover:text-slate-500'
+                            className={`relative z-10 flex items-center justify-center gap-2 transition-all duration-300 ${
+                                isOpt ? 'text-white' : 'text-slate-500 hover:text-slate-700'
                             }`}
                         >
-                            <span
-                                className="w-[5px] h-[5px] rounded-full flex-shrink-0 transition-all duration-300"
-                                style={{ background: isOpt ? 'rgba(255,255,255,0.65)' : opt.dot }}
+                            <Icon
+                                className={`h-3.5 w-3.5 flex-shrink-0 transition-opacity duration-300 ${isOpt ? 'opacity-90' : 'opacity-40'}`}
+                                strokeWidth={isOpt ? 2 : 1.75}
                             />
                             {opt.label}
                         </span>
@@ -154,6 +160,61 @@ interface PlatformCardsProps {
     onSelectMode?: (mode: ActiveMode) => void;
 }
 
+// ─── Feature card sub-component ───────────────────────────────────────────────
+interface FeatureCardProps {
+    label: string;
+    detail: string;
+    iconEl: React.ReactNode;
+    j: number;
+    onClick?: () => void;
+    carousel?: boolean;
+}
+
+const FeatureCard: React.FC<FeatureCardProps> = ({
+    label, detail, iconEl, j, onClick, carousel,
+}) => (
+    <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.06 + j * 0.07, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        whileHover={{ y: -3, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
+        whileTap={{ scale: 0.99 }}
+        onClick={onClick}
+        className={[
+            'group flex flex-col rounded-[1.75rem] border border-slate-200/70 bg-white',
+            'hover:border-[#1B4ED8]/25 hover:shadow-[0_8px_32px_rgba(59,126,248,0.08)]',
+            'transition-all duration-200',
+            onClick ? 'cursor-pointer' : 'cursor-default',
+            carousel ? 'snap-start flex-shrink-0 w-[74vw] max-w-[268px] p-5' : 'p-7',
+        ].filter(Boolean).join(` `)}
+    >
+        {/* Icon */}
+        <div className="w-11 h-11 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center mb-6 text-slate-400 group-hover:text-[#1B4ED8] group-hover:bg-blue-50/60 group-hover:border-blue-100/80 transition-all duration-300 flex-shrink-0">
+            {iconEl}
+        </div>
+
+        {/* Title */}
+        <h4 className="font-heading font-bold text-[1.05rem] text-navy leading-snug mb-3 flex-1">
+            {label}
+        </h4>
+
+        {/* Description */}
+        <p className="text-slate-500 text-sm font-light leading-relaxed mb-6">
+            {detail}
+        </p>
+
+        {/* CTA — only for clickable industry-mode service cards */}
+        {onClick && (
+            <span className="flex items-center gap-1.5 text-[#1B4ED8] text-[13px] font-bold group-hover:gap-2.5 transition-all duration-200">
+                View Technical Specs
+                <span className="transition-transform duration-[150ms] group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                </span>
+            </span>
+        )}
+    </motion.div>
+);
+
 // ─── Component ─────────────────────────────────────────────────────────────────
 export const PlatformCards = ({
     activeMode = 'industry',
@@ -184,6 +245,48 @@ export const PlatformCards = ({
     const industryServices = services
         .filter(s => s.mode === 'industry' || s.mode === 'both')
         .slice(0, 4);
+
+    // ── Carousel drag-to-scroll ────────────────────────────────────────
+    const carouselRef = useRef<HTMLDivElement>(null);
+    const dragState = useRef({ active: false, startX: 0, scrollLeft: 0 });
+    const [activeDot, setActiveDot] = useState(0);
+
+    const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+        const el = carouselRef.current;
+        if (!el) return;
+        dragState.current = { active: true, startX: e.clientX, scrollLeft: el.scrollLeft };
+        el.style.cursor = 'grabbing';
+        el.style.userSelect = 'none';
+        // Disable snap while dragging for smooth continuous scroll
+        el.style.scrollSnapType = 'none';
+    }, []);
+
+    const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+        if (!dragState.current.active || !carouselRef.current) return;
+        const dx = e.clientX - dragState.current.startX;
+        carouselRef.current.scrollLeft = dragState.current.scrollLeft - dx;
+    }, []);
+
+    const onPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+        const el = carouselRef.current;
+        if (!el) return;
+        dragState.current.active = false;
+        el.style.cursor = 'grab';
+        el.style.userSelect = '';
+        // Re-enable snap so the card snaps into place on release
+        el.style.scrollSnapType = 'x mandatory';
+    }, []);
+
+    const onScroll = useCallback(() => {
+        const el = carouselRef.current;
+        if (!el || el.children.length === 0) return;
+        // Get the first card element to measure its width (excluding spacer)
+        const firstCard = el.children[0] as HTMLElement;
+        if (!firstCard) return;
+        const cardWidth = firstCard.offsetWidth + 12; // card width + gap (3 = 0.75rem)
+        const cardIndex = Math.round(el.scrollLeft / cardWidth);
+        setActiveDot(Math.max(0, Math.min(cardIndex, el.children.length - 2))); // -2 to exclude spacer
+    }, []);
 
     return (
         <>
@@ -278,77 +381,84 @@ export const PlatformCards = ({
                                 {c.description}
                             </p>
 
-                            {/* Feature grid 2×2 */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8 sm:mb-10">
-                                {activeMode === 'industry' && industryServices.length > 0 ? (
-                                    industryServices.map((svc, j) => (
-                                        <motion.button
-                                            key={svc.id}
-                                            initial={{ opacity: 0, y: 8 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{
-                                                delay: 0.06 + j * 0.07,
-                                                duration: 0.45,
-                                                ease: [0.16, 1, 0.3, 1],
-                                            }}
-                                            whileHover={{ y: -3, scale: 1.015, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
-                                            whileTap={{ scale: 0.97 }}
-                                            onClick={() => setSelectedService(svc)}
-                                            className="flex items-start gap-3 p-4 rounded-2xl border text-left group cursor-pointer shadow-[0_1px_0_rgba(255,255,255,0.90)_inset,0_2px_8px_rgba(27,78,216,0.04)] hover:shadow-[0_1px_0_rgba(255,255,255,0.96)_inset,0_8px_28px_rgba(27,78,216,0.12),0_0_0_1px_rgba(27,78,216,0.09)] transition-all duration-300"
-                                            style={{
-                                                background: c.featBg,
-                                                borderColor: c.featBorder,
-                                            }}
-                                        >
-                                            <div
-                                                className={`w-8 h-8 rounded-[10px] bg-gradient-to-br ${c.featIconBg} flex items-center justify-center flex-shrink-0 transition-shadow duration-200 group-hover:shadow-[0_4px_14px_rgba(27,78,216,0.30)]`}
-                                                style={{ boxShadow: '0 3px 10px rgba(0,0,0,0.10)' }}
-                                            >
-                                                <ServiceIcon name={svc.icon} className="h-3.5 w-3.5 text-white" />
-                                            </div>
-                                            <div className="min-w-0">
-                                                <p className="text-[12px] font-bold text-navy/90 leading-tight mb-0.5 truncate">{svc.title}</p>
-                                                <p className="text-[11px] text-slate-400 font-light leading-tight truncate">
-                                                    {svc.short_description.length > 40
-                                                        ? svc.short_description.slice(0, 40) + '…'
-                                                        : svc.short_description}
-                                                </p>
-                                            </div>
-                                        </motion.button>
-                                    ))
-                                ) : (
-                                    c.features.map((feat, j) => (
-                                        <motion.div
-                                            key={feat.label}
-                                            initial={{ opacity: 0, y: 8 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{
-                                                delay: 0.06 + j * 0.07,
-                                                duration: 0.45,
-                                                ease: [0.16, 1, 0.3, 1],
-                                            }}
-                                            whileHover={{ y: -2, scale: 1.01, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
-                                            className="flex items-start gap-3 p-4 rounded-2xl border shadow-[0_1px_0_rgba(255,255,255,0.90)_inset,0_2px_8px_rgba(27,78,216,0.04)] hover:shadow-[0_1px_0_rgba(255,255,255,0.96)_inset,0_6px_20px_rgba(27,78,216,0.09),0_0_0_1px_rgba(27,78,216,0.07)] transition-all duration-300"
-                                            style={{
-                                                background: c.featBg,
-                                                borderColor: c.featBorder,
-                                            }}
-                                        >
-                                            <div
-                                                className={`w-8 h-8 rounded-[10px] bg-gradient-to-br ${c.featIconBg} flex items-center justify-center flex-shrink-0`}
-                                                style={{ boxShadow: '0 3px 10px rgba(0,0,0,0.10)' }}
-                                            >
-                                                <feat.icon className="h-3.5 w-3.5 text-white" strokeWidth={1.75} />
-                                            </div>
-                                            <div className="min-w-0">
-                                                <p className="text-[12px] font-bold text-navy/90 leading-tight mb-0.5 truncate">{feat.label}</p>
-                                                <p className="text-[11px] text-slate-400 font-light leading-tight">{feat.detail}</p>
-                                            </div>
-                                        </motion.div>
-                                    ))
-                                )}
-                            </div>
+                            {/* ── Feature cards — snap carousel on mobile, 2×2 grid on desktop ── */}
+                            <div className="mb-8 sm:mb-10">
+                                {(() => {
+                                    const isLive = activeMode === 'industry' && industryServices.length > 0;
+                                    const count = isLive ? industryServices.length : c.features.length;
 
+                                    const makeCard = (carousel: boolean, j: number) => {
+                                        if (isLive) {
+                                            const svc = industryServices[j];
+                                            return (
+                                                 <FeatureCard
+                                                     key={svc.id}
+                                                     label={svc.title}
+                                                     detail={svc.short_description}
+                                                     iconEl={<ServiceIcon name={svc.icon} className="h-5 w-5" />}
+                                                     j={j}
+                                                     onClick={() => setSelectedService(svc)}
+                                                     carousel={carousel}
+                                                 />
+                                             );
+
+                                        }
+                                        const feat = c.features[j];
+                                        const FI = feat.icon;
+                                        return (
+                                             <FeatureCard
+                                                 key={feat.label}
+                                                 label={feat.label}
+                                                 detail={feat.detail}
+                                                 iconEl={<FI className="h-5 w-5" strokeWidth={1.75} />}
+                                                 j={j}
+                                                 carousel={carousel}
+                                             />
+                                         );
+
+                                    };
+
+                                    return (
+                                        <>
+                                            {/* Mobile: horizontal snap carousel — edge of next card always peeking */}
+                                            <div
+                                                ref={carouselRef}
+                                                className="md:hidden -mx-4 px-4 overflow-x-auto pb-4 flex gap-3 snap-x snap-mandatory"
+                                                style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', cursor: 'grab', touchAction: 'pan-x' } as React.CSSProperties}
+                                                onPointerDown={onPointerDown}
+                                                onPointerMove={onPointerMove}
+                                                onPointerUp={onPointerUp}
+                                                onPointerCancel={onPointerUp}
+                                                onScroll={onScroll}
+                                            >
+                                                {Array.from({ length: count }, (_, j) => makeCard(true, j))}
+                                                {/* Trailing spacer so last card snaps fully into view */}
+                                                <div className="flex-shrink-0 w-4" aria-hidden="true" />
+                                            </div>
+
+                                            {/* Scroll position dots — track active card */}
+                                            <div className="md:hidden flex items-center justify-center gap-1.5 mt-2">
+                                                {Array.from({ length: count }, (_, i) => (
+                                                    <div
+                                                        key={i}
+                                                        className="rounded-full transition-all duration-300"
+                                                        style={{
+                                                            width: i === activeDot ? 18 : 5,
+                                                            height: 4,
+                                                            background: i === activeDot ? c.rowDot : c.rowDot + '35',
+                                                        }}
+                                                    />
+                                                ))}
+                                            </div>
+
+                                            {/* Desktop: 2×2 grid */}
+                                            <div className="hidden md:grid grid-cols-2 gap-3">
+                                                {Array.from({ length: count }, (_, j) => makeCard(false, j))}
+                                            </div>
+                                        </>
+                                    );
+                                })()}
+                            </div>
                             {/* CTA row */}
                             <motion.div
                                 initial={{ opacity: 0, y: 8 }}
@@ -380,7 +490,7 @@ export const PlatformCards = ({
                         <div className="w-full lg:w-[320px] xl:w-[340px] flex-shrink-0">
                             <motion.div
                                 className="relative rounded-[2.5rem] overflow-hidden"
-                                whileHover={{ y: -5, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
+                                whileHover={{ y: -7, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
                                 style={{
                                     background: c.visualBgGradient,
                                     border: `1.5px solid ${c.visualBorder}`,
@@ -394,13 +504,20 @@ export const PlatformCards = ({
                                     style={{ background: 'linear-gradient(90deg, transparent 8%, rgba(255,255,255,0.88) 38%, rgba(255,255,255,0.96) 50%, rgba(255,255,255,0.88) 62%, transparent 92%)' }}
                                 />
                                 {/* Fine grid texture */}
-                                <div className="absolute inset-0 fine-grid opacity-[0.18] pointer-events-none" />
+                                <div className="absolute inset-0 fine-grid opacity-[0.22] pointer-events-none" />
 
-                                {/* Radial glow */}
+                                {/* Radial glow — more vibrant */}
                                 <div
                                     className="absolute inset-0 pointer-events-none"
                                     style={{
-                                        background: `radial-gradient(ellipse 75% 55% at 50% 25%, ${c.visualGlow}, transparent)`,
+                                        background: `radial-gradient(ellipse 80% 65% at 50% 20%, ${c.visualGlow}, transparent)`,
+                                    }}
+                                />
+                                {/* Bottom ambient fill */}
+                                <div
+                                    className="absolute bottom-0 inset-x-0 h-1/2 pointer-events-none"
+                                    style={{
+                                        background: `radial-gradient(ellipse 60% 40% at 50% 100%, ${c.visualGlow.replace('0.10', '0.06').replace('0.09', '0.05')}, transparent)`,
                                     }}
                                 />
 

@@ -451,50 +451,55 @@ export const WelcomeScreen = ({ onComplete }: { onComplete: () => void }) => {
                 </div>
 
                 {/* ── BRAND NAME — per-character stagger ─────────────── */}
-                <div className="flex items-baseline overflow-hidden mb-2.5">
-                    {'NIYANTRAN'.split('').map((ch, i) => (
-                        <motion.span
-                            key={`a${i}`}
-                            initial={{ opacity: 0, y: 22, filter: 'blur(4px)' }}
-                            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                            transition={{ delay: 0.41 + i * 0.037, duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
-                            className="font-heading font-black leading-none text-white"
-                            style={{
-                                fontSize: 'clamp(1.6rem, 4.2vw, 3.1rem)',
-                                letterSpacing: '0.14em',
-                            }}
-                        >
-                            {ch}
-                        </motion.span>
-                    ))}
+                {/* Stack vertically on mobile so each word fits the narrow viewport */}
+                <div className="flex flex-col sm:flex-row items-center sm:items-baseline overflow-hidden mb-2.5 gap-0.5 sm:gap-0">
+                    <div className="flex items-baseline">
+                        {'NIYANTRAN'.split('').map((ch, i) => (
+                            <motion.span
+                                key={`a${i}`}
+                                initial={{ opacity: 0, y: 22, filter: 'blur(4px)' }}
+                                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                                transition={{ delay: 0.41 + i * 0.037, duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
+                                className="font-heading font-black leading-none text-white"
+                                style={{
+                                    fontSize: 'clamp(1.3rem, 5vw, 3.1rem)',
+                                    letterSpacing: '0.14em',
+                                }}
+                            >
+                                {ch}
+                            </motion.span>
+                        ))}
+                    </div>
                     <motion.span
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.17 }}
                         transition={{ delay: 0.80, duration: 0.4 }}
-                        className="mx-3 font-heading font-black leading-none"
+                        className="mx-3 font-heading font-black leading-none hidden sm:inline-block"
                         style={{
-                            fontSize: 'clamp(1.6rem, 4.2vw, 3.1rem)',
+                            fontSize: 'clamp(1.3rem, 5vw, 3.1rem)',
                             color: 'rgba(255,255,255,0.17)',
                         }}
                     >
                         ·
                     </motion.span>
-                    {'INSTRUMENTS'.split('').map((ch, i) => (
-                        <motion.span
-                            key={`b${i}`}
-                            initial={{ opacity: 0, y: 22, filter: 'blur(4px)' }}
-                            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                            transition={{ delay: 0.78 + i * 0.033, duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
-                            className="font-heading font-black leading-none"
-                            style={{
-                                fontSize: 'clamp(1.6rem, 4.2vw, 3.1rem)',
-                                letterSpacing: '0.14em',
-                                color: i >= 6 ? 'rgba(59,130,246,0.88)' : '#FFFFFF',
-                            }}
-                        >
-                            {ch}
-                        </motion.span>
-                    ))}
+                    <div className="flex items-baseline">
+                        {'INSTRUMENTS'.split('').map((ch, i) => (
+                            <motion.span
+                                key={`b${i}`}
+                                initial={{ opacity: 0, y: 22, filter: 'blur(4px)' }}
+                                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                                transition={{ delay: 0.78 + i * 0.033, duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
+                                className="font-heading font-black leading-none"
+                                style={{
+                                    fontSize: 'clamp(1.3rem, 5vw, 3.1rem)',
+                                    letterSpacing: '0.14em',
+                                    color: i >= 6 ? 'rgba(59,130,246,0.88)' : '#FFFFFF',
+                                }}
+                            >
+                                {ch}
+                            </motion.span>
+                        ))}
+                    </div>
                 </div>
 
                 {/* Hairline divider */}

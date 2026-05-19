@@ -6,7 +6,7 @@ import {
     Select, SelectContent, SelectItem,
     SelectTrigger, SelectValue,
 } from '@/components/ui/select';
-import { Mail, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Mail, ArrowRight, CheckCircle2, Cpu, GraduationCap } from 'lucide-react';
 
 export type InquiryMode = 'industry' | 'education';
 
@@ -213,20 +213,45 @@ export const DevContact = ({ mode, onModeChange }: Props) => {
                         </p>
 
                         {/* Mode toggle */}
-                        <div className="inline-flex items-center gap-1 bg-white border border-blue-100 rounded-full p-1 mb-8 shadow-[0_2px_10px_rgba(27,78,216,0.05)]">
-                            {(['industry', 'education'] as const).map(m => (
+                        <div
+                            className="inline-flex items-center p-1 rounded-[18px] border border-slate-200/60 bg-white backdrop-blur-xl mb-8"
+                            style={{
+                                boxShadow: '0 2px 0 rgba(255,255,255,1) inset, 0 4px 24px rgba(4,14,33,0.08), 0 0 0 1px rgba(219,234,254,0.45)',
+                            }}
+                        >
+                            {([
+                                { id: 'industry' as const,  label: 'Industry',  Icon: Cpu },
+                                { id: 'education' as const, label: 'Education', Icon: GraduationCap },
+                            ]).map(({ id: m, label, Icon }) => (
                                 <button
                                     key={m}
                                     onClick={() => onModeChange(m)}
-                                    className={`rounded-full px-5 py-2 text-[11px] font-bold tracking-[0.22em] uppercase transition-all duration-300 ${
-                                        mode === m
-                                            ? cfg.pillCls + (mode === 'industry'
-                                                ? ' shadow-[0_1px_0_rgba(255,255,255,0.14)_inset,0_4px_14px_rgba(4,14,33,0.22)]'
-                                                : ' shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_4px_14px_rgba(14,165,233,0.26)]')
-                                            : 'text-slate-300 hover:text-slate-500'
-                                    }`}
+                                    className="relative px-5 py-2 rounded-[14px] text-[11px] font-bold tracking-[0.18em] uppercase focus:outline-none select-none min-w-[110px] transition-colors duration-200"
                                 >
-                                    {m === 'industry' ? 'Industry' : 'Education'}
+                                    {mode === m && (
+                                        <motion.div
+                                            layoutId="contact-mode-pill"
+                                            className="absolute inset-0 rounded-[14px]"
+                                            style={{
+                                                background: m === 'industry'
+                                                    ? 'linear-gradient(135deg, #040e21 0%, #1b4ed8 100%)'
+                                                    : 'linear-gradient(135deg, #0284c7 0%, #22d3ee 100%)',
+                                                boxShadow: m === 'industry'
+                                                    ? '0 1px 0 rgba(255,255,255,0.18) inset, 0 6px 26px rgba(27,78,216,0.42), 0 2px 8px rgba(4,14,33,0.20)'
+                                                    : '0 1px 0 rgba(255,255,255,0.22) inset, 0 6px 26px rgba(14,165,233,0.42), 0 2px 8px rgba(14,165,233,0.16)',
+                                            }}
+                                            transition={{ type: 'spring', stiffness: 420, damping: 36 }}
+                                        />
+                                    )}
+                                    <span className={`relative z-10 flex items-center justify-center gap-2 transition-all duration-300 ${
+                                        mode === m ? 'text-white' : 'text-slate-500 hover:text-slate-700'
+                                    }`}>
+                                        <Icon
+                                            className={`h-3.5 w-3.5 flex-shrink-0 transition-opacity duration-300 ${mode === m ? 'opacity-90' : 'opacity-40'}`}
+                                            strokeWidth={mode === m ? 2 : 1.75}
+                                        />
+                                        {label}
+                                    </span>
                                 </button>
                             ))}
                         </div>
@@ -344,7 +369,7 @@ export const DevContact = ({ mode, onModeChange }: Props) => {
                                             className={`group inline-flex items-center justify-center gap-2 w-full rounded-[12px] h-11 text-white text-[13px] font-bold tracking-[0.06em] mt-1 disabled:opacity-60 dev-btn-sweep ${cfg.btnCls}`}
                                         >
                                             {status === 'loading' ? 'Saving inquiry…' : status === 'preparing' ? 'Preparing email…' : cfg.ctaLabel}
-                                            {status === 'idle' && <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />}
+                                            {status === 'idle' && (<span className="transition-transform duration-200 ease-in-out group-hover:translate-x-[4px] inline-flex"><ArrowRight className="h-3.5 w-3.5" /></span>)}
                                         </motion.button>
                                     </motion.form>
 
@@ -416,7 +441,7 @@ export const DevContact = ({ mode, onModeChange }: Props) => {
                                             className={`group inline-flex items-center justify-center gap-2 w-full rounded-[12px] h-11 text-white text-[13px] font-bold tracking-[0.06em] mt-1 disabled:opacity-60 dev-btn-sweep ${cfg.btnCls}`}
                                         >
                                             {status === 'loading' ? 'Saving inquiry…' : status === 'preparing' ? 'Preparing email…' : cfg.ctaLabel}
-                                            {status === 'idle' && <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />}
+                                            {status === 'idle' && (<span className="transition-transform duration-200 ease-in-out group-hover:translate-x-[4px] inline-flex"><ArrowRight className="h-3.5 w-3.5" /></span>)}
                                         </motion.button>
                                     </motion.form>
                                 )}

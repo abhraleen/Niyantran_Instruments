@@ -101,7 +101,7 @@ export const Hero = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.46, duration: 0.68 }}
-                    className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-12 sm:mb-16 w-full px-4 sm:px-0"
+                    className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-0 w-full px-4 sm:px-0"
                 >
                     <motion.button
                         onClick={() => scrollTo('inquiry')}
@@ -124,6 +124,14 @@ export const Hero = () => {
                         <ChevronRight className="h-4 w-4 opacity-60" />
                     </motion.button>
                 </motion.div>
+
+                {/* Trust strip */}
+                <p
+                    className="text-center mb-12 sm:mb-16"
+                    style={{ fontFamily: 'monospace', fontSize: '11px', color: '#9ca3af', letterSpacing: '0.1em', marginTop: '24px' }}
+                >
+                    ● ISO Certified · Precision to 0.001mm · Semiconductor Grade · Est. 2010
+                </p>
 
                 {/* Stats strip */}
                 <motion.div

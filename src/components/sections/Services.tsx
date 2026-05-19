@@ -404,7 +404,9 @@ export const Services = () => {
                                 {/* CTA */}
                                 <span className="flex items-center gap-1.5 text-[#1B4ED8] text-[13px] font-bold group-hover:gap-2.5 transition-all duration-200">
                                     View Technical Specs
-                                    <ArrowUpRight className="h-3.5 w-3.5" />
+                                    <span className="transition-transform duration-[150ms] group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
+                                        <ArrowUpRight className="h-3.5 w-3.5" />
+                                    </span>
                                 </span>
                             </motion.button>
                         ))}
