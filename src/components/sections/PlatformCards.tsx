@@ -275,10 +275,11 @@ export const PlatformCards = ({
             .catch(() => { /* silent — keeps stale data on error */ });
     }, []);
 
-    // All industry services sorted ASC by sort_order.
-    // New services added via admin get higher sort_order values and appear last.
-    const industryServices = services
-        .filter(s => s.mode === 'industry' || s.mode === 'both')
+    // Live services are mode-aware, so admin changes reflect in both industry and education views.
+    const liveServices = services
+        .filter(s => activeMode === 'industry'
+            ? s.mode === 'industry' || s.mode === 'both'
+            : s.mode === 'education' || s.mode === 'both')
         .sort((a, b) => a.sort_order - b.sort_order);
 
     // ── Carousel state ────────────────────────────────────────────────
@@ -407,8 +408,8 @@ export const PlatformCards = ({
                             {/* ── Feature cards — single-card carousel (both modes) ── */}
                             <div className="mb-8 sm:mb-10">
                                 {(() => {
-                                    const isLive = activeMode === 'industry' && industryServices.length > 0;
-                                    const total  = isLive ? industryServices.length : c.features.length;
+                                    const isLive = liveServices.length > 0;
+                                    const total  = isLive ? liveServices.length : c.features.length;
                                     totalCardsRef.current = total;
                                     const safeIdx = total > 0 ? carouselIdx % total : 0;
 
@@ -420,7 +421,7 @@ export const PlatformCards = ({
                                             >
                                                 <CarouselContent>
                                                     {isLive
-                                                        ? industryServices.map((svc, j) => (
+                                                        ? liveServices.map((svc, j) => (
                                                             <CarouselItem key={svc.id} className="w-full sm:w-1/2 px-1.5 pb-2 overflow-visible">
                                                                 <FeatureCard
                                                                     label={svc.title}

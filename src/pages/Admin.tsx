@@ -33,6 +33,7 @@ interface Inquiry {
 
 type View = 'inquiries' | 'analytics' | 'platform' | 'services';
 type TypeFilter = 'all' | 'industry' | 'education';
+type ServiceModeFilter = 'all' | Service['mode'];
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
 const STATUS_CFG = {
@@ -96,10 +97,12 @@ const SVC_STATUS_CFG = {
 // ─── Service Form Modal (create / edit) ───────────────────────────────────────
 function ServiceFormModal({
     initial,
+    defaultMode = 'industry',
     onSave,
     onClose,
 }: {
     initial?: Service | null;
+    defaultMode?: Service['mode'];
     onSave: (svc: Service) => void;
     onClose: () => void;
 }) {
@@ -108,7 +111,7 @@ function ServiceFormModal({
     const [err, setErr]       = React.useState('');
 
     const [title,     setTitle]     = React.useState(initial?.title             ?? '');
-    const [mode,      setMode]      = React.useState<Service['mode']>(initial?.mode ?? 'industry');
+    const [mode,      setMode]      = React.useState<Service['mode']>(initial?.mode ?? defaultMode);
     const [icon,      setIcon]      = React.useState(initial?.icon              ?? 'Activity');
     const [status,    setStatus]    = React.useState<Service['status']>(initial?.status ?? 'active');
     const [sortOrder, setSortOrder] = React.useState(String(initial?.sort_order ?? 0));
@@ -514,6 +517,7 @@ export const AdminDashboard = () => {
     const [svcDeleteTarget, setSvcDeleteTarget]   = React.useState<Service | null>(null);
     const [inqDeleteTarget, setInqDeleteTarget]   = React.useState<Inquiry | null>(null);
     const [svcSearch,       setSvcSearch]     = React.useState('');
+    const [svcModeFilter,   setSvcModeFilter] = React.useState<ServiceModeFilter>('all');
     const [svcPreview,      setSvcPreview]    = React.useState<Service | null>(null);
 
     React.useEffect(() => {
@@ -571,10 +575,27 @@ export const AdminDashboard = () => {
     const allAreas  = Array.from(new Set(inquiries.map(i => i.area_of_interest)));
 
     const svcFiltered = React.useMemo(() => {
-        if (!svcSearch) return services;
+        const filteredByMode = svcModeFilter === 'all'
+            ? services
+            : services.filter(s => s.mode === svcModeFilter);
+
+        if (!svcSearch) return filteredByMode;
+
         const q = svcSearch.toLowerCase();
-        return services.filter(s => s.title.toLowerCase().includes(q) || s.mode.includes(q) || s.status.includes(q));
-    }, [services, svcSearch]);
+        return filteredByMode.filter(s =>
+            s.title.toLowerCase().includes(q)
+            || s.mode.includes(q)
+            || s.status.includes(q)
+            || s.short_description.toLowerCase().includes(q)
+        );
+    }, [services, svcModeFilter, svcSearch]);
+
+    const svcCounts = React.useMemo(() => ({
+        all: services.length,
+        industry: services.filter(s => s.mode === 'industry').length,
+        education: services.filter(s => s.mode === 'education').length,
+        both: services.filter(s => s.mode === 'both').length,
+    }), [services]);
 
     const NAV = [
         { id: 'inquiries' as View, label: 'Inquiries', icon: Inbox,    badge: pendCount },
@@ -1033,6 +1054,26 @@ export const AdminDashboard = () => {
                                     </div>
                                 </div>
 
+                                <div className="flex bg-white border border-slate-100 rounded-[14px] p-1 shadow-sm gap-0.5 w-fit max-w-full overflow-x-auto">
+                                    {([
+                                        { id: 'all' as ServiceModeFilter, label: 'All', count: svcCounts.all },
+                                        { id: 'industry' as ServiceModeFilter, label: 'Industry', count: svcCounts.industry },
+                                        { id: 'education' as ServiceModeFilter, label: 'Education', count: svcCounts.education },
+                                        { id: 'both' as ServiceModeFilter, label: 'Both', count: svcCounts.both },
+                                    ]).map(tab => (
+                                        <button
+                                            key={tab.id}
+                                            onClick={() => setSvcModeFilter(tab.id)}
+                                            className={`px-4 py-2 rounded-[10px] text-[12px] font-bold transition-all flex items-center gap-2 whitespace-nowrap ${svcModeFilter === tab.id ? 'bg-[#040E21] text-white shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                                        >
+                                            {tab.label}
+                                            <span className={`text-[10px] font-black px-1.5 py-0.5 rounded-full leading-none ${svcModeFilter === tab.id ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-400'}`}>
+                                                {tab.count}
+                                            </span>
+                                        </button>
+                                    ))}
+                                </div>
+
                                 {/* Table */}
                                 <div className="bg-white rounded-[20px] border border-slate-100 shadow-sm overflow-hidden">
                                     <div className="overflow-x-auto">
@@ -1059,7 +1100,9 @@ export const AdminDashboard = () => {
                                                                 <div className="w-11 h-11 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center">
                                                                     <Package className="h-5 w-5 text-slate-200" strokeWidth={1.5} />
                                                                 </div>
-                                                                <p className="text-sm text-slate-300 font-medium">No services yet</p>
+                                                                <p className="text-sm text-slate-300 font-medium">
+                                                                    {services.length === 0 ? 'No services yet' : 'No services match this filter'}
+                                                                </p>
                                                                 <button onClick={() => setSvcForm({ open: true, editing: null })} className="text-[12px] font-bold text-[#1B4ED8] hover:underline">Add your first service</button>
                                                             </div>
                                                         </td>
@@ -1199,6 +1242,7 @@ export const AdminDashboard = () => {
                 {svcForm.open && (
                     <ServiceFormModal
                         initial={svcForm.editing}
+                        defaultMode={svcForm.editing?.mode ?? (svcModeFilter === 'all' ? 'industry' : svcModeFilter)}
                         onSave={svc => {
                             setServices(prev =>
                                 svcForm.editing
