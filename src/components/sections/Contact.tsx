@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Mail, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { apiBaseUrl } from '@/lib/api';
 
 export const Contact = () => {
     const [formData, setFormData] = React.useState({
@@ -24,7 +25,7 @@ export const Contact = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch('/api/inquiries', {
+            const response = await fetch(`${apiBaseUrl}/api/inquiries`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),

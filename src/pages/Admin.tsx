@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { useAdminAuth } from '@/context/AdminAuthContext';
 import type { Service } from '@/components/sections/Services';
 import { ServicePanel, ServiceIcon as SvcDetailIcon } from '@/components/sections/Services';
+import { apiBaseUrl } from '@/lib/api';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 interface Inquiry {
@@ -138,7 +139,7 @@ function ServiceFormModal({
                 status,
                 sortOrder: parseInt(sortOrder, 10) || 0,
             };
-            const url    = isEdit ? `/api/services/${initial!.id}` : '/api/services';
+            const url    = isEdit ? `${apiBaseUrl}/api/services/${initial!.id}` : `${apiBaseUrl}/api/services`;
             const method = isEdit ? 'PATCH' : 'POST';
             const res    = await fetch(url, {
                 method,
@@ -517,7 +518,7 @@ export const AdminDashboard = () => {
 
     React.useEffect(() => {
         setLoading(true);
-        fetch('/api/inquiries')
+        fetch(`${apiBaseUrl}/api/inquiries`)
             .then(async res => {
                 const json = await res.json();
                 const rows: Inquiry[] = Array.isArray(json) ? json : Array.isArray(json.data) ? json.data : [];
@@ -533,7 +534,7 @@ export const AdminDashboard = () => {
         if (view !== 'services') return;
         setSvcLoading(true);
         console.log('🔵 Admin Services: Starting fetch from /api/services/all');
-        fetch('/api/services/all')
+        fetch(`${apiBaseUrl}/api/services/all`)
             .then(async r => {
                 console.log('🟡 Admin Services: Response status', r.status);
                 const json = await r.json();
@@ -1128,7 +1129,7 @@ export const AdminDashboard = () => {
                                                                     <button
                                                                         onClick={async () => {
                                                                             const newStatus = svc.status === 'active' ? 'draft' : 'active';
-                                                                            const res = await fetch(`/api/services/${svc.id}`, {
+                                                                            const res = await fetch(`${apiBaseUrl}/api/services/${svc.id}`, {
                                                                                 method: 'PATCH',
                                                                                 headers: { 'Content-Type': 'application/json' },
                                                                                 body: JSON.stringify({ status: newStatus }),
@@ -1217,7 +1218,7 @@ export const AdminDashboard = () => {
                     <DeleteConfirmModal
                         service={svcDeleteTarget}
                         onConfirm={async () => {
-                            await fetch(`/api/services/${svcDeleteTarget.id}`, { method: 'DELETE' });
+                            await fetch(`${apiBaseUrl}/api/services/${svcDeleteTarget.id}`, { method: 'DELETE' });
                             setServices(prev => prev.filter(s => s.id !== svcDeleteTarget.id));
                             setSvcDeleteTarget(null);
                         }}
@@ -1234,7 +1235,7 @@ export const AdminDashboard = () => {
                         onConfirm={async () => {
                             setInquiries(prev => prev.filter(i => i.id !== inqDeleteTarget.id));
                             setInqDeleteTarget(null);
-                            await fetch(`/api/inquiries/${inqDeleteTarget.id}`, { method: 'DELETE' });
+                            await fetch(`${apiBaseUrl}/api/inquiries/${inqDeleteTarget.id}`, { method: 'DELETE' });
                         }}
                         onClose={() => setInqDeleteTarget(null)}
                     />

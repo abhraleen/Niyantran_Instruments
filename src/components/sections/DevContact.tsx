@@ -7,6 +7,7 @@ import {
     SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { Mail, ArrowRight, CheckCircle2, Cpu, GraduationCap } from 'lucide-react';
+import { apiBaseUrl } from '@/lib/api';
 
 export type InquiryMode = 'industry' | 'education';
 
@@ -82,7 +83,7 @@ export const DevContact = ({ mode, onModeChange }: Props) => {
 
         setStatus('loading');
         try {
-            const res = await fetch('/api/inquiries', {
+            const res = await fetch(`${apiBaseUrl}/api/inquiries`, {
                 method:  'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -139,7 +140,7 @@ export const DevContact = ({ mode, onModeChange }: Props) => {
 
         setStatus('loading');
         try {
-            const res = await fetch('/api/inquiries', {
+            const res = await fetch(`${apiBaseUrl}/api/inquiries`, {
                 method:  'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

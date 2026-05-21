@@ -5,6 +5,7 @@ import {
     CheckCircle2, Zap, FlaskConical, ArrowUpRight,
     Cpu, Scan,
 } from 'lucide-react';
+import { apiBaseUrl } from '@/lib/api';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 export interface Service {
@@ -365,7 +366,7 @@ export const Services = () => {
 
     React.useEffect(() => {
         console.log('🔵 Services: Starting fetch from /api/services');
-        fetch('/api/services')
+        fetch(`${apiBaseUrl}/api/services`)
             .then(async r => {
                 console.log('🟡 Services: Response status', r.status);
                 const json = await r.json();

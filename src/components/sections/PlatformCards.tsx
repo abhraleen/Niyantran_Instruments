@@ -8,6 +8,8 @@ import {
 import type { Service } from '@/components/sections/Services';
 import { ServicePanel, ServiceIcon } from '@/components/sections/Services';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { apiBaseUrl } from '@/lib/api';
+import { apiBaseUrl } from '@/lib/api';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 export type ActiveMode = 'industry' | 'education';
@@ -261,7 +263,7 @@ export const PlatformCards = ({
     const [selectedService, setSelectedService] = React.useState<Service | null>(null);
 
     React.useEffect(() => {
-        fetch('/api/services')
+        fetch(`${apiBaseUrl}/api/services`)
             .then(async r => {
                 const json = await r.json();
                 const raw: Service[] = Array.isArray(json.data) ? json.data : [];
