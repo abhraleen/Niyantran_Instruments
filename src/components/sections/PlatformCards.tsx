@@ -9,7 +9,6 @@ import type { Service } from '@/components/sections/Services';
 import { ServicePanel, ServiceIcon } from '@/components/sections/Services';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { apiBaseUrl } from '@/lib/api';
-import { apiBaseUrl } from '@/lib/api';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 export type ActiveMode = 'industry' | 'education';
