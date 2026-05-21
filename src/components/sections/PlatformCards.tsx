@@ -1,12 +1,13 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Activity, Cpu, BarChart3, Layers,
     GraduationCap, BookOpen, Users, Briefcase,
-    ArrowRight, ArrowUpRight,
+    ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight,
 } from 'lucide-react';
 import type { Service } from '@/components/sections/Services';
 import { ServicePanel, ServiceIcon } from '@/components/sections/Services';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 export type ActiveMode = 'industry' | 'education';
@@ -167,11 +168,10 @@ interface FeatureCardProps {
     iconEl: React.ReactNode;
     j: number;
     onClick?: () => void;
-    carousel?: boolean;
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({
-    label, detail, iconEl, j, onClick, carousel,
+    label, detail, iconEl, j, onClick,
 }) => {
     const baseClass = [
         'group relative flex flex-col overflow-hidden rounded-[1.75rem]',
@@ -179,8 +179,8 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
         'hover:border-[#1B4ED8]/30 hover:shadow-[0_16px_48px_rgba(27,78,216,0.11),0_2px_8px_rgba(27,78,216,0.06)]',
         'transition-all duration-300',
         onClick ? 'cursor-pointer' : 'cursor-default',
-        carousel ? 'snap-start flex-shrink-0 w-[74vw] max-w-[268px] p-5' : 'p-7',
-    ].filter(Boolean).join(' ');
+        'p-5 min-h-[340px]',
+    ].join(' ');
 
     const cardBg = { background: 'linear-gradient(158deg, #f8faff 0%, #ffffff 55%)' };
 
@@ -216,7 +216,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
                 {label}
             </h4>
             {/* Description */}
-            <p className="text-slate-400 text-[12.5px] font-light leading-relaxed mb-5 line-clamp-2">
+            <p className="text-slate-400 text-[12.5px] font-light leading-relaxed mb-5 line-clamp-4">
                 {detail}
             </p>
             {/* CTA — only for clickable industry-mode service cards */}
@@ -231,24 +231,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
         </>
     );
 
-    // ── Carousel mode: plain <div> — NO Framer Motion. ──────────────────────────
-    // motion.div registers internal gesture lifecycle handlers on every mount.
-    // Those handlers capture pointerdown on the card BEFORE the browser can
-    // classify the touch as a horizontal scroll swipe, making the carousel
-    // appear frozen. A plain div has zero gesture overhead.
-    if (carousel) {
-        return (
-            <div
-                onClick={onClick}
-                className={baseClass}
-                style={{ ...cardBg, touchAction: 'pan-x' }}
-            >
-                {body}
-            </div>
-        );
-    }
-
-    // ── Grid mode: motion.div with full hover / tap animations ──────────────────
+    // ── Card with hover / tap animations ────────────────────────────────────────
     return (
         <motion.div
             initial={{ opacity: 0, y: 8 }}
@@ -278,49 +261,42 @@ export const PlatformCards = ({
     const [selectedService, setSelectedService] = React.useState<Service | null>(null);
 
     React.useEffect(() => {
-        console.log('🔵 PlatformCards: Starting fetch from /api/services');
         fetch('/api/services')
             .then(async r => {
-                console.log('🟡 PlatformCards: Response status', r.status);
                 const json = await r.json();
-                console.log('🟢 PlatformCards: Response data', json);
                 const raw: Service[] = Array.isArray(json.data) ? json.data : [];
-                console.log('🟢 PlatformCards: Setting services state with', raw.length, 'items');
                 setServices(raw.map(s => ({
                     ...s,
                     applications: Array.isArray(s.applications) ? s.applications : [],
                     features:     Array.isArray(s.features)     ? s.features     : [],
                 })));
             })
-            .catch(err => {
-                console.error('🔴 PlatformCards: Fetch failed:', err);
-            });
+            .catch(() => { /* silent — keeps stale data on error */ });
     }, []);
 
-    // Services visible in industry mode (mode=industry or mode=both), max 4
+    // All industry services sorted ASC by sort_order.
+    // New services added via admin get higher sort_order values and appear last.
     const industryServices = services
         .filter(s => s.mode === 'industry' || s.mode === 'both')
-        .slice(0, 4);
+        .sort((a, b) => a.sort_order - b.sort_order);
 
-    // ── Carousel native-scroll dot tracker ───────────────────────────
-    const carouselRef = useRef<HTMLDivElement>(null);
-    const [activeDot, setActiveDot] = useState(0);
+    // ── Carousel state ────────────────────────────────────────────────
+    const [carouselIdx,  setCarouselIdx]  = useState(0);
+    const totalCardsRef = useRef(0);
 
-    // Reset dot position when switching modes (carousel DOM is remounted by AnimatePresence)
+    // Reset to first card when mode switches.
+    useEffect(() => { setCarouselIdx(0); }, [activeMode]);
+
+    // Keyboard ← → navigation.
     useEffect(() => {
-        setActiveDot(0);
-    }, [activeMode]);
-
-    const onScroll = useCallback(() => {
-        const el = carouselRef.current;
-        if (!el || el.children.length === 0) return;
-        const firstCard = el.children[0] as HTMLElement;
-        if (!firstCard) return;
-        // gap-3 = 12px
-        const cardWidth = firstCard.offsetWidth + 12;
-        const cardIndex = Math.round(el.scrollLeft / cardWidth);
-        // -2 to exclude trailing spacer from count
-        setActiveDot(Math.max(0, Math.min(cardIndex, el.children.length - 2)));
+        const onKey = (e: KeyboardEvent) => {
+            const total = totalCardsRef.current;
+            if (!total) return;
+            if (e.key === 'ArrowRight') setCarouselIdx(prev => (prev + 1) % total);
+            else if (e.key === 'ArrowLeft') setCarouselIdx(prev => (prev - 1 + total) % total);
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
     }, []);
 
     return (
@@ -427,77 +403,96 @@ export const PlatformCards = ({
                                 {c.description}
                             </p>
 
-                            {/* ── Feature cards — snap carousel on mobile, 2×2 grid on desktop ── */}
+                            {/* ── Feature cards — single-card carousel (both modes) ── */}
                             <div className="mb-8 sm:mb-10">
                                 {(() => {
                                     const isLive = activeMode === 'industry' && industryServices.length > 0;
-                                    const count = isLive ? industryServices.length : c.features.length;
-
-                                    const makeCard = (carousel: boolean, j: number) => {
-                                        if (isLive) {
-                                            const svc = industryServices[j];
-                                            return (
-                                                 <FeatureCard
-                                                     key={svc.id}
-                                                     label={svc.title}
-                                                     detail={svc.short_description}
-                                                     iconEl={<ServiceIcon name={svc.icon} className="h-5 w-5" />}
-                                                     j={j}
-                                                     onClick={() => setSelectedService(svc)}
-                                                     carousel={carousel}
-                                                 />
-                                             );
-
-                                        }
-                                        const feat = c.features[j];
-                                        const FI = feat.icon;
-                                        return (
-                                             <FeatureCard
-                                                 key={feat.label}
-                                                 label={feat.label}
-                                                 detail={feat.detail}
-                                                 iconEl={<FI className="h-5 w-5" strokeWidth={1.75} />}
-                                                 j={j}
-                                                 carousel={carousel}
-                                             />
-                                         );
-
-                                    };
+                                    const total  = isLive ? industryServices.length : c.features.length;
+                                    totalCardsRef.current = total;
+                                    const safeIdx = total > 0 ? carouselIdx % total : 0;
 
                                     return (
-                                        <>
-                                            {/* Mobile: horizontal snap carousel — edge of next card always peeking */}
-                                            <div
-                                                ref={carouselRef}
-                                                className="md:hidden -mx-4 px-4 overflow-x-auto pb-4 flex gap-3 snap-x snap-mandatory"
-                                                style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', touchAction: 'pan-x' } as React.CSSProperties}
-                                                onScroll={onScroll}
+                                        <div className="relative select-none">
+                                            <Carousel
+                                                index={safeIdx}
+                                                onIndexChange={setCarouselIdx}
                                             >
-                                                {Array.from({ length: count }, (_, j) => makeCard(true, j))}
-                                                {/* Trailing spacer so last card snaps fully into view */}
-                                                <div className="flex-shrink-0 w-4" aria-hidden="true" />
+                                                <CarouselContent>
+                                                    {isLive
+                                                        ? industryServices.map((svc, j) => (
+                                                            <CarouselItem key={svc.id} className="w-full sm:w-1/2 px-1.5 pb-2 overflow-visible">
+                                                                <FeatureCard
+                                                                    label={svc.title}
+                                                                    detail={svc.short_description}
+                                                                    iconEl={<ServiceIcon name={svc.icon} className="h-5 w-5" />}
+                                                                    j={j}
+                                                                    onClick={() => setSelectedService(svc)}
+                                                                />
+                                                            </CarouselItem>
+                                                        ))
+                                                        : c.features.map((feat, j) => {
+                                                            const FI = feat.icon;
+                                                            return (
+                                                                <CarouselItem key={feat.label} className="w-full sm:w-1/2 px-1.5 pb-2 overflow-visible">
+                                                                    <FeatureCard
+                                                                        label={feat.label}
+                                                                        detail={feat.detail}
+                                                                        iconEl={<FI className="h-5 w-5" strokeWidth={1.75} />}
+                                                                        j={j}
+                                                                    />
+                                                                </CarouselItem>
+                                                            );
+                                                        })
+                                                    }
+                                                </CarouselContent>
+                                            </Carousel>
+
+                                            {/* Navigation row: ← dots → */}
+                                            <div className="flex items-center mt-5 gap-3">
+                                                <motion.button
+                                                    onClick={() => setCarouselIdx(prev => (prev - 1 + total) % total)}
+                                                    whileHover={{ scale: 1.08 }}
+                                                    whileTap={{ scale: 0.92 }}
+                                                    transition={{ type: 'spring', stiffness: 420, damping: 26 }}
+                                                    className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full border border-slate-200 bg-white text-slate-400 hover:text-[#1B4ED8] hover:border-[#1B4ED8]/30 transition-colors duration-200 shadow-sm"
+                                                    aria-label="Previous"
+                                                >
+                                                    <ChevronLeft className="h-4 w-4" />
+                                                </motion.button>
+
+                                                <div className="flex items-center gap-1.5 flex-1 justify-center">
+                                                    {Array.from({ length: total }, (_, i) => (
+                                                        <button
+                                                            key={i}
+                                                            onClick={() => setCarouselIdx(i)}
+                                                            className="rounded-full transition-all duration-300 focus:outline-none hover:opacity-70"
+                                                            style={{
+                                                                width:      i === safeIdx ? 20 : 5,
+                                                                height:     4,
+                                                                background: i === safeIdx ? c.rowDot : c.rowDot + '35',
+                                                            }}
+                                                            aria-label={`Card ${i + 1}`}
+                                                        />
+                                                    ))}
+                                                </div>
+
+                                                <motion.button
+                                                    onClick={() => setCarouselIdx(prev => (prev + 1) % total)}
+                                                    whileHover={{ scale: 1.08 }}
+                                                    whileTap={{ scale: 0.92 }}
+                                                    transition={{ type: 'spring', stiffness: 420, damping: 26 }}
+                                                    className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full border border-slate-200 bg-white text-slate-400 hover:text-[#1B4ED8] hover:border-[#1B4ED8]/30 transition-colors duration-200 shadow-sm"
+                                                    aria-label="Next"
+                                                >
+                                                    <ChevronRight className="h-4 w-4" />
+                                                </motion.button>
                                             </div>
 
-                                            {/* Scroll position dots — track active card */}
-                                            <div className="md:hidden flex items-center justify-center gap-1.5 mt-2">
-                                                {Array.from({ length: count }, (_, i) => (
-                                                    <div
-                                                        key={i}
-                                                        className="rounded-full transition-all duration-300"
-                                                        style={{
-                                                            width: i === activeDot ? 18 : 5,
-                                                            height: 4,
-                                                            background: i === activeDot ? c.rowDot : c.rowDot + '35',
-                                                        }}
-                                                    />
-                                                ))}
-                                            </div>
-
-                                            {/* Desktop: 2×2 grid */}
-                                            <div className="hidden md:grid grid-cols-2 gap-3">
-                                                {Array.from({ length: count }, (_, j) => makeCard(false, j))}
-                                            </div>
-                                        </>
+                                            {/* Keyboard hint — desktop only */}
+                                            <p className="hidden md:block text-center text-[10px] font-mono tracking-[0.18em] uppercase text-slate-300 mt-2.5 select-none">
+                                                ← → navigate
+                                            </p>
+                                        </div>
                                     );
                                 })()}
                             </div>
