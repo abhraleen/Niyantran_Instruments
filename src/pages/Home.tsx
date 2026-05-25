@@ -8,9 +8,12 @@ import { Contact } from '@/components/sections/Contact';
 import { WelcomeScreen } from '@/components/layout/WelcomeScreen';
 
 export const Home: React.FC<{ onLoginClick?: () => void }> = ({ onLoginClick }) => {
-    const [showWelcome, setShowWelcome] = React.useState(true);
+    const [showWelcome, setShowWelcome] = React.useState(
+        () => !localStorage.getItem('ni_welcome_seen')
+    );
 
     const handleComplete = React.useCallback(() => {
+        localStorage.setItem('ni_welcome_seen', '1');
         setShowWelcome(false);
     }, []);
 
