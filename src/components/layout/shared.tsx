@@ -27,7 +27,6 @@ export const Navbar = ({
     }, []);
 
     const navLinks = [
-        { label: 'About', href: '#about' },
         { label: 'Services', href: '#services' },
         { label: 'Inquiry', href: '#inquiry' },
     ];
@@ -303,7 +302,6 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({ onLoginClick }) => {
     const [clickCount, setClickCount] = React.useState(0);
     const navLinks = [
-        { label: 'About', href: '#about' },
         { label: 'Services', href: '#services' },
         { label: 'Inquiry', href: '#inquiry' },
     ];
