@@ -26,10 +26,7 @@ export const Navbar = ({
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const navLinks = [
-        { label: 'Services', href: '#services' },
-        { label: 'Inquiry', href: '#inquiry' },
-    ];
+    const navLinks: { label: string; href: string }[] = [];
 
     return (
         <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
