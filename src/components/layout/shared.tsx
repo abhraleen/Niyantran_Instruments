@@ -117,7 +117,7 @@ export const Navbar = ({
                                 : 'rgba(255,255,255,0.08)',
                             paddingLeft: scrolled ? 30 : 10,
                             paddingRight: scrolled ? 26 : 10,
-                            height: scrolled ? 72 : 46,
+                            height: 56,
                             boxShadow: scrolled
                                 ? '0 1px 0 rgba(255,255,255,0.90) inset, 0 16px 48px rgba(27,78,216,0.12), 0 4px 16px rgba(0,0,0,0.05), 0 0 0 1px rgba(219,234,254,0.60)'
                                 : '0 4px 24px rgba(4,14,33,0.06)',
@@ -133,9 +133,9 @@ export const Navbar = ({
                             <motion.div
                                 className="overflow-hidden flex-shrink-0 shadow-[0_4px_14px_rgba(27,78,216,0.22)] group-hover:shadow-[0_6px_22px_rgba(27,78,216,0.36)] transition-shadow duration-300"
                                 animate={{
-                                    width: scrolled ? 42 : 30,
-                                    height: scrolled ? 42 : 30,
-                                    borderRadius: scrolled ? '11px' : '8px',
+                                    width: 36,
+                                    height: 36,
+                                    borderRadius: '9px',
                                 }}
                                 transition={ease}
                             >
@@ -229,7 +229,7 @@ export const Navbar = ({
                                     ))}
                                     <a
                                         href="#inquiry"
-                                        className="inline-flex items-center gap-2 rounded-full px-6 h-[44px] bg-navy hover:bg-primary text-white text-[13.5px] font-bold tracking-[0.04em] dev-btn-sweep shadow-[0_1px_0_rgba(255,255,255,0.12)_inset,0_4px_16px_rgba(4,14,33,0.22)] hover:shadow-[0_1px_0_rgba(255,255,255,0.15)_inset,0_8px_28px_rgba(27,78,216,0.38)] transition-all duration-300 whitespace-nowrap"
+                                        className="inline-flex items-center gap-2 rounded-full px-6 h-[38px] bg-navy hover:bg-primary text-white text-[13.5px] font-bold tracking-[0.04em] dev-btn-sweep shadow-[0_1px_0_rgba(255,255,255,0.12)_inset,0_4px_16px_rgba(4,14,33,0.22)] hover:shadow-[0_1px_0_rgba(255,255,255,0.15)_inset,0_8px_28px_rgba(27,78,216,0.38)] transition-all duration-300 whitespace-nowrap"
                                     >
                                         <Mail className="h-3.5 w-3.5" />
                                         Get in Touch
